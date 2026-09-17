@@ -17,7 +17,7 @@ Alternatives
 
 ## ADR-001 — Laravel application sebagai Identity Platform kernel
 
-**Status:** Accepted  
+**Status:** Accepted
 **Date:** 2026-09-17
 
 ### Context
@@ -36,7 +36,7 @@ Kita bertanggung jawab atas protocol integration, security review, observability
 
 ## ADR-002 — `mixudev/laravel-authentication` sebagai Authentication Boundary
 
-**Status:** Accepted  
+**Status:** Accepted
 **Date:** 2026-09-17
 
 ### Context
@@ -55,7 +55,7 @@ Authentication implementation dapat di-upgrade/replaced tanpa mengubah OIDC/SAML
 
 ## ADR-003 — Passport hanya sebagai OAuth2 adapter
 
-**Status:** Accepted  
+**Status:** Accepted
 **Date:** 2026-09-17
 
 ### Context
@@ -74,7 +74,7 @@ Upgrade/replacement Passport tetap terisolasi. OIDC layer tetap milik project.
 
 ## ADR-004 — OIDC dibangun sebagai identity layer di atas OAuth2
 
-**Status:** Accepted  
+**Status:** Accepted
 **Date:** 2026-09-17
 
 ### Context
@@ -93,7 +93,7 @@ Project tidak menganggap OAuth2 token server otomatis sebagai OpenID Provider.
 
 ## ADR-005 — SAML di belakang adapter
 
-**Status:** Accepted  
+**Status:** Accepted
 **Date:** 2026-09-17
 
 ### Context
@@ -112,7 +112,7 @@ Engine dapat diganti tanpa mengubah claim model/application model.
 
 ## ADR-006 — Multi-tenant ready sejak awal
 
-**Status:** Accepted  
+**Status:** Accepted
 **Date:** 2026-09-17
 
 ### Context
@@ -131,7 +131,7 @@ Schema sedikit lebih eksplisit sejak awal, tetapi expansion ke SaaS/multi-org ti
 
 ## ADR-007 — Discovery-first integration
 
-**Status:** Accepted  
+**Status:** Accepted
 **Date:** 2026-09-17
 
 ### Context
@@ -153,7 +153,7 @@ Developer experience lebih baik dan endpoint baru bisa ditambahkan tanpa meminta
 
 ## ADR-008 — Admin dashboard uses official Tabler + Blade
 
-**Status:** Accepted  
+**Status:** Accepted
 **Date:** 2026-09-17
 
 ### CSS boundary clarification
@@ -176,7 +176,7 @@ Dashboard rendering remains server-first and shared-hosting friendly. UI can lat
 
 ## ADR-009 — Modular route registry
 
-**Status:** Accepted  
+**Status:** Accepted
 **Date:** 2026-09-17
 
 ### Context
@@ -195,7 +195,7 @@ Security review is easier because middleware and protocol endpoints are grouped 
 
 ## ADR-010 — Adversarial security testing is a release gate
 
-**Status:** Accepted  
+**Status:** Accepted
 **Date:** 2026-09-17
 
 ### Context
@@ -238,9 +238,24 @@ The platform has an explicit authorization boundary from day one, prevents hardc
 - Third-party RBAC package: deferred; may be considered later only if requirements exceed the project-owned model and an explicit ADR approves it.
 
 
+## ADR-014 — Redirect URIs use normalized storage and exact matching
+
+**Status:** Accepted
+**Date:** 2026-09-17
+
+### Decision
+
+Store redirect URIs under an application with a SHA-256 lookup hash, canonicalize scheme/host and default ports, and compare exact canonical strings. Reject fragments, wildcards, userinfo, unsafe encoded separators, dot segments, and non-loopback HTTP. Loopback HTTP is retained for native development clients only.
+
+### Security consequence
+
+Protocol handlers cannot accept arbitrary callback destinations or wildcard registrations by accident. Production policy may further restrict loopback behavior by client type.
+
+---
+
 ## ADR-013 — Application Registry is tenant-scoped before protocol integration
 
-**Status:** Accepted  
+**Status:** Accepted
 **Date:** 2026-09-17
 
 ### Context
@@ -259,7 +274,7 @@ Application resolution can enforce organization ownership and active lifecycle b
 
 ## ADR-012 — Use Spatie Laravel Permission for Control-Plane RBAC
 
-**Status:** Accepted  
+**Status:** Accepted
 **Date:** 2026-09-17
 
 ### Decision
@@ -273,7 +288,7 @@ Spatie owns role/permission mechanics. Mixu owns which permissions exist, when t
 
 ## ADR-013 — Use Spatie Laravel Backup for Recovery Baseline
 
-**Status:** Accepted  
+**Status:** Accepted
 **Date:** 2026-09-17
 
 ### Decision

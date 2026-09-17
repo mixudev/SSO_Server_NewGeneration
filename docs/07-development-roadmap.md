@@ -37,6 +37,7 @@ Implement:
 
 - [done] Application entity;
 - [done] Organization entity;
+- [done] Redirect URI registry and exact-match validator;
 - scope registry;
 - claims registry;
 - application policy;

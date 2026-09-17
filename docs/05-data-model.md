@@ -109,6 +109,8 @@ protocol_mode + status
 
 ## 5. `application_redirect_uris`
 
+Implementation status: Registry schema and pure exact-match validator completed. Stored URI values are canonicalized before hashing; wildcard, fragment, userinfo, unsafe path encoding, and non-loopback HTTP are rejected. Persistence and administration use `ApplicationRedirectUri`; protocol endpoints must call the validator before redirecting.
+
 ```text
 id
 application_id
