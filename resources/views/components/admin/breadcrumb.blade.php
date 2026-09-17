@@ -1,3 +1,5 @@
+@props(['title' => null])
+
 <div class="container-xl pt-3">
     <ol class="breadcrumb" aria-label="Breadcrumb">
         <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Overview</a></li>

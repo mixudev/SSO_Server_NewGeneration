@@ -135,21 +135,18 @@ The canonical layout is:
 ```text
 resources/views/
 ├── layouts/
-│   ├── admin.blade.php
 │   ├── guest.blade.php
-│   ├── auth.blade.php
-│   └── components/
+│   └── auth.blade.php
 │
-├── partials/
+├── components/
 │   ├── admin/
+│   │   ├── layout.blade.php
 │   │   ├── sidebar.blade.php
 │   │   ├── navbar.blade.php
 │   │   ├── breadcrumb.blade.php
-│   │   ├── footer.blade.php
-│   │   └── command-menu.blade.php
-│   └── shared/
-│
-├── components/
+│   │   └── footer.blade.php
+│   ├── shared/
+│   │   └── flash-messages.blade.php
 │   ├── ui/
 │   │   ├── alert.blade.php
 │   │   ├── badge.blade.php

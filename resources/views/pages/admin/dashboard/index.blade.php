@@ -1,6 +1,4 @@
-@extends('layouts.admin')
-
-@section('content')
+<x-admin.layout title="Overview">
     <main class="container-xl py-4" id="main-content">
         <div class="page-header mb-4">
             <div>
@@ -40,4 +38,4 @@
             </section>
         </div>
     </main>
-@endsection
+</x-admin.layout>

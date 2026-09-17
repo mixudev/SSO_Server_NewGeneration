@@ -52,7 +52,7 @@ class AdminDashboardTest extends TestCase
     {
         $this->assertStringContainsString(
             'resources/css/admin.css',
-            file_get_contents(resource_path('views/layouts/admin.blade.php')) ?: '',
+            file_get_contents(resource_path('views/components/admin/layout.blade.php')) ?: '',
         );
         $this->assertStringNotContainsString(
             'resources/css/admin.css',
