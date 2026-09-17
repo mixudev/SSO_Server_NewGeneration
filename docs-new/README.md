@@ -142,10 +142,36 @@ Adversarial tests:
 
 Verifikasi focused slice: 8 tests passed, 12 assertions. Full suite: 25 tests passed, 51 assertions.
 
+### 2026-09-17 — Claim Registry
+
+Implementasi:
+
+- `claims` canonical registry dengan ULID, unique key, source, sensitivity, dan lifecycle status.
+- `Claim` model dan factory.
+- `ClaimKeyValidator` untuk reserved OIDC claims dan canonical custom claim keys.
+- Claim key leading/trailing whitespace tidak dipangkas; input ambigu ditolak.
+
+Validation policy:
+
+- Reserved keys mencakup `iss`, `sub`, `aud`, `exp`, `iat`, `auth_time`, `nonce`, `email`, `name`, `preferred_username`, `phone_number`, `roles`, dan `organization_id`.
+- Custom keys menggunakan karakter lowercase canonical dengan separator `.`, `_`, atau `-`.
+- Empty, uppercase, whitespace, slash, wildcard, duplicate separator, assignment syntax, control character, dan key terlalu panjang ditolak.
+- Claim value resolution dan application claim policy belum diaktifkan.
+
+Adversarial tests:
+
+- Malformed dan ambiguous claim keys.
+- Leading/trailing whitespace bypass.
+- Control character injection.
+- Duplicate claim key pada database.
+- ULID identifier dan metadata persistence.
+
+Verifikasi focused slice: 4 tests passed, 18 assertions. Full suite: 29 tests passed, 69 assertions.
+
 ## Langkah berikutnya
 
-1. Claim Registry dan claim policy versioning.
-2. Application policy dan admin CRUD setelah policy boundary stabil.
+1. Claim policy versioning dan application claim policy.
+2. Application authorization policy serta admin CRUD.
 3. Client credentials sebelum Passport/OAuth integration.
 
 Protocol endpoint belum boleh diaktifkan sebelum registry, policy, credential, state, nonce, dan PKCE contracts memiliki implementation serta adversarial tests.
