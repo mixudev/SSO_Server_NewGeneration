@@ -18,7 +18,8 @@ Folder ini menyimpan dokumentasi pengerjaan aktual per vertical slice. Dokumenta
 - Passport: 13.8.0
 - Spatie Permission: 8.3.0
 - Spatie Backup: 10.3.0
-- Full test terakhir: 14 tests passed, 31 assertions.
+- Full test terakhir sebelum dashboard shell: 29 tests passed, 69 assertions.
+- Full test setelah dashboard shell: 33 tests passed, 80 assertions.
 - Frontend build terakhir: `npm run build` lulus.
 - PHP formatting: Pint lulus.
 - Windows development: Pail tidak dijalankan melalui default `composer run dev` karena membutuhkan `pcntl`; Pail tetap tersedia untuk Linux/WSL.
@@ -167,6 +168,27 @@ Adversarial tests:
 - ULID identifier dan metadata persistence.
 
 Verifikasi focused slice: 4 tests passed, 18 assertions. Full suite: 29 tests passed, 69 assertions.
+
+### 2026-09-17 — Admin Dashboard Shell
+
+Implementasi:
+
+- Admin layout terpisah pada `resources/views/layouts/admin.blade.php`.
+- Navbar, sidebar, breadcrumb, footer, dan flash messages dipisah menjadi partial Blade.
+- Dashboard overview memakai Tabler cards, semantic landmarks, accessible labels, dan empty state eksplisit.
+- Dashboard tetap memakai `Route::view()` karena belum membutuhkan query atau controller.
+- Authentication asset boundary tetap terpisah dari admin asset boundary.
+
+Security and accessibility checks:
+
+- Anonymous request ditolak oleh authentication middleware.
+- Authenticated user tanpa `admin.dashboard.view` ditolak oleh authorization middleware.
+- User-controlled display name dirender escaped.
+- HTML dashboard tidak menampilkan `password`, `client_secret`, atau `private_key`.
+- Navigation memiliki `aria-label`; current page memakai `aria-current`.
+- Tidak ada angka production sintetis; metrics live ditunda.
+
+Verifikasi: focused `4 tests passed, 11 assertions`; full suite `33 tests passed, 80 assertions`; `npm run build`, Pint, Blade view cache, dan `git diff --check` lulus.
 
 ## Langkah berikutnya
 
