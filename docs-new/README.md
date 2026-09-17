@@ -8,6 +8,7 @@ Folder ini menyimpan dokumentasi pengerjaan aktual per vertical slice. Dokumenta
 - Organization Registry: selesai.
 - Application Registry foundation: selesai.
 - Redirect URI Registry dan exact-match validator: selesai.
+- Scope Registry dan application scope allowlist: selesai.
 - OAuth/OIDC/SAML protocol flow: belum dimulai.
 
 ## Verification baseline
@@ -93,13 +94,40 @@ Adversarial tests:
 
 Verifikasi: 12 tests passed, 29 assertions pada focused slice; full suite terakhir 14 tests passed, 31 assertions.
 
+### 2026-09-17 — Scope Registry
+
+Implementasi:
+
+- `scopes` canonical registry dengan ULID, unique name, category, risk level, system/default flags, dan lifecycle status.
+- `application_scopes` sebagai allowlist tenant-bound melalui application.
+- Unique `(application_id, scope_id)` dan foreign keys cascade.
+- `Scope`, `ApplicationScope`, dan relasi `Application::scopes()` serta `Scope::applications()`.
+- `ScopeNameValidator` untuk reserved OIDC scopes dan namespaced custom scopes.
+- `ScopeSetNormalizer` untuk whitespace, deduplikasi, dan urutan deterministik.
+
+Validation policy:
+
+- Reserved names yang diizinkan: `openid`, `profile`, `email`, `address`, `phone`.
+- Custom scope wajib namespaced, contoh `account:read`.
+- Nama kosong, terlalu panjang, control character, whitespace internal, uppercase, slash, dan custom unnamespaced ditolak.
+- Scope registry global; assignment tetap terikat ke application dan organization melalui foreign key.
+- `allowed` dan `consent_required` disimpan di pivot untuk policy layer berikutnya.
+
+Adversarial tests:
+
+- Duplicate scope name.
+- Duplicate application-scope assignment.
+- Scope assignment lintas organization yang sah melalui application berbeda.
+- Unnamespaced, uppercase, malformed, slash, dan control-character scope names.
+- Duplicate whitespace dan ordering normalization.
+
+Verifikasi focused slice: 7 tests passed, 14 assertions.
+
 ## Langkah berikutnya
 
-1. Scope Registry dan `application_scopes`.
-2. Scope parser/normalizer dengan reserved OIDC scope policy dan risk level.
-3. Scope escalation serta tenant-isolation tests.
-4. Claim registry setelah scope contract stabil.
-5. Application policy dan admin CRUD setelah model/policy boundary stabil.
+1. Scope authorization policy untuk menolak requested scope yang tidak ada di allowlist atau `allowed=false`.
+2. Claim registry dan claim policy versioning.
+3. Application CRUD setelah policy boundary stabil.
 6. Client credentials sebelum Passport/OAuth integration.
 
 Protocol endpoint belum boleh diaktifkan sebelum registry, policy, credential, state, nonce, dan PKCE contracts memiliki implementation serta adversarial tests.
