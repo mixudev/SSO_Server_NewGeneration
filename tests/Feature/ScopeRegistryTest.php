@@ -2,6 +2,9 @@
 
 namespace Tests\Feature;
 
+use App\Domain\Applications\Services\ScopeAuthorizationEvaluator;
+use App\Domain\Applications\Services\ScopeNameValidator;
+use App\Domain\Applications\Services\ScopeSetNormalizer;
 use App\Models\Application;
 use App\Models\ApplicationScope;
 use App\Models\Organization;
@@ -69,5 +72,30 @@ class ScopeRegistryTest extends TestCase
         ]);
 
         $this->assertCount(2, ApplicationScope::where('scope_id', $scope->id)->get());
+    }
+
+    public function test_application_cannot_authorize_scope_registered_for_another_application(): void
+    {
+        $application = Application::factory()->create();
+        $otherApplication = Application::factory()->create();
+        $scope = Scope::factory()->create(['name' => 'account:read']);
+        ApplicationScope::factory()->create([
+            'application_id' => $otherApplication->id,
+            'scope_id' => $scope->id,
+        ]);
+
+        $registeredScopes = $application->scopes
+            ->mapWithKeys(fn (Scope $registeredScope): array => [
+                $registeredScope->name => [
+                    'allowed' => (bool) $registeredScope->pivot->allowed,
+                    'status' => $registeredScope->status,
+                ],
+            ])
+            ->all();
+
+        $this->expectException(\InvalidArgumentException::class);
+        (new ScopeAuthorizationEvaluator(
+            new ScopeSetNormalizer(new ScopeNameValidator),
+        ))->authorize('account:read', $registeredScopes);
     }
 }

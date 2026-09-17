@@ -123,12 +123,30 @@ Adversarial tests:
 
 Verifikasi focused slice: 7 tests passed, 14 assertions.
 
+### 2026-09-17 — Scope Authorization Policy
+
+Implementasi:
+
+- `ScopeAuthorizationEvaluator` menerima hanya scope yang terdaftar pada application target.
+- Scope harus berstatus `active` dan pivot harus memiliki `allowed=true`.
+- Requested scope dinormalisasi melalui validator yang sama sebelum evaluasi.
+- Scope unknown, inactive, disallowed, dan scope dari application lain ditolak secara fail-closed.
+
+Adversarial tests:
+
+- Unknown scope tidak boleh di-downgrade menjadi partial approval.
+- `allowed=false` ditolak.
+- Scope inactive ditolak.
+- Scope yang hanya terdaftar pada application lain ditolak.
+- Normalisasi hasil tetap deterministik.
+
+Verifikasi focused slice: 8 tests passed, 12 assertions. Full suite: 25 tests passed, 51 assertions.
+
 ## Langkah berikutnya
 
-1. Scope authorization policy untuk menolak requested scope yang tidak ada di allowlist atau `allowed=false`.
-2. Claim registry dan claim policy versioning.
-3. Application CRUD setelah policy boundary stabil.
-6. Client credentials sebelum Passport/OAuth integration.
+1. Claim Registry dan claim policy versioning.
+2. Application policy dan admin CRUD setelah policy boundary stabil.
+3. Client credentials sebelum Passport/OAuth integration.
 
 Protocol endpoint belum boleh diaktifkan sebelum registry, policy, credential, state, nonce, dan PKCE contracts memiliki implementation serta adversarial tests.
 
