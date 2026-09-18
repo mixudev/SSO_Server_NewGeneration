@@ -99,6 +99,15 @@
                     </a>
                 </div>
             @endcan
+            @can('security.manage')
+                <div class="dashboard-nav-item">
+                    <a href="{{ route('admin.keys.index') }}" class="dashboard-nav-link {{ request()->routeIs('admin.keys*') ? 'is-active' : '' }}">
+                        <i class="bi bi-key" aria-hidden="true"></i>
+                        <span>Signing Keys</span>
+                        <span class="dashboard-nav-tooltip">Signing Keys</span>
+                    </a>
+                </div>
+            @endcan
 
             <div class="dashboard-nav-item">
                 <span class="dashboard-nav-link is-disabled" aria-disabled="true" title="Coming soon">

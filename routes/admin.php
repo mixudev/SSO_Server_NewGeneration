@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\ApplicationController;
 use App\Http\Controllers\Admin\ApplicationCredentialController;
 use App\Http\Controllers\Admin\AuditController;
 use App\Http\Controllers\Admin\ClaimController;
+use App\Http\Controllers\Admin\KeyController;
 use App\Http\Controllers\Admin\OrganizationController;
 use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Admin\ScopeController;
@@ -81,6 +82,15 @@ Route::middleware(['auth', 'can:admin.dashboard.view'])
         Route::get('/audit', [AuditController::class, 'index'])
             ->middleware('can:audit.view')
             ->name('audit.index');
+        Route::get('/keys', [KeyController::class, 'index'])
+            ->middleware('can:security.manage')
+            ->name('keys.index');
+        Route::post('/keys/rotate', [KeyController::class, 'rotate'])
+            ->middleware('can:security.manage')
+            ->name('keys.rotate');
+        Route::delete('/keys/{key}', [KeyController::class, 'revoke'])
+            ->middleware('can:security.manage')
+            ->name('keys.revoke');
         Route::get('/claims', [ClaimController::class, 'index'])
             ->middleware('can:claims.view')
             ->name('claims.index');
