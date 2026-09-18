@@ -5,8 +5,8 @@
             <form method="POST" action="{{ route('admin.claims.store') }}" class="grid gap-3 border border-[var(--dash-border)] bg-[var(--dash-card)] p-4 md:grid-cols-5">
                 @csrf
                 <x-form.input name="key" label="Claim key" placeholder="user.email" required /><x-form.input name="source" label="Source" placeholder="user.email" required />
-                <div><label for="claim-value-type" class="mb-1.5 block text-[11px] uppercase text-[var(--dash-muted)]">Value type</label><select id="claim-value-type" name="value_type" class="w-full border border-[var(--dash-border)] bg-[var(--dash-card)] px-3 py-2 text-xs"><option>string</option><option>boolean</option><option>array</option><option>json</option></select></div>
-                <div><label for="claim-sensitivity" class="mb-1.5 block text-[11px] uppercase text-[var(--dash-muted)]">Sensitivity</label><select id="claim-sensitivity" name="sensitivity" class="w-full border border-[var(--dash-border)] bg-[var(--dash-card)] px-3 py-2 text-xs"><option>public</option><option>personal</option><option>sensitive</option></select></div>
+                <x-form.select name="value_type" label="Value type" id="claim-value-type" required><option>string</option><option>boolean</option><option>array</option><option>json</option></x-form.select>
+                <x-form.select name="sensitivity" label="Sensitivity" id="claim-sensitivity" required><option>public</option><option>personal</option><option>sensitive</option></x-form.select>
                 <div class="flex items-end"><x-form.button type="submit" size="sm">Create claim</x-form.button></div>
             </form>
         @endcan

@@ -6,8 +6,8 @@
                 @csrf
                 <x-form.input name="name" label="Scope name" placeholder="account:read" required />
                 <x-form.input name="description" label="Description" />
-                <div><label for="scope-category" class="mb-1.5 block text-[11px] uppercase text-[var(--dash-muted)]">Category</label><select id="scope-category" name="category" class="w-full border border-[var(--dash-border)] bg-[var(--dash-card)] px-3 py-2 text-xs"><option value="custom">Custom</option><option value="standard">Standard</option></select></div>
-                <div><label for="scope-risk" class="mb-1.5 block text-[11px] uppercase text-[var(--dash-muted)]">Risk level</label><select id="scope-risk" name="risk_level" class="w-full border border-[var(--dash-border)] bg-[var(--dash-card)] px-3 py-2 text-xs"><option>low</option><option>medium</option><option>high</option><option>critical</option></select></div>
+                <x-form.select name="category" label="Category" id="scope-category" required><option value="custom">Custom</option><option value="standard">Standard</option></x-form.select>
+                <x-form.select name="risk_level" label="Risk level" id="scope-risk" required><option>low</option><option>medium</option><option>high</option><option>critical</option></x-form.select>
                 <div class="flex items-end"><x-form.button type="submit" size="sm">Create scope</x-form.button></div>
             </form>
         @endcan
