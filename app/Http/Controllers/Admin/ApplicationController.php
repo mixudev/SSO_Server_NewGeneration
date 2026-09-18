@@ -12,6 +12,7 @@ use App\Models\Identity\Application;
 use App\Models\Identity\Claim;
 use App\Models\Identity\Organization;
 use App\Models\Identity\Scope;
+use App\Models\Identity\SigningKey;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -52,9 +53,13 @@ class ApplicationController extends Controller
 
     public function show(Application $application): View
     {
-        $application->load(['organization', 'redirectUris']);
+        $application->load(['organization', 'redirectUris', 'scopes', 'credential']);
+        $signingKeyReady = SigningKey::query()
+            ->where('algorithm', 'RS256')
+            ->where('status', 'active')
+            ->exists();
 
-        return view('pages.admin.applications.show', compact('application'));
+        return view('pages.admin.applications.show', compact('application', 'signingKeyReady'));
     }
 
     public function wizardBasic(Request $request): View|RedirectResponse

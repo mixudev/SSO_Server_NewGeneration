@@ -46,6 +46,17 @@
             </section>
 
             <section class="border border-[var(--dash-border)] bg-[var(--dash-card)] p-5">
+                <h2 class="text-sm font-semibold text-[var(--dash-text-heading)]">Protocol readiness</h2>
+                <dl class="mt-4 divide-y divide-[var(--dash-border-subtle)] text-sm">
+                    <div class="flex justify-between gap-4 py-3"><dt class="text-[var(--dash-text-muted)]">Registry</dt><dd class="font-medium text-[var(--dash-text)]">{{ $application->status === 'active' ? 'Active application' : 'Not active' }}</dd></div>
+                    <div class="flex justify-between gap-4 py-3"><dt class="text-[var(--dash-text-muted)]">Scopes</dt><dd class="font-medium text-[var(--dash-text)]">{{ $application->scopes->count() }} assigned</dd></div>
+                    <div class="flex justify-between gap-4 py-3"><dt class="text-[var(--dash-text-muted)]">Signing key</dt><dd class="font-medium text-[var(--dash-text)]">{{ $signingKeyReady ? 'Available' : 'Unavailable' }}</dd></div>
+                    <div class="flex justify-between gap-4 py-3"><dt class="text-[var(--dash-text-muted)]">Runtime endpoints</dt><dd class="font-medium text-[var(--dash-text-muted)]">Not enabled</dd></div>
+                </dl>
+                <p class="mt-4 text-xs text-[var(--dash-text-muted)]">This is registry readiness only. OAuth/OIDC runtime configuration is not editable here.</p>
+            </section>
+
+            <section class="border border-[var(--dash-border)] bg-[var(--dash-card)] p-5">
                 <h2 class="text-sm font-semibold text-[var(--dash-text-heading)]">Redirect URIs</h2>
                 @if($application->redirectUris->isEmpty())
                     <p class="mt-4 text-sm text-[var(--dash-text-muted)]">No redirect URI registered.</p>

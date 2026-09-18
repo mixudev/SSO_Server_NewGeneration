@@ -66,6 +66,7 @@ class AuthenticationSecuritySubscriber
                 'user_id' => $event->user->getAuthIdentifier(),
             ],
         ]);
+        $this->auditLogger->record('ACCOUNT_LOCKED', subject: (string) $event->user->getAuthIdentifier(), risk: 'high', metadata: ['duration_minutes' => (int) $event->lockoutDurationMinutes]);
     }
 
     public function handleNewDeviceLoginDetected(NewDeviceLoginDetected $event): void
@@ -80,6 +81,7 @@ class AuthenticationSecuritySubscriber
                 'user_id' => $event->user->getAuthIdentifier(),
             ],
         ]);
+        $this->auditLogger->record('NEW_DEVICE_LOGIN', subject: (string) $event->user->getAuthIdentifier(), risk: 'medium', metadata: ['device_id' => (string) $event->device->id]);
     }
 
     public function handleOtpVerified(OtpVerified $event): void
@@ -93,6 +95,7 @@ class AuthenticationSecuritySubscriber
                 'user_id' => $event->user->getAuthIdentifier(),
             ],
         ]);
+        $this->auditLogger->record('OTP_VERIFIED', subject: (string) $event->user->getAuthIdentifier(), risk: 'low');
     }
 
     public function handlePasswordChanged(PasswordChanged $event): void
@@ -106,6 +109,7 @@ class AuthenticationSecuritySubscriber
                 'user_id' => $event->user->getAuthIdentifier(),
             ],
         ]);
+        $this->auditLogger->record('PASSWORD_CHANGED', subject: (string) $event->user->getAuthIdentifier(), risk: 'high');
     }
 
     public function handleSessionRevoked(SessionRevoked $event): void
@@ -120,6 +124,7 @@ class AuthenticationSecuritySubscriber
                 'user_id' => $event->user?->getAuthIdentifier(),
             ],
         ]);
+        $this->auditLogger->record('SESSION_REVOKED', subject: $event->user?->getAuthIdentifier() !== null ? (string) $event->user->getAuthIdentifier() : null, risk: 'high');
     }
 
     public function handleLogoutPerformed(LogoutPerformed $event): void
@@ -133,6 +138,7 @@ class AuthenticationSecuritySubscriber
                 'user_id' => $event->user?->getAuthIdentifier(),
             ],
         ]);
+        $this->auditLogger->record('LOGOUT', subject: $event->user?->getAuthIdentifier() !== null ? (string) $event->user->getAuthIdentifier() : null, risk: 'low');
     }
 
     public function handleUserRegistered(UserRegistered $event): void
@@ -146,6 +152,7 @@ class AuthenticationSecuritySubscriber
                 'user_id' => $event->user->getAuthIdentifier(),
             ],
         ]);
+        $this->auditLogger->record('USER_REGISTERED', subject: (string) $event->user->getAuthIdentifier(), risk: 'medium');
     }
 
     public function handlePasswordResetRequested(PasswordResetRequested $event): void
@@ -159,6 +166,7 @@ class AuthenticationSecuritySubscriber
                 'user_id' => $event->user?->getAuthIdentifier(),
             ],
         ]);
+        $this->auditLogger->record('PASSWORD_RESET_REQUESTED', subject: $event->user?->getAuthIdentifier() !== null ? (string) $event->user->getAuthIdentifier() : null, risk: 'medium');
     }
 
     public function handlePasswordResetCompleted(PasswordResetCompleted $event): void
@@ -172,6 +180,7 @@ class AuthenticationSecuritySubscriber
                 'user_id' => $event->user->getAuthIdentifier(),
             ],
         ]);
+        $this->auditLogger->record('PASSWORD_RESET_COMPLETED', subject: (string) $event->user->getAuthIdentifier(), risk: 'high');
     }
 
     public function handleEmailVerified(EmailVerified $event): void
@@ -185,6 +194,7 @@ class AuthenticationSecuritySubscriber
                 'user_id' => $event->user->getAuthIdentifier(),
             ],
         ]);
+        $this->auditLogger->record('EMAIL_VERIFIED', subject: (string) $event->user->getAuthIdentifier(), risk: 'low');
     }
 
     public function subscribe(Dispatcher $events): array
