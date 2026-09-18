@@ -135,16 +135,32 @@ Next slice 2.3.6 — avatar and final security UX:
   ```
   Result: 7 tests passed, 22 assertions.
 
-### 2.5 Scopes and claims views
-- Paths: `app/Http/Controllers/Admin/ScopeController.php`, `app/Http/Controllers/Admin/ClaimController.php`, `resources/views/pages/admin/scopes/`, `resources/views/pages/admin/claims/`
-- Target:
-  - CRUD views backed by Phase 1 registries.
-  - Prevent deleting a scope or claim referenced by an active application policy.
-  - Show version and usage state.
+### 2.5 Organizations view [completed]
+- Paths: `app/Http/Controllers/Admin/OrganizationController.php`, `app/Http/Requests/Admin/UpdateOrganizationRequest.php`, `resources/views/pages/admin/organizations/`, `tests/Feature/Admin/OrganizationsTest.php`
+- Delivered:
+  - Searchable and filterable organization index with application counts.
+  - Organization detail/update boundary with allowlisted lifecycle states.
+  - `organizations.view` protects reads and `organizations.manage` protects mutations.
+  - Status/name/slug mutations are audited; secret fields are excluded from output.
 - Verification:
   ```bash
-  php artisan test --filter=AdminScope --compact
-  php artisan test --filter=AdminClaim --compact
+  php artisan test tests/Feature/Admin/OrganizationsTest.php --compact
+  ```
+  Result: 3 tests passed, 17 assertions.
+
+### 2.6 Scopes and claims views
+- Paths: `app/Http/Controllers/Admin/ScopeController.php`, `app/Http/Controllers/Admin/ClaimController.php`, `resources/views/pages/admin/scopes/`, `resources/views/pages/admin/claims/`
+- Boundary decision:
+  - Implement registry-only administration first.
+  - Do not expose claim-policy editing until the versioned application claim-policy persistence model documented in `docs/05-data-model.md` exists.
+  - Prevent hard deletion of system records and records referenced by active applications; prefer explicit deactivation.
+- Target:
+  - CRUD views backed by Phase 1 registries.
+  - Use existing scope-name and claim-key validators plus enum allowlists.
+  - Show status and usage state without rendering raw policy JSON.
+- Verification:
+  ```bash
+  php artisan test tests/Feature/Admin/ScopesIndexTest.php tests/Feature/Admin/ClaimsIndexTest.php --compact
   php artisan view:cache
   ```
 

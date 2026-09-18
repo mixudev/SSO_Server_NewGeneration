@@ -55,11 +55,12 @@
             </div>
 
             <div class="dashboard-nav-item">
-                <span class="dashboard-nav-link is-disabled" aria-disabled="true" title="Coming soon">
+                <a href="{{ route('admin.organizations.index') }}"
+                    class="dashboard-nav-link {{ request()->routeIs('admin.organizations*') ? 'is-active' : '' }}">
                     <i class="bi bi-building" aria-hidden="true"></i>
                     <span>Organizations</span>
-                    <span class="dashboard-nav-tooltip">Coming soon</span>
-                </span>
+                    <span class="dashboard-nav-tooltip">Organizations</span>
+                </a>
             </div>
 
             <div class="dashboard-nav-label">System &amp; Security</div>

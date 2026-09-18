@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\ApplicationController;
+use App\Http\Controllers\Admin\OrganizationController;
 use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Admin\UserController;
 use Illuminate\Support\Facades\Route;
@@ -58,6 +59,15 @@ Route::middleware(['auth', 'can:admin.dashboard.view'])
         Route::get('/users/{user}', [UserController::class, 'show'])
             ->middleware('can:users.view')
             ->name('users.show');
+        Route::get('/organizations', [OrganizationController::class, 'index'])
+            ->middleware('can:organizations.view')
+            ->name('organizations.index');
+        Route::get('/organizations/{organization}', [OrganizationController::class, 'show'])
+            ->middleware('can:organizations.view')
+            ->name('organizations.show');
+        Route::put('/organizations/{organization}', [OrganizationController::class, 'update'])
+            ->middleware('can:organizations.manage')
+            ->name('organizations.update');
         Route::put('/users/{user}', [UserController::class, 'update'])
             ->middleware('can:users.manage')
             ->name('users.update');

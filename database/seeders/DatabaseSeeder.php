@@ -24,6 +24,8 @@ class DatabaseSeeder extends Seeder
         'applications.credentials.rotate',
         'users.view',
         'users.manage',
+        'organizations.view',
+        'organizations.manage',
         'sessions.view',
         'sessions.revoke',
         'audit.view',

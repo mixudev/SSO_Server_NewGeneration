@@ -12,6 +12,9 @@
                 <h1 class="mt-2 text-2xl font-semibold text-[var(--dash-text-heading)]">Applications</h1>
                 <p class="mt-1 text-sm text-[var(--dash-text-muted)]">Manage registered client applications and their lifecycle state.</p>
             </div>
+            @can('applications.create')
+                <x-form.button href="{{ route('admin.applications.wizard.basic') }}" size="sm" icon="plus-lg">Create application</x-form.button>
+            @endcan
         </div>
 
         <form method="GET" action="{{ route('admin.applications.index') }}" class="grid gap-3 rounded-[var(--dash-radius)] border border-[var(--dash-border)] bg-[var(--dash-card)] p-4 md:grid-cols-[1fr_180px_auto]">
@@ -41,6 +44,7 @@
                     <x-table.th>Protocol</x-table.th>
                     <x-table.th>Status</x-table.th>
                     <x-table.th>Updated</x-table.th>
+                    <x-table.th align="right">Action</x-table.th>
                 </x-slot:head>
                 @foreach($applications as $application)
                     <tr>
@@ -52,6 +56,7 @@
                         <x-table.td>{{ strtoupper($application->protocol_mode) }}</x-table.td>
                         <x-table.td>{{ str($application->status)->title() }}</x-table.td>
                         <x-table.td>{{ $application->updated_at?->toDateString() }}</x-table.td>
+                        <x-table.td align="right"><x-form.button href="{{ route('admin.applications.show', $application) }}" variant="secondary" size="sm">View</x-form.button></x-table.td>
                     </tr>
                 @endforeach
             </x-table.wrapper>
