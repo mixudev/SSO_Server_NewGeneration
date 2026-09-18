@@ -54,4 +54,22 @@ class ScopeAuthorizationEvaluatorTest extends TestCase
             }
         }
     }
+
+    public function test_rejects_scope_registration_with_malformed_state(): void
+    {
+        $registrations = [
+            ['allowed' => 1, 'status' => 'active'],
+            ['allowed' => true, 'status' => 'ACTIVE'],
+            ['allowed' => true, 'status' => null],
+        ];
+
+        foreach ($registrations as $registration) {
+            try {
+                $this->evaluator->authorize('account:read', ['account:read' => $registration]);
+                $this->fail('Malformed scope registration was accepted.');
+            } catch (InvalidArgumentException) {
+                $this->assertTrue(true);
+            }
+        }
+    }
 }

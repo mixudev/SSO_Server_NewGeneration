@@ -20,7 +20,14 @@ final class ScopeAuthorizationEvaluator
         foreach ($requestedScopes as $scope) {
             $registration = $registeredScopes[$scope] ?? null;
 
-            if ($registration === null || ! $registration['allowed'] || $registration['status'] !== 'active') {
+            if ($registration === null
+                || ! array_key_exists('allowed', $registration)
+                || ! is_bool($registration['allowed'])
+                || ! array_key_exists('status', $registration)
+                || ! is_string($registration['status'])
+                || ! $registration['allowed']
+                || $registration['status'] !== 'active'
+            ) {
                 throw new InvalidArgumentException('Requested scope is not authorized.');
             }
 
