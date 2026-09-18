@@ -37,14 +37,17 @@ Establish the domain core for identity metadata, scopes, claims, key lifecycles,
   ```
 
 ### 1.3 Cryptographic Key Abstraction
-- Path: `app/Domain/Identity/Contracts/KeyManagerInterface.php`, `app/Infrastructure/Security/LocalRsaKeyManager.php`
+- Paths: `app/Domain/Identity/Contracts/KeyManagerInterface.php`, `app/Infrastructure/Identity/LocalRsaKeyManager.php`, `app/Models/Identity/SigningKey.php`, `database/migrations/2026_09_18_013002_create_signing_keys_table.php`
 - Target:
   - Key generation (RS256, 2048-bit minimum), public key extraction, kid calculation.
-  - Active key resolution and rotation schedule without invalidating unexpired tokens.
+  - Encrypted private-key storage, active key resolution, and atomic rotation without invalidating unexpired tokens.
+  - Private key excluded from model serialization and active lookup fails closed when no key exists.
 - Verification:
   ```bash
-  php artisan test --filter=KeyManagerTest --compact
+  php artisan test tests/Feature/Identity/SigningKeyLifecycleTest.php --compact
   ```
+
+Status: completed in checkpoint `1f4439a` follow-up slice.
 
 ### 1.4 Security Audit Subsystem
 - Path: `app/Domain/Identity/Contracts/AuditLoggerInterface.php`, `app/Infrastructure/Audit/SecurityAuditLogger.php`
