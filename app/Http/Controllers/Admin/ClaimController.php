@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Domain\Identity\Contracts\AuditLoggerInterface;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\StoreClaimRequest;
+use App\Http\Requests\Admin\UpdateClaimRequest;
 use App\Models\Identity\Claim;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -34,5 +35,20 @@ class ClaimController extends Controller
         );
 
         return redirect()->route('admin.claims.index')->with('success', 'Claim created.');
+    }
+
+    public function update(UpdateClaimRequest $request, Claim $claim): RedirectResponse
+    {
+        $values = $request->validated();
+        $claim->update($values);
+        $this->auditLogger->record(
+            event: 'CLAIM_UPDATED',
+            subject: (string) $claim->getKey(),
+            actor: (string) $request->user()->getAuthIdentifier(),
+            risk: $values['sensitivity'] === 'sensitive' || $values['status'] === 'revoked' ? 'high' : 'medium',
+            metadata: ['key' => $claim->key, 'status' => $claim->status],
+        );
+
+        return redirect()->route('admin.claims.index')->with('success', 'Claim updated.');
     }
 }

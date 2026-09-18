@@ -18,11 +18,17 @@ class ScopesClaimsTest extends TestCase
     public function test_registry_pages_require_separate_view_permissions(): void
     {
         $admin = $this->admin();
-        Scope::factory()->create(['name' => 'account:read']);
-        Claim::factory()->create(['key' => 'user.email']);
+        $scope = Scope::factory()->create(['name' => 'account:read']);
+        $claim = Claim::factory()->create(['key' => 'user.email']);
 
-        $this->actingAs($admin)->get(route('admin.scopes.index'))->assertOk()->assertSee('account:read');
-        $this->actingAs($admin)->get(route('admin.claims.index'))->assertOk()->assertSee('user.email');
+        $this->actingAs($admin)->get(route('admin.scopes.index'))
+            ->assertOk()
+            ->assertSee('create-scope-modal')
+            ->assertSee('edit-scope-'.$scope->getKey());
+        $this->actingAs($admin)->get(route('admin.claims.index'))
+            ->assertOk()
+            ->assertSee('create-claim-modal')
+            ->assertSee('edit-claim-'.$claim->getKey());
 
         $operator = User::factory()->create();
         $operator->givePermissionTo('admin.dashboard.view');
@@ -72,6 +78,30 @@ class ScopesClaimsTest extends TestCase
         ])->assertStatus(422);
 
         $this->assertDatabaseHas('scopes', ['id' => $scope->getKey(), 'status' => 'active']);
+    }
+
+    public function test_claim_update_and_revocation_use_authorized_boundary(): void
+    {
+        $admin = $this->admin();
+        $claim = Claim::factory()->create(['key' => 'user.name', 'status' => 'active']);
+
+        $this->actingAs($admin)->put(route('admin.claims.update', $claim), [
+            'key' => 'user.display_name',
+            'description' => 'Display name',
+            'source' => 'user.name',
+            'value_type' => 'string',
+            'sensitivity' => 'personal',
+            'status' => 'revoked',
+        ])->assertRedirect(route('admin.claims.index'));
+
+        $this->assertDatabaseHas('claims', ['id' => $claim->getKey(), 'key' => 'user.display_name', 'status' => 'revoked']);
+        $this->assertDatabaseHas('security_events', ['event' => 'CLAIM_UPDATED']);
+
+        $operator = User::factory()->create();
+        $operator->givePermissionTo('admin.dashboard.view');
+        $this->actingAs($operator)->put(route('admin.claims.update', $claim), [
+            'key' => 'user.forbidden', 'source' => 'user.name', 'value_type' => 'string', 'sensitivity' => 'public', 'status' => 'active',
+        ])->assertForbidden();
     }
 
     public function test_system_flag_is_not_request_assignable_and_output_escapes_html(): void

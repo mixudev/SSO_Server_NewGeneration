@@ -32,6 +32,11 @@ class ApplicationCredentialTest extends TestCase
     {
         [$admin, $application] = $this->application('active', 'confidential_web');
 
+        $this->actingAs($admin)
+            ->get(route('admin.applications.show', $application))
+            ->assertOk()
+            ->assertSee('issue-client-modal');
+
         $response = $this->actingAs($admin)
             ->post(route('admin.applications.credentials.issue', $application));
 
@@ -45,6 +50,9 @@ class ApplicationCredentialTest extends TestCase
 
         $this->actingAs($admin)
             ->get(route('admin.applications.show', $application))
+            ->assertOk()
+            ->assertSee('rotate-client-modal')
+            ->assertSee('revoke-client-modal')
             ->assertDontSee($secret);
     }
 

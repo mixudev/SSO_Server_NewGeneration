@@ -101,6 +101,9 @@ Route::middleware(['auth', 'can:admin.dashboard.view'])
         Route::post('/claims', [ClaimController::class, 'store'])
             ->middleware('can:claims.manage')
             ->name('claims.store');
+        Route::put('/claims/{claim}', [ClaimController::class, 'update'])
+            ->middleware('can:claims.manage')
+            ->name('claims.update');
         Route::put('/organizations/{organization}', [OrganizationController::class, 'update'])
             ->middleware('can:organizations.manage')
             ->name('organizations.update');

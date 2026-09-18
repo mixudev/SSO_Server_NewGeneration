@@ -33,16 +33,19 @@
                 <div class="mt-4 flex flex-wrap gap-2">
                     @can('applications.credentials.issue')
                         @if($application->status === 'active' && ! $application->credential)
-                            <form method="POST" action="{{ route('admin.applications.credentials.issue', $application) }}">@csrf<x-form.button type="submit" size="sm" icon="key">Issue credential</x-form.button></form>
+                            <x-form.button type="button" size="sm" icon="key" onclick="AppModal.open('issue-client-modal')">Issue OAuth client</x-form.button>
                         @endif
                     @endcan
                     @can('applications.credentials.rotate')
                         @if($application->credential?->status === 'active')
-                            <form method="POST" action="{{ route('admin.applications.credentials.rotate', $application) }}" data-confirm="The previous client secret becomes invalid immediately." data-confirm-type="warning" data-confirm-title="Rotate credential?" data-confirm-btn="Rotate credential">@csrf<x-form.button type="submit" size="sm" variant="secondary" icon="arrow-repeat">Rotate credential</x-form.button></form>
-                            <form method="POST" action="{{ route('admin.applications.credentials.revoke', $application) }}" data-confirm="The active client and its tokens will be revoked." data-confirm-type="delete" data-confirm-title="Revoke credential?" data-confirm-btn="Revoke credential">@csrf @method('DELETE')<x-form.button type="submit" size="sm" variant="ghost">Revoke credential</x-form.button></form>
+                            <x-form.button type="button" variant="secondary" size="sm" icon="arrow-repeat" onclick="AppModal.open('rotate-client-modal')">Rotate client</x-form.button>
+                            <x-form.button type="button" variant="ghost" size="sm" onclick="AppModal.open('revoke-client-modal')">Revoke client</x-form.button>
                         @endif
                     @endcan
                 </div>
+                @if($application->credential)
+                    <p class="mt-4 text-xs text-[var(--dash-text-muted)]">OAuth client status: <x-status-badge :value="$application->credential->status" /> · generation {{ $application->credential->generation }}</p>
+                @endif
             </section>
 
             <section class="border border-[var(--dash-border)] bg-[var(--dash-card)] p-5">
@@ -70,4 +73,21 @@
             </section>
         </div>
     </div>
+
+    @can('applications.credentials.issue')
+        <x-app-modal id="issue-client-modal" maxWidth="md" title="Issue OAuth client" description="The client secret is displayed once after issuance." icon="key">
+            <p class="text-sm text-[var(--dash-text-muted)]">Issue credentials for this active application. Public clients receive no secret.</p>
+            <x-slot name="footer"><x-form.button type="button" variant="ghost" onclick="AppModal.close('issue-client-modal')">Cancel</x-form.button><form method="POST" action="{{ route('admin.applications.credentials.issue', $application) }}">@csrf<x-form.button type="submit">Issue client</x-form.button></form></x-slot>
+        </x-app-modal>
+    @endcan
+    @can('applications.credentials.rotate')
+        <x-app-modal id="rotate-client-modal" maxWidth="md" title="Rotate OAuth client" description="The previous client secret becomes invalid immediately." icon="arrow-repeat" iconColor="amber">
+            <p class="text-sm text-[var(--dash-text-muted)]">Continue only when every consumer is ready to receive the new one-time secret.</p>
+            <x-slot name="footer"><x-form.button type="button" variant="ghost" onclick="AppModal.close('rotate-client-modal')">Cancel</x-form.button><form method="POST" action="{{ route('admin.applications.credentials.rotate', $application) }}">@csrf<x-form.button type="submit" variant="secondary">Rotate client</x-form.button></form></x-slot>
+        </x-app-modal>
+        <x-app-modal id="revoke-client-modal" maxWidth="md" title="Revoke OAuth client" description="The client and its tokens will be revoked." icon="shield-x" iconColor="red">
+            <p class="text-sm text-[var(--dash-text-muted)]">This action cannot be undone from this page.</p>
+            <x-slot name="footer"><x-form.button type="button" variant="ghost" onclick="AppModal.close('revoke-client-modal')">Cancel</x-form.button><form method="POST" action="{{ route('admin.applications.credentials.revoke', $application) }}">@csrf @method('DELETE')<x-form.button type="submit" variant="danger">Revoke client</x-form.button></form></x-slot>
+        </x-app-modal>
+    @endcan
 </x-dashboard.layout>

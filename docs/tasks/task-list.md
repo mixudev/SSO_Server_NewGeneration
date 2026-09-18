@@ -37,8 +37,9 @@ Updated: 2026-09-18
 - [x] Build the Users and Roles administration view with last-admin protection and audit coverage.
 - [x] Build Organizations administration view with lifecycle status, application counts, search, authorization, and audit coverage.
 - [x] Build Scopes and Claims registry views with validator-backed creation and separate permissions.
-- [x] Add Scope update/revocation guard for system records and active-application references.
-- [ ] Add Claim update/deactivation after persisted policy-reference support exists.
+- [x] Add modal-based Scope create/update/revocation flow with system/reference guards.
+- [x] Add modal-based Claim create/update/deactivation flow with validator and permission boundaries.
+- [x] Add modal-based OAuth client issue/rotate/revoke flow on application details with one-time secret handling.
 - [ ] Define persisted versioned application claim-policy records before policy editing or protocol issuance.
 - [ ] Complete dashboard visual and accessibility review across all Phase 2 views.
 - [ ] Start OAuth 2.0 boundary audit and Passport adapter contracts.
