@@ -21,6 +21,7 @@ class ClaimFactory extends Factory
             'key' => 'user.email',
             'description' => fake()->sentence(),
             'source' => 'user.email',
+            'value_type' => 'string',
             'sensitivity' => 'personal',
             'status' => 'active',
         ];

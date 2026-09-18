@@ -29,4 +29,11 @@ class ClaimRegistryTest extends TestCase
         $this->expectException(QueryException::class);
         Claim::factory()->create(['key' => 'user.email']);
     }
+
+    public function test_claim_persists_an_explicit_value_type(): void
+    {
+        $claim = Claim::factory()->create(['value_type' => 'boolean']);
+
+        $this->assertSame('boolean', $claim->value_type);
+    }
 }

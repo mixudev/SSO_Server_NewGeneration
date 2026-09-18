@@ -15,11 +15,10 @@ Establish the domain core for identity metadata, scopes, claims, key lifecycles,
 ## Tasks
 
 ### 1.1 Scope and Claim Registries
-- Path: `app/Domain/Identity/Models/Scope.php`, `app/Domain/Identity/Models/Claim.php`
-- Database: migrations in `database/migrations/`
+- Paths: `app/Models/Identity/Scope.php`, `app/Models/Identity/Claim.php`, `database/factories/Identity/`, `database/migrations/`
 - Target:
   - System and custom scopes with descriptions and default assignment rules.
-  - Claim definitions with type enforcement (`string`, `boolean`, `array`, `json`).
+  - Claim definitions with explicit value types (`string`, `boolean`, `array`, `json`) and database-level uniqueness for keys.
 - Verification:
   ```bash
   php artisan test --filter=ScopeRegistryTest --compact

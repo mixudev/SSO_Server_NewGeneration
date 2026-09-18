@@ -19,6 +19,7 @@ class Claim extends Model
         'key',
         'description',
         'source',
+        'value_type',
         'sensitivity',
         'status',
     ];
