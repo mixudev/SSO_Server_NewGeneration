@@ -25,15 +25,11 @@
                     <x-form.input name="name" label="Full name" :value="$user->name" required placeholder="Enter full name" />
                     <x-form.input name="email" type="email" label="Email address" :value="$user->email" required placeholder="name@example.com" />
                 </div>
-                <div>
-                    <label for="role" class="mb-1.5 block font-[var(--font-ppneuemontrealmono)] text-[11px] font-medium uppercase tracking-[0.02em] text-[var(--dash-muted)]">Role <span class="text-[var(--dash-danger)]">*</span></label>
-                    <select id="role" name="role" required class="w-full rounded-[var(--dash-radius)] border border-[var(--dash-border)] bg-[var(--dash-card)] px-3 py-2 text-xs text-[var(--dash-text)] focus:border-[var(--dash-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--dash-primary-ring)]">
-                        @foreach ($roles as $role)
-                            <option value="{{ $role->name }}" @selected($user->hasRole($role->name))>{{ $role->name }}</option>
-                        @endforeach
-                    </select>
-                    @error('role')<p class="mt-1 text-xs text-[var(--dash-danger)]">{{ $message }}</p>@enderror
-                </div>
+                <x-form.select name="role" label="Role" id="role" required>
+                    @foreach ($roles as $role)
+                        <option value="{{ $role->name }}" @selected($user->hasRole($role->name))>{{ $role->name }}</option>
+                    @endforeach
+                </x-form.select>
                 <footer class="flex justify-end border-t border-[var(--dash-border)] pt-5">
                     <x-form.button type="submit" size="sm">Save user</x-form.button>
                 </footer>

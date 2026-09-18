@@ -14,15 +14,12 @@
 
         <form method="GET" action="{{ route('admin.organizations.index') }}" class="grid gap-3 border border-[var(--dash-border)] bg-[var(--dash-card)] p-4 md:grid-cols-[1fr_180px_auto]">
             <x-form.input name="search" :value="$search" label="Search organizations" placeholder="Search name or slug" />
-            <div>
-                <label for="organization-status" class="mb-1.5 block font-[var(--font-ppneuemontrealmono)] text-[11px] font-medium uppercase tracking-[0.02em] text-[var(--dash-muted)]">Status</label>
-                <select id="organization-status" name="status" class="w-full border border-[var(--dash-border)] bg-[var(--dash-body)] px-3 py-2 text-xs text-[var(--dash-text)] focus:border-[var(--dash-primary)] focus:outline-none">
-                    <option value="">All statuses</option>
-                    @foreach(['active', 'suspended', 'revoked'] as $option)
-                        <option value="{{ $option }}" @selected($status === $option)>{{ str($option)->title() }}</option>
-                    @endforeach
-                </select>
-            </div>
+            <x-form.select name="status" label="Status" id="organization-status">
+                <option value="">All statuses</option>
+                @foreach(['active', 'suspended', 'revoked'] as $option)
+                    <option value="{{ $option }}" @selected($status === $option)>{{ str($option)->title() }}</option>
+                @endforeach
+            </x-form.select>
             <div class="flex items-end"><x-form.button type="submit" size="sm">Filter</x-form.button></div>
         </form>
 
