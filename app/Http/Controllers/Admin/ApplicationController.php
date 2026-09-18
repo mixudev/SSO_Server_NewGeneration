@@ -37,6 +37,13 @@ class ApplicationController extends Controller
         return view('pages.admin.applications.index', compact('applications', 'search', 'status'));
     }
 
+    public function show(Application $application): View
+    {
+        $application->load(['organization', 'redirectUris']);
+
+        return view('pages.admin.applications.show', compact('application'));
+    }
+
     public function store(StoreApplicationRequest $request): RedirectResponse
     {
         $application = DB::transaction(function () use ($request): Application {

@@ -72,6 +72,8 @@ Status: index slice completed in `app/Http/Controllers/Admin/ApplicationControll
 
 Create slice completed: `app/Http/Requests/Admin/StoreApplicationRequest.php` canonicalizes and validates exact redirect URIs, `ApplicationController::store()` persists atomically with draft lifecycle, and `tests/Feature/Admin/ApplicationCreationTest.php` covers permission denial, canonicalization, and redirect abuse. Wizard, credentials, and activation remain separate slices.
 
+Detail slice completed: `ApplicationController::show()`, `resources/views/pages/admin/applications/show.blade.php`, and `tests/Feature/Admin/ApplicationDetailsTest.php` cover permission enforcement, route model binding, organization/redirect URI display, and secret-material exclusion.
+
 ### 2.3 Application creation wizard
 
 Status: not started.
