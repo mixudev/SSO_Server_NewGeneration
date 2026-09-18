@@ -276,7 +276,10 @@
             const modal = document.getElementById(id);
             if (!modal) return console.error(`Modal with id "${id}" not found.`);
 
+            modal._previousFocus = document.activeElement;
             const backdrop = modal.querySelector('.modal-backdrop');
+            const firstFocusable = modal.querySelector('button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), a[href]');
+            setTimeout(() => firstFocusable?.focus(), 0);
             const box = modal.querySelector('.modal-box');
 
             modal.style.display = 'flex';
@@ -307,6 +310,9 @@
                 document.body.classList.remove('overflow-hidden');
                 backdrop.classList.remove('modal-anim-overlay-out');
                 box.classList.remove('modal-anim-box-out');
+                const previousFocus = modal._previousFocus;
+                previousFocus?.focus();
+                delete modal._previousFocus;
             }, 280);
         }
     };
@@ -319,8 +325,24 @@
         }
     });
 
-    // Close on Escape key
+    // Close on Escape and keep keyboard focus inside the active modal
     document.addEventListener('keydown', (e) => {
+        const openModals = Array.from(document.querySelectorAll('.app-modal:not(.hidden)')).filter(m => m.style.display === 'flex');
+        const activeModal = openModals[openModals.length - 1];
+        if (activeModal && e.key === 'Tab') {
+            const focusable = Array.from(activeModal.querySelectorAll('button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), a[href]'));
+            if (focusable.length) {
+                const first = focusable[0];
+                const last = focusable[focusable.length - 1];
+                if (e.shiftKey && document.activeElement === first) {
+                    e.preventDefault();
+                    last.focus();
+                } else if (!e.shiftKey && document.activeElement === last) {
+                    e.preventDefault();
+                    first.focus();
+                }
+            }
+        }
         if (e.key === 'Escape') {
             // Find top-most open modal (excluding AppPopup)
             const openModals = Array.from(document.querySelectorAll('.app-modal:not(.hidden)')).filter(m => m.style.display === 'flex');

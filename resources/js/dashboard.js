@@ -134,8 +134,10 @@ document.addEventListener('click', (event) => {
         cancelText:  trigger.getAttribute('data-cancel-btn')    || 'Cancel',
         onConfirm: () => {
             const form = trigger.closest('form');
-            if (form) form.submit();
-            else if (trigger.tagName === 'A' && trigger.href) window.location.href = trigger.href;
+            if (form) {
+                if (typeof form.requestSubmit === 'function') form.requestSubmit();
+                else form.submit();
+            } else if (trigger.tagName === 'A' && trigger.href) window.location.href = trigger.href;
         },
     });
 });
