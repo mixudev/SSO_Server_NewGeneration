@@ -16,8 +16,8 @@ final class SecurityAuditLogger implements AuditLoggerInterface
     public function record(
         string $event,
         ?string $requestId = null,
-        ?int $organizationId = null,
-        ?int $applicationId = null,
+        ?string $organizationId = null,
+        ?string $applicationId = null,
         ?string $subject = null,
         ?string $actor = null,
         string $risk = 'medium',

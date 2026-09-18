@@ -17,8 +17,8 @@ class SecurityAuditLoggerTest extends TestCase
         $event = (new SecurityAuditLogger)->record(
             event: 'SIGNING_KEY_ROTATED',
             requestId: 'req-123',
-            organizationId: 7,
-            applicationId: 9,
+            organizationId: 'org-7',
+            applicationId: 'app-9',
             subject: 'user-1',
             actor: 'admin-1',
             risk: 'high',

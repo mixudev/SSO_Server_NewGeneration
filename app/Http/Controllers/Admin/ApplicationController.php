@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Domain\Identity\Contracts\AuditLoggerInterface;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\StoreApplicationRequest;
 use App\Http\Requests\Admin\UpdateApplicationRequest;
@@ -13,6 +14,8 @@ use Illuminate\View\View;
 
 class ApplicationController extends Controller
 {
+    public function __construct(private AuditLoggerInterface $auditLogger) {}
+
     public function index(Request $request): View
     {
         $search = $request->string('search')->trim()->toString();
@@ -64,6 +67,27 @@ class ApplicationController extends Controller
         });
 
         return redirect()->route('admin.applications.show', $application)->with('success', "Application {$application->name} updated.");
+    }
+
+    public function destroy(Application $application, Request $request): RedirectResponse
+    {
+        if ($application->status !== 'draft') {
+            return back()->withErrors(['application' => 'Only draft applications can be deleted.']);
+        }
+
+        DB::transaction(function () use ($application, $request): void {
+            $applicationId = $application->getKey();
+            $application->delete();
+
+            $this->auditLogger->record(
+                event: 'APPLICATION_DELETED',
+                applicationId: $applicationId,
+                actor: (string) $request->user()->getAuthIdentifier(),
+                risk: 'high',
+            );
+        });
+
+        return redirect()->route('admin.applications.index')->with('success', 'Application deleted.');
     }
 
     public function store(StoreApplicationRequest $request): RedirectResponse

@@ -20,4 +20,7 @@ Route::middleware(['auth', 'can:admin.dashboard.view'])
         Route::put('/applications/{application}', [ApplicationController::class, 'update'])
             ->middleware('can:applications.update')
             ->name('applications.update');
+        Route::delete('/applications/{application}', [ApplicationController::class, 'destroy'])
+            ->middleware('can:applications.delete')
+            ->name('applications.destroy');
     });

@@ -76,6 +76,8 @@ Detail slice completed: `ApplicationController::show()`, `resources/views/pages/
 
 Update slice completed: `UpdateApplicationRequest`, `ApplicationController::update()`, and the `applications.update` route update metadata and replace canonical redirect URIs atomically. `tests/Feature/Admin/ApplicationUpdateTest.php` covers permission denial, invalid URI rollback, and successful replacement.
 
+Delete slice completed: `ApplicationController::destroy()` permits only draft applications, requires `applications.delete`, deletes transactionally, and records `APPLICATION_DELETED` through `AuditLoggerInterface`. Migration `2026_09_18_021026_align_security_event_identity_ids.php` aligns audit correlation IDs with ULID identity IDs. `tests/Feature/Admin/ApplicationDeletionTest.php` covers success, active-application guard, audit persistence, and permission denial.
+
 ### 2.3 Application creation wizard
 
 Status: not started.
