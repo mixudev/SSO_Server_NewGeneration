@@ -21,8 +21,6 @@ class Scope extends Model
         'description',
         'category',
         'risk_level',
-        'is_system',
-        'is_default',
         'status',
     ];
 

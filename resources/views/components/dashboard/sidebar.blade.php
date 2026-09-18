@@ -63,6 +63,21 @@
                 </a>
             </div>
 
+            <div class="dashboard-nav-item">
+                <a href="{{ route('admin.scopes.index') }}" class="dashboard-nav-link {{ request()->routeIs('admin.scopes*') ? 'is-active' : '' }}">
+                    <i class="bi bi-shield-check" aria-hidden="true"></i>
+                    <span>Scopes</span>
+                    <span class="dashboard-nav-tooltip">Scopes</span>
+                </a>
+            </div>
+            <div class="dashboard-nav-item">
+                <a href="{{ route('admin.claims.index') }}" class="dashboard-nav-link {{ request()->routeIs('admin.claims*') ? 'is-active' : '' }}">
+                    <i class="bi bi-list-check" aria-hidden="true"></i>
+                    <span>Claims</span>
+                    <span class="dashboard-nav-tooltip">Claims</span>
+                </a>
+            </div>
+
             <div class="dashboard-nav-label">System &amp; Security</div>
 
             <div class="dashboard-nav-item">

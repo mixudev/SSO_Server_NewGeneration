@@ -1,8 +1,10 @@
 <?php
 
 use App\Http\Controllers\Admin\ApplicationController;
+use App\Http\Controllers\Admin\ClaimController;
 use App\Http\Controllers\Admin\OrganizationController;
 use App\Http\Controllers\Admin\ProfileController;
+use App\Http\Controllers\Admin\ScopeController;
 use App\Http\Controllers\Admin\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -65,6 +67,18 @@ Route::middleware(['auth', 'can:admin.dashboard.view'])
         Route::get('/organizations/{organization}', [OrganizationController::class, 'show'])
             ->middleware('can:organizations.view')
             ->name('organizations.show');
+        Route::get('/scopes', [ScopeController::class, 'index'])
+            ->middleware('can:scopes.view')
+            ->name('scopes.index');
+        Route::post('/scopes', [ScopeController::class, 'store'])
+            ->middleware('can:scopes.manage')
+            ->name('scopes.store');
+        Route::get('/claims', [ClaimController::class, 'index'])
+            ->middleware('can:claims.view')
+            ->name('claims.index');
+        Route::post('/claims', [ClaimController::class, 'store'])
+            ->middleware('can:claims.manage')
+            ->name('claims.store');
         Route::put('/organizations/{organization}', [OrganizationController::class, 'update'])
             ->middleware('can:organizations.manage')
             ->name('organizations.update');

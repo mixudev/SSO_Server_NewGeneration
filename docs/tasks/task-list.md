@@ -27,7 +27,8 @@ Updated: 2026-09-18
 - [ ] Define and test credential generation separately from application activation.
 - [x] Build the Users and Roles administration view with last-admin protection and audit coverage.
 - [x] Build Organizations administration view with lifecycle status, application counts, search, authorization, and audit coverage.
-- [ ] Build Scopes and Claims registry views with active-application reference protection.
+- [x] Build Scopes and Claims registry views with validator-backed creation and separate permissions.
+- [ ] Add Scope/Claim update, deactivation, and active-application reference protection.
 - [ ] Define persisted versioned application claim-policy records before policy editing or protocol issuance.
 - [ ] Build Key Management view with rotation, revocation, audit, and private-key exclusion.
 - [ ] Build the global Session Inspector and revocation view.
