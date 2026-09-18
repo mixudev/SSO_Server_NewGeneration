@@ -208,7 +208,7 @@
                     autocomplete="off"
                     spellcheck="false"
                 >
-                <button class="sp-close-btn" @click="close()" title="Close (ESC)">
+                <button type="button" class="sp-close-btn" @click="close()" title="Close (ESC)" aria-label="Close command palette">
                     <kbd>ESC</kbd>
                 </button>
             </div>

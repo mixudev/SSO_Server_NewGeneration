@@ -16,7 +16,7 @@
         @else
             <x-table.wrapper :striped="true"><x-slot:head><x-table.th>Key</x-table.th><x-table.th>Source</x-table.th><x-table.th>Type</x-table.th><x-table.th>Sensitivity</x-table.th><x-table.th>Status</x-table.th></x-slot:head>
                 @foreach($claims as $claim)
-                    <tr><x-table.td><strong>{{ $claim->key }}</strong><div class="text-xs text-[var(--dash-text-muted)]">{{ $claim->description }}</div></x-table.td><x-table.td>{{ $claim->source }}</x-table.td><x-table.td>{{ $claim->value_type->value }}</x-table.td><x-table.td>{{ $claim->sensitivity }}</x-table.td><x-table.td>{{ $claim->status }}</x-table.td></tr>
+                    <tr><x-table.td><strong>{{ $claim->key }}</strong><div class="text-xs text-[var(--dash-text-muted)]">{{ $claim->description }}</div></x-table.td><x-table.td>{{ $claim->source }}</x-table.td><x-table.td><x-status-badge :value="$claim->value_type->value" /></x-table.td><x-table.td><x-status-badge :value="$claim->sensitivity" /></x-table.td><x-table.td><x-status-badge :value="$claim->status" /></x-table.td></tr>
                 @endforeach
             </x-table.wrapper>
             <div>{{ $claims->links() }}</div>

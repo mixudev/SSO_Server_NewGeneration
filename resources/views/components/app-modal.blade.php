@@ -210,6 +210,8 @@
     class="app-modal fixed inset-0 z-[9900] hidden items-center justify-center p-4"
     role="dialog"
     aria-modal="true"
+    aria-labelledby="{{ $id }}-title"
+    @if($description) aria-describedby="{{ $id }}-description" @endif
     data-modal-id="{{ $id }}"
 >
     <!-- Simple Backdrop -->
@@ -233,11 +235,11 @@
                     </div>
                     @endif
                     <div class="min-w-0 flex flex-col justify-center">
-                        <h3 class="text-[17px] font-bold text-gray-900 dark:text-slate-100 tracking-tight leading-tight">
-                            {{ $title ?? 'Modal Title' }}
-                        </h3>
+                        <h3 id="{{ $id }}-title" class="text-[17px] font-bold text-gray-900 dark:text-slate-100 tracking-tight leading-tight">
+                                                    {{ $title ?? 'Modal Title' }}
+                                                </h3>
                         @if($description)
-                        <p class="max-w-[260px] truncate text-[12px] text-gray-500 dark:text-slate-400 mt-1 leading-relaxed" title="{{ $description }}">
+                        <p id="{{ $id }}-description" class="max-w-[260px] truncate text-[12px] text-gray-500 dark:text-slate-400 mt-1 leading-relaxed" title="{{ $description }}">
                             {{ $description }}
                         </p>
                         @endif

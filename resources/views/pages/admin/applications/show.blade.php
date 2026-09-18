@@ -12,7 +12,7 @@
                 <h1 class="mt-2 text-2xl font-semibold text-[var(--dash-text-heading)]">{{ $application->name }}</h1>
                 <p class="mt-1 text-sm text-[var(--dash-text-muted)]">{{ $application->description ?: 'No description provided.' }}</p>
             </div>
-            <span class="border border-[var(--dash-border)] px-3 py-1 text-xs font-semibold uppercase tracking-[0.12em] text-[var(--dash-text-muted)]">{{ $application->status }}</span>
+            <x-status-badge :value="$application->status" />
         </div>
 
         <div class="grid gap-6 lg:grid-cols-2">

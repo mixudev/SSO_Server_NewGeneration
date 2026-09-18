@@ -67,14 +67,15 @@ Alpine.data('dashboardShell', () => ({
    ========================================================================= */
 Alpine.data('dashboardSearch', () => ({
     openState: false,
+    previousFocus: null,
     query: '',
     navItems: [
         { name: 'Dashboard Overview',         href: '/admin',          icon: 'bi bi-graph-up' },
-        { name: 'OAuth2 / OIDC Client Apps',  href: '#applications',   icon: 'bi bi-key' },
-        { name: 'Users & Roles',              href: '#users',          icon: 'bi bi-people' },
-        { name: 'Organizations & Tenants',    href: '#organizations',  icon: 'bi bi-building' },
-        { name: 'Security Audit Logs',        href: '/admin/audit',      icon: 'bi bi-shield-lock' },
-        { name: 'System Settings',            href: '#settings',       icon: 'bi bi-gear' },
+        { name: 'OAuth2 / OIDC Client Apps',  href: '/admin/applications', icon: 'bi bi-key' },
+        { name: 'Users & Roles',              href: '/admin/users',        icon: 'bi bi-people' },
+        { name: 'Organizations & Tenants',    href: '/admin/organizations', icon: 'bi bi-building' },
+        { name: 'Security Audit Logs',        href: '/admin/audit',        icon: 'bi bi-shield-lock' },
+        { name: 'System Settings',            href: null,                  icon: 'bi bi-gear', disabled: true },
     ],
     actionItems: [
         { name: 'Rotate Security Keys',    icon: 'bi bi-arrow-repeat',       action: () => window.AppModal?.open('rotateKeyModal') },
