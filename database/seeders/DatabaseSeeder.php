@@ -33,6 +33,8 @@ class DatabaseSeeder extends Seeder
         'claims.manage',
         'sessions.view',
         'sessions.revoke',
+        'keys.view',
+        'keys.rotate',
         'audit.view',
         'security.manage',
     ];

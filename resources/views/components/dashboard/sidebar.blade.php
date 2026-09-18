@@ -99,7 +99,16 @@
                     </a>
                 </div>
             @endcan
-            @can('security.manage')
+            @can('sessions.view')
+                <div class="dashboard-nav-item">
+                    <a href="{{ route('admin.sessions.index') }}" class="dashboard-nav-link {{ request()->routeIs('admin.sessions*') ? 'is-active' : '' }}">
+                        <i class="bi bi-pc-display" aria-hidden="true"></i>
+                        <span>Sessions</span>
+                        <span class="dashboard-nav-tooltip">Sessions</span>
+                    </a>
+                </div>
+            @endcan
+            @can('keys.view')
                 <div class="dashboard-nav-item">
                     <a href="{{ route('admin.keys.index') }}" class="dashboard-nav-link {{ request()->routeIs('admin.keys*') ? 'is-active' : '' }}">
                         <i class="bi bi-key" aria-hidden="true"></i>

@@ -63,7 +63,8 @@ class KeyManagementTest extends TestCase
         $role = Role::findOrCreate('key_admin', 'web');
         $role->syncPermissions([
             Permission::findOrCreate('admin.dashboard.view', 'web'),
-            Permission::findOrCreate('security.manage', 'web'),
+            Permission::findOrCreate('keys.view', 'web'),
+            Permission::findOrCreate('keys.rotate', 'web'),
         ]);
         $user = User::factory()->create();
         $user->assignRole($role);

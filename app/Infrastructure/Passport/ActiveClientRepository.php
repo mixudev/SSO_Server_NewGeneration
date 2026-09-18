@@ -5,6 +5,7 @@ namespace App\Infrastructure\Passport;
 use App\Models\Identity\ApplicationCredential;
 use Laravel\Passport\Client;
 use Laravel\Passport\ClientRepository as PassportClientRepository;
+use Laravel\Passport\Passport;
 
 final class ActiveClientRepository extends PassportClientRepository
 {
@@ -20,7 +21,7 @@ final class ActiveClientRepository extends PassportClientRepository
             ->exists();
 
         return $isAllowed
-            ? Client::query()->whereKey($id)->where('revoked', false)->first()
+            ? Passport::client()->newQuery()->whereKey($id)->where('revoked', false)->first()
             : null;
     }
 }

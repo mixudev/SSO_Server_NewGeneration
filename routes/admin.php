@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\KeyController;
 use App\Http\Controllers\Admin\OrganizationController;
 use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Admin\ScopeController;
+use App\Http\Controllers\Admin\SessionController;
 use App\Http\Controllers\Admin\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -82,14 +83,17 @@ Route::middleware(['auth', 'can:admin.dashboard.view'])
         Route::get('/audit', [AuditController::class, 'index'])
             ->middleware('can:audit.view')
             ->name('audit.index');
+        Route::get('/sessions', [SessionController::class, 'index'])
+            ->middleware('can:sessions.view')
+            ->name('sessions.index');
         Route::get('/keys', [KeyController::class, 'index'])
-            ->middleware('can:security.manage')
+            ->middleware('can:keys.view')
             ->name('keys.index');
         Route::post('/keys/rotate', [KeyController::class, 'rotate'])
-            ->middleware('can:security.manage')
+            ->middleware('can:keys.rotate')
             ->name('keys.rotate');
         Route::delete('/keys/{key}', [KeyController::class, 'revoke'])
-            ->middleware('can:security.manage')
+            ->middleware('can:keys.rotate')
             ->name('keys.revoke');
         Route::get('/claims', [ClaimController::class, 'index'])
             ->middleware('can:claims.view')

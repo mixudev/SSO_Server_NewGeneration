@@ -30,7 +30,8 @@ Updated: 2026-09-18
 - [x] Build read-only Security Audit dashboard with bounded filters and redacted metadata.
 - [ ] Project authentication security events into the application audit log where required.
 - [x] Build Key Management view with rotation, revocation, audit, and private-key exclusion.
-- [ ] Build the global Session Inspector and revocation view.
+- [x] Build read-only global Session Inspector from the canonical database session table.
+- [ ] Add separately authorized cross-user session revocation after package boundary review.
 - [ ] Add database-level active signing-key uniqueness and concurrent rotation hardening.
 - [ ] Build the Audit Log export boundary with explicit authorization and redaction.
 - [x] Build the Users and Roles administration view with last-admin protection and audit coverage.

@@ -73,7 +73,7 @@ Alpine.data('dashboardSearch', () => ({
         { name: 'OAuth2 / OIDC Client Apps',  href: '#applications',   icon: 'bi bi-key' },
         { name: 'Users & Roles',              href: '#users',          icon: 'bi bi-people' },
         { name: 'Organizations & Tenants',    href: '#organizations',  icon: 'bi bi-building' },
-        { name: 'Security Audit Logs',        href: '#audit-logs',     icon: 'bi bi-shield-lock' },
+        { name: 'Security Audit Logs',        href: '/admin/audit',      icon: 'bi bi-shield-lock' },
         { name: 'System Settings',            href: '#settings',       icon: 'bi bi-gear' },
     ],
     actionItems: [
@@ -110,8 +110,9 @@ window.confirmAction = function({
             onConfirm: () => { if (typeof onConfirm === 'function') onConfirm(); },
             onCancel:  () => { if (typeof onCancel  === 'function') onCancel();  },
         });
-    } else if (typeof onCancel === 'function') {
-        onCancel();
+    } else {
+        console.error('AppPopup is unavailable; confirmation was not submitted.');
+        if (typeof onCancel === 'function') onCancel();
     }
 };
 
