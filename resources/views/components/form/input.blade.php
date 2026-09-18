@@ -12,6 +12,9 @@
 @php
     $hasError = isset($errors) && $errors->has($name);
     $inputValue = old($name, $value);
+    $inputId = $attributes->get('id', $name);
+    $helpId = $inputId . '-help';
+    $errorId = $inputId . '-error';
 
     $baseClasses = 'w-full rounded-[var(--dash-radius)] border bg-[var(--dash-card)] px-3 py-2 text-xs text-[var(--dash-text)] placeholder:text-[var(--dash-muted-light)] transition-colors focus:outline-none focus:ring-2 disabled:cursor-not-allowed';
     $borderClasses = $hasError
@@ -35,8 +38,9 @@
     <input
         type="{{ $type }}"
         name="{{ $name }}"
-        id="{{ $attributes->get('id', $name) }}"
+        id="{{ $inputId }}"
         value="{{ $inputValue }}"
+        @if($hasError) aria-invalid="true" aria-describedby="{{ $errorId }}" @elseif($help) aria-describedby="{{ $helpId }}" @endif
         @if($placeholder) placeholder="{{ $placeholder }}" @endif
         @if($required) required @endif
         @if($disabled) disabled @endif
@@ -44,10 +48,10 @@
     />
 
     @if($help && !$hasError)
-        <p class="{{ $helpClasses }}">{{ $help }}</p>
+        <p id="{{ $helpId }}" class="{{ $helpClasses }}">{{ $help }}</p>
     @endif
 
     @error($name)
-        <p class="{{ $errorClasses }}">{{ $message }}</p>
+        <p id="{{ $errorId }}" class="{{ $errorClasses }}">{{ $message }}</p>
     @enderror
 </div>

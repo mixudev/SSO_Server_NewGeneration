@@ -163,8 +163,9 @@ Next slice 2.3.6 — avatar and final security UX:
   Result: 3 tests passed, 22 assertions.
 - Next boundary: update, deactivation, and active-application reference protection before deletion is exposed.
 
-### 2.6 Key management view
-- Paths: `app/Http/Controllers/Admin/KeyController.php`, `resources/views/pages/admin/keys/`, `tests/Feature/AdminKeysTest.php`
+### 2.6 Key management view [completed]
+- Paths: `app/Http/Controllers/Admin/KeyController.php`, `resources/views/pages/admin/keys/`, `tests/Feature/Admin/KeyManagementTest.php`
+- Delivered: public metadata-only inventory, protected rotation/retirement, private-key exclusion, active-slot uniqueness.
 - Target:
   - Show key ID, algorithm, created/activated/retired timestamps, and status.
   - Never render private key material.
@@ -177,8 +178,10 @@ Next slice 2.3.6 — avatar and final security UX:
   npm run build
   ```
 
-### 2.7 Session inspector and revocation
-- Paths: `app/Http/Controllers/Admin/SessionController.php`, `resources/views/pages/admin/sessions/`, `tests/Feature/AdminSessionsTest.php`
+### 2.7 Session inspector [read-only completed]
+- Paths: `app/Http/Controllers/Admin/SessionController.php`, `app/Domain/Sessions/Services/SessionInspector.php`, `resources/views/pages/admin/sessions/`, `tests/Feature/Admin/SessionInspectorTest.php`
+- Delivered: bounded read-only inventory from the configured database session table; payload and session identifiers excluded.
+- Deferred: cross-user revocation until a dedicated package-backed authorization boundary exists.
 - Target:
   - List sessions with user, client, created time, last activity, and safe device metadata.
   - Revoke only the selected session or explicitly all sessions for a user.
@@ -189,8 +192,10 @@ Next slice 2.3.6 — avatar and final security UX:
   php artisan view:cache
   ```
 
-### 2.8 Audit log view
-- Paths: `app/Http/Controllers/Admin/AuditController.php`, `resources/views/pages/admin/audit/`, `tests/Feature/AdminAuditTest.php`
+### 2.8 Audit log view [read-only completed]
+- Paths: `app/Http/Controllers/Admin/AuditController.php`, `app/Domain/Identity/Services/SecurityEventQuery.php`, `resources/views/pages/admin/audit/`, `tests/Feature/Admin/AuditLogTest.php`
+- Delivered: bounded GET filters, deterministic pagination, and redacted metadata.
+- Deferred: export until a separate authorization and redaction contract is approved.
 - Target:
   - Filter by actor, action, resource, date range, and outcome.
   - Redact secrets in rows and detail modal.
