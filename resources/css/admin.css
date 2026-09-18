@@ -1,5 +1,0 @@
-@import '@tabler/core/dist/css/tabler.min.css';
-
-@source '../views/pages/admin/**/*.blade.php';
-@source '../views/partials/admin/**/*.blade.php';
-@source '../views/components/**/*.blade.php';

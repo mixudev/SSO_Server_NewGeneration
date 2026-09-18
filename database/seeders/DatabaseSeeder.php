@@ -38,9 +38,15 @@ class DatabaseSeeder extends Seeder
         $role = Role::findOrCreate('platform_admin', 'web');
         $role->syncPermissions($permissions);
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ])->assignRole($role);
+        User::query()->updateOrCreate(
+            ['email' => 'test@example.com'],
+            [
+                'name' => 'Test User',
+                'password' => 'password',
+                'email_verified_at' => now(),
+            ],
+        )->assignRole($role);
+
+        $this->call(ExampleUserSeeder::class);
     }
 }

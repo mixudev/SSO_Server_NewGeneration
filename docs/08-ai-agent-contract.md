@@ -357,15 +357,15 @@ Dalam kondisi tersebut, dokumentasikan gap dan pilih adapter/extension point yan
 
 ## 20. Dashboard/UI contract
 
-The dashboard baseline is Tabler + Blade + Bootstrap 5.
+The dashboard baseline is Blade components + Tailwind CSS v4 + Alpine.js + Bootstrap Icons.
 
 AI MUST:
 
-- use official Tabler primitives before custom CSS;
+- use existing project Blade components (x-dashboard.*, x-app-modal, x-allert, x-form.*, x-table.*);
 - reuse local Blade components;
 - keep page-specific fragments under `resources/views/pages/admin/<feature>`;
 - never introduce Vue for ordinary admin pages;
-- never install a random Laravel Tabler wrapper without an ADR;
+- never introduce another UI kit or icon library without an ADR;
 - update `10-dashboard-ui.md` when the UI architecture changes.
 
 ## 21. Route contract
@@ -429,7 +429,7 @@ Authentication → mixudev/laravel-authentication
 OAuth2 → laravel/passport
 RBAC → spatie/laravel-permission
 Backup → spatie/laravel-backup
-Dashboard → Tabler + Blade + Bootstrap 5
+Dashboard → Blade + Tailwind v4 + Alpine.js + Bootstrap Icons
 ```
 
 Before adding an alternative package, inspect the official package capability and current project contract first.

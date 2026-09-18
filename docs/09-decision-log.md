@@ -151,14 +151,14 @@ Developer experience lebih baik dan endpoint baru bisa ditambahkan tanpa meminta
 
 ---
 
-## ADR-008 — Admin dashboard uses official Tabler + Blade
+## ADR-008 — Admin dashboard uses custom Blade shell with Tailwind CSS v4, Alpine.js, and Bootstrap Icons
 
 **Status:** Accepted
 **Date:** 2026-09-17
 
 ### CSS boundary clarification
 
-Authentication views owned by `mixudev/laravel-authentication` retain the Tailwind entrypoint. Tabler is loaded only by the admin layout through dedicated `resources/css/admin.css` and `resources/js/admin.js` entries. This prevents Tabler's Bootstrap/reset selectors from changing the package authentication UI.
+Authentication views owned by `mixudev/laravel-authentication` retain the Tailwind entrypoint. Dashboard assets are loaded only by the dashboard layout through dedicated `resources/css/dashboard.css` and `resources/js/dashboard.js` entries. This keeps dashboard styles isolated from the authentication UI.
 
 ### Context
 
@@ -166,11 +166,11 @@ The dashboard must be professional, modular, lightweight to deploy, and suitable
 
 ### Decision
 
-Use official Tabler through `@tabler/core`, Laravel Blade, and Tabler's Bootstrap 5 foundation. Vite is the build pipeline; production serves generated static assets. Vue is not the dashboard baseline.
+Use the project-owned modular Blade shell with Tailwind CSS v4, Alpine.js, and self-hosted Bootstrap Icons. Vite is the build pipeline; production serves generated static assets. Vue is not the dashboard baseline.
 
 ### Consequences
 
-Dashboard rendering remains server-first and shared-hosting friendly. UI can later be replaced because business logic does not depend on Tabler markup.
+Dashboard rendering remains server-first and shared-hosting friendly. UI can evolve because business logic does not depend on presentation markup.
 
 ---
 

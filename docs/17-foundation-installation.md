@@ -75,18 +75,19 @@ Production should use Linux and external backup storage. The current package sup
 
 Do not use Windows production as the reference environment for Spatie Backup v10. For local development, actual backup integration tests must execute on Linux/WSL/CI where required server tooling is available. citeturn230300search4
 
-## 7. Tabler
+## 7. Dashboard UI shell
 
 Dashboard baseline remains:
 
 ```text
-Tabler
-+ Bootstrap 5
-+ Blade
+Blade components
++ Tailwind CSS v4
++ Bootstrap Icons (npm, self-hosted)
++ Alpine.js
 + Vite
 ```
 
-Install/integrate official Tabler assets through the frontend build pipeline and keep business logic out of views.
+Bundle dashboard CSS, JavaScript, fonts, and icons through the frontend pipeline. Keep business logic out of views and do not load runtime CDN assets.
 
 ## 8. Baseline verification
 

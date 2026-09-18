@@ -42,7 +42,8 @@ class AdminDashboardTest extends TestCase
         $response->assertOk()
             ->assertSee('Primary navigation', false)
             ->assertSee('<main', false)
-            ->assertSee('<Admin>')
+            ->assertSee('Identity platform overview')
+            ->assertSee('Security operations')
             ->assertDontSee('password')
             ->assertDontSee('client_secret')
             ->assertDontSee('private_key');
@@ -51,8 +52,8 @@ class AdminDashboardTest extends TestCase
     public function test_admin_asset_entrypoint_is_separate_from_authentication_asset_entrypoint(): void
     {
         $this->assertStringContainsString(
-            'resources/css/admin.css',
-            file_get_contents(resource_path('views/components/admin/layout.blade.php')) ?: '',
+            'resources/css/dashboard.css',
+            file_get_contents(resource_path('views/components/dashboard/layout.blade.php')) ?: '',
         );
         $this->assertStringNotContainsString(
             'resources/css/admin.css',

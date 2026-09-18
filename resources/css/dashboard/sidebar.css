@@ -1,0 +1,213 @@
+/* ==========================================================================
+   TailAdmin Sidebar — Full Width Mode
+   ========================================================================== */
+.dashboard-sidebar {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 50;
+    display: flex;
+    width: 248px;
+    flex-direction: column;
+    background-color: var(--dash-sidebar);
+    border-right: 1px solid var(--dash-sidebar-border);
+    transition: width 0.25s cubic-bezier(0.4, 0, 0.2, 1), transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: width, transform;
+}
+
+/* Sidebar Header */
+.dashboard-sidebar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 68px;
+    padding: 0 16px;
+    border-bottom: 1px solid var(--dash-sidebar-border);
+    flex-shrink: 0;
+}
+
+/* Brand / Logo */
+.dashboard-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    min-width: 0;
+    flex: 1;
+}
+
+.dashboard-brand-mark {
+    display: grid;
+    width: 34px;
+    height: 34px;
+    flex-shrink: 0;
+    place-items: center;
+    border-radius: 2px;
+    background: var(--dash-primary);
+    color: #ffffff;
+}
+
+.dashboard-brand-mark i {
+    font-size: 15px;
+}
+
+.dashboard-brand-copy {
+    min-width: 0;
+    overflow: hidden;
+}
+
+.dashboard-brand-copy strong {
+    display: block;
+    font-size: 13.5px;
+    font-weight: 700;
+    color: var(--dash-text-heading);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    letter-spacing: -0.01em;
+}
+
+.dashboard-brand-copy small {
+    display: block;
+    font-size: 10px;
+    color: var(--dash-sidebar-muted);
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+/* Collapse Toggle Button */
+.dashboard-collapse-button {
+    display: grid;
+    width: 26px;
+    height: 26px;
+    flex-shrink: 0;
+    place-items: center;
+    border-radius: 2px;
+    border: 1px solid var(--dash-sidebar-border);
+    background: var(--dash-sidebar);
+    color: var(--dash-sidebar-muted);
+    cursor: pointer;
+    transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+
+.dashboard-collapse-button:hover {
+    color: var(--dash-text-heading);
+    background-color: var(--dash-sidebar-hover);
+    border-color: var(--dash-primary);
+}
+
+.dashboard-collapse-button i {
+    font-size: 10px;
+    transition: transform 0.25s ease;
+}
+
+/* Sidebar Nav Scroll Area */
+.dashboard-sidebar-nav {
+    flex: 1;
+    overflow-y: visible;
+    overflow-x: visible;
+    padding: 12px 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+}
+
+.dashboard-sidebar-nav::-webkit-scrollbar { width: 3px; }
+.dashboard-sidebar-nav::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.08);
+    border-radius: 4px;
+}
+
+/* Section Labels */
+.dashboard-nav-label {
+    padding: 16px 10px 4px;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--dash-sidebar-muted);
+}
+
+/* Nav Items */
+.dashboard-nav-item {
+    position: relative;
+}
+
+.dashboard-nav-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    padding: 10px 14px;
+    border-radius: 2px;
+    color: var(--dash-sidebar-muted);
+    font-size: 13px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: background-color 0.12s ease, color 0.12s ease;
+    position: relative;
+    white-space: nowrap;
+}
+
+/* Icon within nav link */
+.dashboard-nav-link > i:first-child {
+    font-size: 15px;
+    width: 16px;
+    text-align: center;
+    flex-shrink: 0;
+    color: var(--dash-sidebar-muted);
+    transition: color 0.12s ease;
+}
+
+.dashboard-nav-link span:not(.dashboard-nav-tooltip) {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex: 1;
+    min-width: 0;
+}
+
+/* Hover state */
+.dashboard-nav-link:hover {
+    background-color: var(--dash-sidebar-hover);
+    color: var(--dash-text-heading);
+}
+
+.dashboard-nav-link:hover > i:first-child {
+    color: var(--dash-sidebar-muted);
+}
+
+/* Active state — clean, no glow */
+.dashboard-nav-link.is-active {
+    background-color: var(--dash-sidebar-active);
+    color: var(--dash-primary);
+    font-weight: 600;
+}
+
+.dashboard-nav-link.is-active > i:first-child {
+    color: var(--dash-primary);
+}
+
+/* Sidebar Footer */
+.dashboard-sidebar-footer {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 12px 16px;
+    border-top: 1px solid var(--dash-sidebar-border);
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--dash-sidebar-muted);
+    flex-shrink: 0;
+}
+
+/* Badge */
+.dashboard-nav-badge {
+    margin-left: auto;
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-size: 10.5px;
+    font-weight: 600;
+    background-color: var(--dash-sidebar-hover);
+    color: var(--dash-sidebar-muted);
+}

@@ -1,0 +1,122 @@
+/* ==========================================================================
+   TailAdmin Collapsed Sidebar & Zero-Flicker Transitions
+   ========================================================================== */
+
+/* Collapsed width — applied via html class (zero-flicker) OR Alpine class */
+html.sidebar-is-collapsed .dashboard-sidebar,
+.dashboard-viewport.sidebar-collapsed .dashboard-sidebar {
+    width: 72px;
+}
+
+html.sidebar-is-collapsed .dashboard-shell,
+.dashboard-viewport.sidebar-collapsed .dashboard-shell {
+    padding-left: 72px;
+}
+
+/* Hide text elements in collapsed mode */
+html.sidebar-is-collapsed .dashboard-brand-copy,
+html.sidebar-is-collapsed .dashboard-sidebar-copy,
+html.sidebar-is-collapsed .dashboard-nav-label,
+html.sidebar-is-collapsed .dashboard-nav-badge,
+html.sidebar-is-collapsed .dashboard-nav-link span:not(.dashboard-nav-tooltip),
+.dashboard-viewport.sidebar-collapsed .dashboard-brand-copy,
+.dashboard-viewport.sidebar-collapsed .dashboard-sidebar-copy,
+.dashboard-viewport.sidebar-collapsed .dashboard-nav-label,
+.dashboard-viewport.sidebar-collapsed .dashboard-nav-badge,
+.dashboard-viewport.sidebar-collapsed .dashboard-nav-link span:not(.dashboard-nav-tooltip) {
+    display: none !important;
+}
+
+/* Center the header area in collapsed mode */
+html.sidebar-is-collapsed .dashboard-sidebar-header,
+.dashboard-viewport.sidebar-collapsed .dashboard-sidebar-header {
+    padding: 0 8px;
+    justify-content: center;
+    position: relative;
+}
+
+/* Move collapse button to the edge as a floating pill */
+html.sidebar-is-collapsed .dashboard-collapse-button,
+.dashboard-viewport.sidebar-collapsed .dashboard-collapse-button {
+    position: absolute;
+    right: -14px;
+    top: 22px;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    z-index: 60;
+    background-color: var(--dash-sidebar);
+    border: 1px solid var(--dash-sidebar-border);
+    box-shadow: none;
+}
+
+/* Flip the chevron when collapsed */
+html.sidebar-is-collapsed .dashboard-collapse-button i,
+.dashboard-viewport.sidebar-collapsed .dashboard-collapse-button i {
+    transform: rotate(180deg);
+}
+
+/* Center nav links in collapsed mode */
+html.sidebar-is-collapsed .dashboard-nav-link,
+.dashboard-viewport.sidebar-collapsed .dashboard-nav-link {
+    justify-content: center;
+    width: calc(100% - 4px);
+    margin: 0 auto;
+    padding: 12px 0;
+    gap: 0;
+}
+
+/* Larger icon size when collapsed for better tap targets */
+html.sidebar-is-collapsed .dashboard-nav-link > i:first-child,
+.dashboard-viewport.sidebar-collapsed .dashboard-nav-link > i:first-child {
+    font-size: 16px;
+    width: auto;
+}
+
+/* ==========================================================================
+   Floating Tooltip (shown in collapsed mode on hover)
+   ========================================================================== */
+.dashboard-nav-tooltip {
+    display: none !important;
+}
+
+html.sidebar-is-collapsed .dashboard-nav-item:hover .dashboard-nav-tooltip,
+.dashboard-viewport.sidebar-collapsed .dashboard-nav-item:hover .dashboard-nav-tooltip {
+    display: flex !important;
+    align-items: center;
+    position: absolute;
+    left: calc(100% + 12px);
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 1000;
+    padding: 6px 14px;
+    visibility: visible;
+    background-color: var(--dash-text-heading);
+    color: var(--dash-card);
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+    border-radius: var(--dash-radius);
+    box-shadow: var(--dash-shadow-dropdown);
+    border: 1px solid var(--dash-border);
+    pointer-events: none;
+    animation: tooltipSlideIn 0.12s ease-out;
+}
+
+/* Tooltip arrow */
+html.sidebar-is-collapsed .dashboard-nav-item:hover .dashboard-nav-tooltip::before,
+.dashboard-viewport.sidebar-collapsed .dashboard-nav-item:hover .dashboard-nav-tooltip::before {
+    content: '';
+    position: absolute;
+    right: 100%;
+    top: 50%;
+    transform: translateY(-50%);
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent var(--dash-text-heading) transparent transparent;
+}
+
+@keyframes tooltipSlideIn {
+    from { opacity: 0; transform: translateY(-50%) translateX(-6px); }
+    to   { opacity: 1; transform: translateY(-50%) translateX(0); }
+}

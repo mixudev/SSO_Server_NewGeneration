@@ -258,7 +258,7 @@ Role assignment, role revocation, permission changes, privileged denials, and hi
 ## 2.1 Dashboard UI requirements
 
 ### FR-UI-001
-Admin dashboard SHALL use Tabler official UI kit with Blade server-rendered views.
+Admin dashboard SHALL use custom Blade dashboard components with Tailwind CSS v4, Bootstrap Icons, and Alpine.js.
 
 ### FR-UI-002
 Frontend SHALL be packaged through Laravel/Vite. Production deployment SHALL use built static assets.

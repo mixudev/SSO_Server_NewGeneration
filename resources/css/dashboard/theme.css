@@ -1,0 +1,107 @@
+/* ==========================================================================
+   TailAdmin Theme Tokens & Variables
+   ========================================================================== */
+:root {
+    color-scheme: light;
+    --dash-body: #ffffff;
+    --dash-bg: #ffffff;
+    --dash-card: #ffffff;
+    --dash-card-hover: #fafafa;
+    --dash-border: #e3e3e3;
+    --dash-border-subtle: #f4f4f4;
+    --dash-text: #4d4d4d;
+    --dash-text-heading: #0d0d0d;
+    --dash-muted: #6b6b6b;
+    --dash-muted-light: #999999;
+    --dash-primary: #8a05ff;
+    --dash-primary-hover: #48008c;
+    --dash-primary-soft: #f4f0ff;
+    --dash-primary-ring: rgba(138, 5, 255, 0.2);
+    --dash-success: #006d4c;
+    --dash-success-soft: #dffeed;
+    --dash-warning: #d67f2e;
+    --dash-warning-soft: #fff2e5;
+    --dash-danger: #b4232f;
+    --dash-danger-soft: #fff0f1;
+    --dash-sidebar: #ffffff;
+    --dash-sidebar-border: #e3e3e3;
+    --dash-sidebar-text: #0d0d0d;
+    --dash-sidebar-muted: #6b6b6b;
+    --dash-sidebar-hover: #f4f0ff;
+    --dash-sidebar-active: #f4f0ff;
+    --dash-header: #ffffff;
+    --dash-shadow-sm: none;
+    --dash-shadow-card: none;
+    --dash-shadow-dropdown: 0 12px 30px rgba(13, 13, 13, 0.12);
+    --dash-overlay: rgba(13, 13, 13, 0.56);
+    --dash-radius: 2px;
+    --dash-action: #0d0d0d;
+    --dash-action-text: #ffffff;
+    --radius-full: 937px;
+}
+
+html.dark {
+    color-scheme: dark;
+    --dash-body: #17131c;
+    --dash-bg: #17131c;
+    --dash-card: #211b29;
+    --dash-card-hover: #2a2233;
+    --dash-border: #403648;
+    --dash-border-subtle: #2a2233;
+    --dash-text: #d8d0df;
+    --dash-text-heading: #ffffff;
+    --dash-muted: #aaa0b0;
+    --dash-muted-light: #817587;
+    --dash-primary: #c184ff;
+    --dash-primary-hover: #d2a3ff;
+    --dash-primary-soft: rgba(138, 5, 255, 0.2);
+    --dash-primary-ring: rgba(193, 132, 255, 0.35);
+    --dash-success: #73d6b0;
+    --dash-success-soft: rgba(0, 109, 76, 0.25);
+    --dash-warning: #f0ae6a;
+    --dash-warning-soft: rgba(214, 127, 46, 0.2);
+    --dash-danger: #ff9da4;
+    --dash-danger-soft: rgba(233, 103, 112, 0.2);
+    --dash-sidebar: #17131c;
+    --dash-sidebar-border: #403648;
+    --dash-sidebar-text: #ffffff;
+    --dash-sidebar-muted: #aaa0b0;
+    --dash-sidebar-hover: #2a2233;
+    --dash-sidebar-active: #33213f;
+    --dash-header: rgba(23, 19, 28, 0.95);
+    --dash-shadow-sm: none;
+    --dash-shadow-card: none;
+    --dash-shadow-dropdown: 0 12px 30px rgba(0, 0, 0, 0.35);
+    --dash-overlay: rgba(13, 13, 13, 0.56);
+    --dash-action: #ffffff;
+    --dash-action-text: #0d0d0d;
+    --radius-full: 937px;
+}
+
+body.dashboard-body {
+    margin: 0;
+    min-width: 320px;
+    background-color: var(--dash-body);
+    color: var(--dash-text);
+    font-family: var(--font-ppneuemontreal);
+    font-size: 16px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.dashboard-viewport {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.dashboard-shell {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    padding-left: 248px;
+    transition: padding-left 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}

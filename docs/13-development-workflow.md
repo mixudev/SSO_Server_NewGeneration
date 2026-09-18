@@ -65,7 +65,7 @@ ADR needed?:
 
 Untuk dashboard:
 
-1. cari primitive resmi Tabler yang sesuai;
+1. cari reusable Blade component yang sudah ada (x-dashboard.*, x-form.*, x-table.*);
 2. cari local Blade component yang sudah ada;
 3. gunakan komponen lokal terlebih dahulu;
 4. letakkan query/data preparation di controller/query/application layer, bukan Blade;
@@ -154,7 +154,7 @@ Write invariant
 
 ## 9. UI regression loop
 
-Untuk perubahan Tabler:
+Untuk perubahan dashboard:
 
 ```text
 Implement Blade component

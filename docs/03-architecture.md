@@ -62,13 +62,13 @@ Custom application layer di atas Passport:
 
 ### Dashboard UI
 
-- Tabler official UI kit through `@tabler/core` and the Laravel/Vite asset pipeline.
+- Custom modular dashboard shell through Blade components and the Laravel/Vite asset pipeline.
 - Blade is the primary rendering layer.
-- Bootstrap 5 primitives come through Tabler; do not separately install a competing Bootstrap version.
+- Bootstrap Icons come through the self-hosted `bootstrap-icons` npm package; styling is handled by Tailwind CSS v4.
 - Vanilla JavaScript is the default interaction layer. Alpine.js/Livewire may be introduced selectively.
 - Vue is explicitly not part of the dashboard baseline.
 
-Tabler official documentation/repository: https://github.com/tabler/tabler
+Bootstrap Icons documentation: https://icons.getbootstrap.com/
 
 ### Optional Laravel packages
 

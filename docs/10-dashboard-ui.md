@@ -1,8 +1,8 @@
-# Dashboard UI Architecture — Tabler + Laravel Blade
+# Dashboard UI Architecture — Mixu Dashboard + Laravel Blade
 
 - Document ID: `SSO-UI-001`
-- Version: `0.2`
-- Status: Baseline
+- Version: `0.4`
+- Status: Implemented shell and shared component system
 - Date: `2026-09-17`
 
 ## 1. UI decision
@@ -11,97 +11,52 @@ Dashboard admin Mixu SSO SHALL use:
 
 - Laravel 13.x
 - Blade server-rendered views
-- Tabler official UI kit
-- Bootstrap 5 foundation included by Tabler
-- Tabler Icons
-- Vanilla JavaScript by default
-- Alpine.js only when a small client-side interaction materially improves UX
-- Livewire only for server-driven interactive screens that otherwise become unnecessarily complex in Blade
+- Mixu Dashboard primitives as the visual foundation
+- Tailwind CSS v4 bundled with Vite
+- Alpine.js only for small local interactions
 - Vue is NOT the dashboard foundation
 
-The dashboard is a server-rendered control plane. It is not an SPA.
+The dashboard is a server-rendered identity control plane, not an SPA. The source template was inspected from `mixu-dashboard`, then removed after its required presentation files were migrated into project-owned components.
 
-Tabler is an open-source HTML dashboard UI kit built on Bootstrap 5. Its official repository documents installation through `@tabler/core`, provides light/dark support, ready-made layouts/components, and ships Bootstrap inside the package. As of 2026-09-17, the latest official release is `v1.5.1`. Sources: https://github.com/tabler/tabler and https://github.com/tabler/tabler/releases
+The template's MAM Limpung-specific layout, external CDN assets, demo pages, fake data, and unrelated dependencies were not migrated.
 
-## 2. Why Tabler
+## 2. Why Mixu Dashboard
 
-Tabler is selected because its visual language fits an identity/control-plane product:
+Mixu Dashboard is selected because its primitives fit an identity/control-plane product:
 
-- dense but readable data presentation;
-- mature tables/forms/navigation;
-- responsive admin layouts;
-- light and dark modes;
-- large icon set;
-- Bootstrap-based primitives that are easy to host after build;
-- no requirement to run a JavaScript application server in production.
+- compact cards, forms, tables, and status badges;
+- server-rendered Blade components;
+- responsive layout primitives;
+- light and dark mode support;
+- self-hosted SVG icons and no runtime CDN requirement.
 
-The project SHALL depend on Tabler as a presentation system, not as an application architecture.
+The project owns the migrated components and does not depend on the source template as runtime infrastructure.
 
-## 3. Installation strategy
+## 3. Installation and asset strategy
 
-### 3.1 Do not install a random Laravel Tabler wrapper
-
-Do not make an unofficial `tabler-laravel` wrapper a core dependency unless an explicit architecture decision approves it.
-
-Preferred approach:
+The dashboard uses the existing Laravel Vite toolchain. Runtime UI assets are project-owned and bundled through the separate admin entries:
 
 ```text
-Official Tabler
-    ↓
-resources/css/app.scss or app.css
-resources/js/app.js
-    ↓
+resources/css/dashboard.css
+resources/js/dashboard.js
+        ↓
 Vite build
-    ↓
+        ↓
 public/build
-    ↓
-Blade layouts/components
+        ↓
+admin Blade layout/components
 ```
 
-### 3.1.1 Fresh Laravel setup
-
-After the Laravel project exists and the normal Vite toolchain is present:
+Build workflow:
 
 ```bash
-composer install
 npm install
-npm install @tabler/core
+npm run build
 ```
 
-Then import Tabler into the project's frontend entrypoint and reference that entrypoint from the Blade layout with Laravel's Vite helper. Example:
+Authentication continues to use `resources/css/app.css` and `resources/js/app.js`; the two asset boundaries must remain separate.
 
-```blade
-<!doctype html>
-<html lang="en">
-<head>
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
-</head>
-<body>
-    @yield('content')
-</body>
-</html>
-```
-
-Do not separately install a second Bootstrap major version unless an ADR explicitly approves it; Tabler already contains its Bootstrap foundation.
-
-### 3.2 Recommended package installation
-
-Use the official package:
-
-```bash
-npm install @tabler/core
-```
-
-Import Tabler from the application's frontend entrypoint according to the project's Vite setup:
-
-```js
-import '@tabler/core/dist/css/tabler.min.css';
-import '@tabler/core/dist/js/tabler.min.js';
-```
-
-The exact entry filename may change when the project's asset strategy is finalized; the architectural rule is that Tabler is bundled into the application's Vite build and not downloaded from a CDN in production.
-
-### 3.3 Build workflow
+### 3.1 Build workflow
 
 Development:
 
@@ -123,8 +78,8 @@ Production hosting needs PHP/Laravel plus the generated assets. Node.js does not
 
 Production SHALL prefer self-hosted assets:
 
-- Tabler CSS/JS from the project build;
-- Tabler Icons from the project/package or locally generated SVG;
+- Dashboard CSS/JS from the project build;
+- Bootstrap Icons from `bootstrap-icons` npm package bundled locally;
 - no runtime dependency on third-party CDN for authentication/security screens;
 - version-lock frontend dependencies through the package lock file.
 
@@ -313,7 +268,7 @@ Disable identity provider
 
 ## 9. Dark mode
 
-Tabler's light/dark support SHALL be retained. The application SHALL keep the semantic state of the UI separate from business state.
+Mixu Dashboard's light/dark support SHALL be retained. The application SHALL keep the semantic state of the UI separate from business state.
 
 Never store authentication/security state only in a CSS class or client-side variable.
 
@@ -343,39 +298,44 @@ No feature may require a long-running Node.js process merely to render the admin
 
 AI agents MUST:
 
-1. use the existing Tabler primitives before creating custom CSS;
-2. search `components/` before introducing a duplicate component;
+1. use the existing Mixu Dashboard primitives before creating custom CSS;
+2. search `resources/views/components/` before introducing a duplicate component;
 3. avoid inline style unless required and documented;
 4. avoid introducing Vue for a normal CRUD/dashboard screen;
 5. keep page-specific markup under `pages/admin/<feature>`;
 6. keep reusable Blade components generic;
 7. update this document when introducing a new UI subsystem;
-8. never copy an entire Tabler demo page into one giant Blade file.
+8. keep dashboard pages modular; never copy a complete demo page into one giant Blade file.
 
 ## 13. Upgrade strategy
 
-Tabler SHALL be updated through a controlled dependency change.
+Dashboard assets SHALL be updated through controlled npm and composer package upgrades.
 
 Upgrade process:
 
 ```text
-read Tabler changelog
+read package changelog
 → inspect breaking changes
-→ update package lock
-→ run visual regression tests
-→ run dashboard feature tests
-→ inspect security-critical pages manually
-→ record ADR when behavior changes
+→ update package.json / composer.json
+→ run npm run build / test suite
 ```
 
-Source: https://github.com/tabler/tabler/releases
+## 14. Shared component styling contract
 
+The dashboard's reusable Blade components are styled with Tailwind CSS v4 utility classes and semantic CSS variables from `resources/css/dashboard/theme.css`.
 
-## 14. Official references
+- Forms: `x-form.input` and `x-form.group` use theme surfaces, 2px borders, violet focus states, mono labels, and accessible validation text.
+- Buttons: `x-form.button` is the standard text/action button with `primary`, `secondary`, `danger`, `outline`, and `ghost` variants plus `sm`, `md`, and `lg` sizes.
+- Tables: `x-table.wrapper`, `x-table.th`, `x-table.td`, `x-table.label`, and `x-table.action` use compact spacing, hairline borders, theme-aware surfaces, and responsive horizontal overflow.
+- Rectangular controls use a 2px radius. Profile triggers and status/security labels use `rounded-full`.
+- New dashboard components MUST use Tailwind utilities and semantic `var(--dash-*)` values. Do not introduce legacy slate/zinc palettes, inline styles, or component-specific CSS when utilities are sufficient.
+- Dashboard CSS remains limited to shared tokens, shell geometry, responsive behavior, and interaction states that cannot be expressed safely in Blade utilities.
 
-- Tabler repository: https://github.com/tabler/tabler
-- Tabler releases: https://github.com/tabler/tabler/releases
-- Tabler documentation: https://docs.tabler.io/
+## 15. Official references
+
+- Bootstrap Icons: https://icons.getbootstrap.com/
+- Tailwind CSS: https://tailwindcss.com/
+- Alpine.js: https://alpinejs.dev/
 - Laravel installation: https://laravel.com/docs/13.x/installation
 - Laravel Vite: https://laravel.com/docs/13.x/vite
 

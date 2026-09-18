@@ -20,7 +20,7 @@ Dokumentasi ini adalah **single source of truth** untuk perancangan, pengembanga
 | `07-development-roadmap.md` | Tahapan implementasi dari foundation sampai SAML/multi-tenant/advanced features. |
 | `08-ai-agent-contract.md` | Kontrak kerja AI agent agar kode dipecah per responsibility, tidak membuat file raksasa, dan tidak melanggar arsitektur. |
 | `09-decision-log.md` | Architecture Decision Record (ADR); semua perubahan arsitektur besar harus dicatat. |
-| `10-dashboard-ui.md` | Baseline dashboard: Tabler + Blade + Bootstrap 5, instalasi, struktur view, UI contract, deployment. |
+| `10-dashboard-ui.md` | Baseline dashboard: Blade + Tailwind CSS v4 + Bootstrap Icons + Alpine.js, struktur view, UI contract, deployment. |
 | `11-routing-architecture.md` | Struktur route modular, ownership, middleware matrix, naming, protocol route boundaries. |
 | `12-security-testing-strategy.md` | Strategi unit/feature/integration/protocol/adversarial/concurrency/property testing untuk mencoba menjebol invariant keamanan. |
 | `13-development-workflow.md` | Workflow implementasi, slicing, definition of done, migrasi, dan sinkronisasi dokumentasi. |
@@ -58,8 +58,8 @@ Dokumentasi ini adalah **single source of truth** untuk perancangan, pengembanga
 - OIDC Provider adalah layer di atas OAuth 2.0; Passport bukan dianggap sebagai implementasi OIDC lengkap.
 - SAML selalu berada di balik protocol adapter sehingga domain core tidak bergantung pada library SAML tertentu.
 - UI dashboard, domain logic, protocol handler, infrastructure, dan integration code harus dipisahkan.
-- Dashboard admin memakai **Tabler official + Blade + Bootstrap 5**; Vue bukan fondasi dashboard.
-- Tabler dipasang sebagai asset dependency melalui Vite dan dibuild menjadi asset statis untuk deployment shared hosting.
+- Dashboard admin memakai **Blade + Tailwind CSS v4 + Bootstrap Icons + Alpine.js**; Vue bukan fondasi dashboard.
+- Dashboard assets dipasang melalui npm/Vite dan dibuild menjadi asset statis untuk deployment production.
 - `routes/web.php` adalah composition point; route kompleks dipecah per bounded context/protocol.
 - Security test harus bersifat adversarial: test suite wajib mencoba replay, race condition, tenant breakout, redirect abuse, token tampering, parser abuse, SSRF, dan privilege escalation bila relevan.
 - Jangan membuat controller/service raksasa. Satu class harus memiliki satu tanggung jawab utama.

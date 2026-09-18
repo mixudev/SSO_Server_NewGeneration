@@ -9,6 +9,7 @@
         "php": "^8.3",
         "laravel/framework": "^13.0",
         "laravel/passport": "^13.8",
+        "laravel/socialite": "^5.31",
         "laravel/tinker": "^3.0",
         "mixudev/laravel-authentication": "^1.7",
         "mixudev/laravel-timezone": "^1.0",

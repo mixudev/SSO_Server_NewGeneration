@@ -17,7 +17,7 @@ ADR
 ```
 
 Also establish:
-- Tabler dashboard baseline and asset pipeline;
+- Dashboard shell baseline and asset pipeline;
 - modular route loading;
 - test folder taxonomy and adversarial testing harness;
 
@@ -59,7 +59,7 @@ Acceptance:
 Before implementing feature pages:
 
 ```text
-install official Tabler asset dependency
+setup dashboard asset pipeline with Tailwind and Bootstrap Icons
 → build base layout
 → create local Blade primitives
 → create navigation/sidebar
@@ -238,7 +238,7 @@ Before protocol-heavy implementation, baseline:
 mixudev authentication
 → Passport
 → Spatie Permission
-→ Tabler/Blade
+→ Dashboard/Blade
 → modular routes
 → Spatie Backup
 → security baseline

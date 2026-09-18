@@ -87,7 +87,7 @@ Baseline yang diverifikasi pada 2026-09-17:
 - Laravel 13.x sebagai application kernel.
 - `mixudev/laravel-authentication` `v1.7.5` sebagai authentication boundary.
 - `laravel/passport` `v13.8.0` sebagai OAuth2 engine.
-- **Dashboard UI:** Tabler official + Laravel Blade + Bootstrap 5; vanilla JS sebagai default, Alpine.js/Livewire hanya selektif. Vue bukan fondasi dashboard.
+- **Dashboard UI:** Blade components + Tailwind CSS v4 + Alpine.js; Bootstrap Icons via npm; Vue bukan fondasi dashboard.
 - Sanctum hanya bila dashboard/internal SPA/API membutuhkan first-party authentication.
 - Socialite hanya untuk upstream social/federated identity.
 - Horizon untuk queue operations bila Redis queue digunakan.
@@ -193,7 +193,7 @@ Wizard registrasi harus melakukan validasi, normalized input, preview configurat
 
 ## 7.1 Dashboard UI baseline
 
-Dashboard admin SHALL menggunakan Tabler sebagai UI kit resmi. Tabler dipasang melalui asset pipeline Laravel/Vite dan dibundle menjadi static production assets. Jangan memasang random Laravel wrapper sebagai architectural dependency.
+Dashboard admin SHALL menggunakan Mixu Dashboard shell mandiri berbasis Blade components, Tailwind CSS v4, dan Bootstrap Icons (self-hosted). Asset dipasang melalui Vite dan dibundle menjadi static production assets.
 
 Target struktur view:
 

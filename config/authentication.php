@@ -193,7 +193,7 @@ return [
 
         // CAPTCHA / Bot Protection Adaptif
         'captcha' => [
-            'enabled' => false,
+            'enabled' => true,
             'driver' => 'turnstile', // 'turnstile', 'recaptcha_v2', 'recaptcha_v3', 'hcaptcha'
             'trigger_after_failed_attempts' => 3,           // 0 = selalu minta, >0 = baru minta setelah N kali gagal
             'site_key' => env('AUTH_CAPTCHA_SITE_KEY', ''),
@@ -327,11 +327,11 @@ return [
 
     // Tujuan redirect setelah aksi autentikasi berhasil
     'redirects' => [
-        'login' => '/dashboard',
-        'register' => '/dashboard',
+        'login' => '/admin',
+        'register' => '/admin',
         'logout' => '/login',
         'password_reset' => '/login',
-        'two_factor' => '/dashboard',
+        'two_factor' => '/admin',
     ],
 
     /*

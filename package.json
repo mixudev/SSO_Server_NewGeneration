@@ -15,6 +15,9 @@
         "vite": "^7.0.7"
     },
     "dependencies": {
-        "@tabler/core": "^1.5.1"
+        "@fontsource/inter": "^5.3.0",
+        "@fontsource/jetbrains-mono": "^5.3.0",
+        "alpinejs": "^3.17.3",
+        "bootstrap-icons": "^1.13.1"
     }
 }
