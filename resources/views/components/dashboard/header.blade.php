@@ -117,21 +117,21 @@
 
                 <!-- Menu Items -->
                 <nav class="dp-nav" role="group">
-                    <a href="#profile" class="dp-item" role="menuitem" @click="profileOpen = false">
+                    <a href="{{ route('admin.profile.show') }}" class="dp-item" role="menuitem" @click="profileOpen = false">
                         <span class="dp-item-icon"><i class="bi bi-person"></i></span>
                         <span class="dp-item-label">My Profile</span>
                         <i class="bi bi-arrow-right dp-item-arrow"></i>
                     </a>
-                    <a href="#settings" class="dp-item" role="menuitem" @click="profileOpen = false">
+                    <a href="{{ route('admin.profile.edit') }}" class="dp-item" role="menuitem" @click="profileOpen = false">
                         <span class="dp-item-icon"><i class="bi bi-sliders"></i></span>
-                        <span class="dp-item-label">Settings</span>
+                        <span class="dp-item-label">Profile Settings</span>
                         <i class="bi bi-arrow-right dp-item-arrow"></i>
                     </a>
-                    <a href="#activity" class="dp-item" role="menuitem" @click="profileOpen = false">
+                    <span class="dp-item is-disabled" role="menuitem" aria-disabled="true">
                         <span class="dp-item-icon"><i class="bi bi-clock-history"></i></span>
                         <span class="dp-item-label">Activity Log</span>
-                        <i class="bi bi-arrow-right dp-item-arrow"></i>
-                    </a>
+                        <span class="text-[10px] font-semibold uppercase tracking-wide">Soon</span>
+                    </span>
                 </nav>
 
                 <!-- Sign Out -->

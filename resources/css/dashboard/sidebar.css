@@ -188,6 +188,17 @@
     color: var(--dash-primary);
 }
 
+.dashboard-nav-link.is-disabled {
+    cursor: not-allowed;
+    opacity: 0.42;
+    user-select: none;
+}
+
+.dashboard-nav-link.is-disabled:hover {
+    background-color: transparent;
+    color: var(--dash-sidebar-muted);
+}
+
 /* Sidebar Footer */
 .dashboard-sidebar-footer {
     display: flex;

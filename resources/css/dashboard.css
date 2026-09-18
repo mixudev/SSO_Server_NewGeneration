@@ -76,8 +76,60 @@ button, input { font: inherit; }
     color: var(--dash-primary);
 }
 
-.dashboard-body .dashboard-hero {
+body.dashboard-body .dashboard-hero {
     background: linear-gradient(120deg, var(--dash-card) 17.4%, var(--dash-primary-soft) 100%);
+}
+
+.dashboard-body input:not([type='checkbox']):not([type='radio']):not([type='file']),
+.dashboard-body select,
+.dashboard-body textarea {
+    border: 1px solid var(--dash-input-border);
+    background: var(--dash-input-bg);
+    color: var(--dash-text);
+    outline: none;
+    transition: border-color 160ms ease, box-shadow 160ms ease;
+}
+
+.dashboard-body input::placeholder,
+.dashboard-body textarea::placeholder {
+    color: var(--dash-input-placeholder);
+}
+
+.dashboard-body input:not([type='checkbox']):not([type='radio']):not([type='file']):focus,
+.dashboard-body select:focus,
+.dashboard-body textarea:focus {
+    border-color: var(--dash-primary);
+    box-shadow: 0 0 0 3px var(--dash-primary-ring);
+}
+
+.profile-banner {
+    background: linear-gradient(120deg, #251c32 0%, #4c2670 55%, #7135a3 100%);
+}
+
+.recovery-panel {
+    border: 1px solid var(--dash-warning);
+    background: var(--dash-warning-soft);
+}
+
+.recovery-codes {
+    border: 1px solid var(--dash-warning);
+    background: var(--dash-card);
+    color: var(--dash-text-heading);
+}
+
+.recovery-action {
+    border: 1px solid var(--dash-warning);
+    background: var(--dash-card);
+    color: var(--dash-text-heading);
+    transition: background-color 160ms ease, border-color 160ms ease;
+}
+
+.recovery-action:hover {
+    background: var(--dash-warning-soft);
+}
+
+html.dark .profile-banner {
+    background: linear-gradient(120deg, #211827 0%, #30203e 55%, #45265c 100%);
 }
 
 .dashboard-body .btn-secondary,

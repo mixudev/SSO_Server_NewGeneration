@@ -37,7 +37,7 @@
             <div class="dashboard-nav-label">Identity &amp; Access</div>
 
             <div class="dashboard-nav-item">
-                <a href="#applications"
+                <a href="{{ route('admin.applications.index') }}"
                     class="dashboard-nav-link {{ request()->routeIs('admin.applications*') ? 'is-active' : '' }}">
                     <i class="bi bi-key" aria-hidden="true"></i>
                     <span>OAuth Clients</span>
@@ -46,41 +46,37 @@
             </div>
 
             <div class="dashboard-nav-item">
-                <a href="#users"
-                    class="dashboard-nav-link {{ request()->routeIs('admin.users*') ? 'is-active' : '' }}">
+                <span class="dashboard-nav-link is-disabled" aria-disabled="true" title="Coming soon">
                     <i class="bi bi-people" aria-hidden="true"></i>
                     <span>Users &amp; Roles</span>
-                    <span class="dashboard-nav-tooltip">User Accounts &amp; Roles</span>
-                </a>
+                    <span class="dashboard-nav-tooltip">Coming soon</span>
+                </span>
             </div>
 
             <div class="dashboard-nav-item">
-                <a href="#organizations"
-                    class="dashboard-nav-link {{ request()->routeIs('admin.organizations*') ? 'is-active' : '' }}">
+                <span class="dashboard-nav-link is-disabled" aria-disabled="true" title="Coming soon">
                     <i class="bi bi-building" aria-hidden="true"></i>
                     <span>Organizations</span>
-                    <span class="dashboard-nav-tooltip">Organizations &amp; Tenants</span>
-                </a>
+                    <span class="dashboard-nav-tooltip">Coming soon</span>
+                </span>
             </div>
 
             <div class="dashboard-nav-label">System &amp; Security</div>
 
             <div class="dashboard-nav-item">
-                <a href="#audit-logs"
-                    class="dashboard-nav-link {{ request()->routeIs('admin.audit*') ? 'is-active' : '' }}">
+                <span class="dashboard-nav-link is-disabled" aria-disabled="true" title="Coming soon">
                     <i class="bi bi-shield-lock" aria-hidden="true"></i>
                     <span>Security Audit</span>
-                    <span class="dashboard-nav-tooltip">Audit Trail &amp; Security Logs</span>
-                </a>
+                    <span class="dashboard-nav-tooltip">Coming soon</span>
+                </span>
             </div>
 
             <div class="dashboard-nav-item">
-                <a href="#settings"
-                    class="dashboard-nav-link {{ request()->routeIs('admin.settings*') ? 'is-active' : '' }}">
+                <span class="dashboard-nav-link is-disabled" aria-disabled="true" title="Coming soon">
                     <i class="bi bi-gear" aria-hidden="true"></i>
                     <span>Settings</span>
-                    <span class="dashboard-nav-tooltip">System Settings</span>
-                </a>
+                    <span class="dashboard-nav-tooltip">Coming soon</span>
+                </span>
             </div>
         @endif
     </nav>

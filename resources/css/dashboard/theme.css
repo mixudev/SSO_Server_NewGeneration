@@ -37,6 +37,9 @@
     --dash-radius: 2px;
     --dash-action: #0d0d0d;
     --dash-action-text: #ffffff;
+    --dash-input-bg: #ffffff;
+    --dash-input-border: #cfcfcf;
+    --dash-input-placeholder: #8a8a8a;
     --radius-full: 937px;
 }
 
@@ -52,9 +55,9 @@ html.dark {
     --dash-text-heading: #ffffff;
     --dash-muted: #aaa0b0;
     --dash-muted-light: #817587;
-    --dash-primary: #c184ff;
-    --dash-primary-hover: #d2a3ff;
-    --dash-primary-soft: rgba(138, 5, 255, 0.2);
+    --dash-primary: #b45cff;
+    --dash-primary-hover: #ca7dff;
+    --dash-primary-soft: rgba(180, 92, 255, 0.2);
     --dash-primary-ring: rgba(193, 132, 255, 0.35);
     --dash-success: #73d6b0;
     --dash-success-soft: rgba(0, 109, 76, 0.25);
@@ -73,8 +76,11 @@ html.dark {
     --dash-shadow-card: none;
     --dash-shadow-dropdown: 0 12px 30px rgba(0, 0, 0, 0.35);
     --dash-overlay: rgba(13, 13, 13, 0.56);
-    --dash-action: #ffffff;
-    --dash-action-text: #0d0d0d;
+    --dash-action: #b45cff;
+    --dash-action-text: #ffffff;
+    --dash-input-bg: #241d2d;
+    --dash-input-border: #665572;
+    --dash-input-placeholder: #a99bb2;
     --radius-full: 937px;
 }
 

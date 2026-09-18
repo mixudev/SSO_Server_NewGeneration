@@ -80,22 +80,42 @@ Delete slice completed: `ApplicationController::destroy()` permits only draft ap
 
 ### 2.3 Application creation wizard
 
-Status: not started.
-- Paths: `app/Http/Controllers/Admin/ApplicationWizardController.php`, `resources/views/pages/admin/applications/wizard/`, `tests/Feature/AdminApplicationWizardTest.php`
-- Target steps:
-  1. Basic information.
-  2. Protocol/client type.
-  3. Exact redirect URIs.
-  4. Allowed scopes.
-  5. Claim policy.
-  6. Security policy.
-  7. Review and create credentials.
-- Store only validated server-side state between steps. Prevent step skipping and cross-user state access.
-- Verification:
-  ```bash
-  php artisan test tests/Feature/AdminApplicationWizardTest.php --compact
-  php artisan view:cache
-  ```
+Status: slice 2.3.3 completed.
+- Slices 2.3.1 and 2.3.2 remain complete: basic information, protocol/client type, exact redirect URIs, active scopes, active claims, review, and draft creation.
+- Added explicit security policy step with allowlisted `consent_policy` values: `explicit`, `implicit`, and `none`.
+- Added bounded session policy: `session_max_age` 300–86400 seconds and `session_idle_timeout` 60–900 seconds.
+- Added protocol/client validation: public SPA idle timeout cannot exceed 600 seconds and idle timeout cannot exceed maximum session age.
+- Completion re-reads active scopes and claims inside the transaction. A registry item deactivated after selection causes validation failure and prevents application persistence.
+- Persisted only allowlisted policy fields into `consent_policy` and `session_policy_json`; no executable configuration is accepted.
+- Review displays scope labels, claim labels, consent policy, and session limits. Internal IDs are not used as review labels.
+- Files: `app/Http/Controllers/Admin/ApplicationController.php`, `routes/admin.php`, `resources/views/pages/admin/applications/wizard.blade.php`, `tests/Feature/Admin/ApplicationWizardTest.php`.
+- Security coverage: permission denial, step skipping, redirect abuse, scope/claim tampering, inactive/unknown/duplicate registry values, invalid policy values, public SPA timeout abuse, stale registry selections, draft lifecycle, and no persistence after invalid input.
+- No credentials are generated and no application is activated in this slice.
+- Verification: `php artisan test --compact` (75 tests, 202 assertions), `php artisan test tests/Feature/Admin --compact` (27 tests, 95 assertions), `php artisan view:cache`, `vendor/bin/pint --dirty --format agent`, `npm run build`, and `git diff --check` all pass.
+
+Next slice 2.3.4 — final review integrity and credential boundary:
+- Add a dedicated final review action that revalidates every wizard segment before persistence.
+- Add explicit transaction rollback tests for pivot and application writes.
+- Define credential-generation contract without exposing client secrets in HTML, logs, session, or validation errors.
+- Keep credential creation separate from activation; newly completed applications remain `draft`.
+- Acceptance: a draft is persisted atomically only after current registry/policy validation, and credential material has a separate tested boundary.
+
+### 2.3.5 Profile security center
+
+Status: profile security center implemented with application-owned pages; avatar upload remains separate.
+- Added `ProfileSecuritySummary` at `app/Infrastructure/Identity/ProfileSecuritySummary.php` to consume package services for 2FA, passkeys, sessions, and recent login metadata without exposing secrets.
+- Added application-owned routes and views under `admin.profile.security`: 2FA setup/confirm, passkey options/register/remove, session revoke/revoke-others, and password-reset request.
+- `resources/views/pages/admin/profile/security.blade.php` is the single management page. It does not redirect to package session/profile views.
+- Package controllers/services remain the security implementation boundary; host routes delegate to them and preserve ownership, rate limits, password confirmation, WebAuthn challenge, and audit behavior.
+- No authentication package files or login routes were modified. Package pages remain available for backward compatibility but are not linked from the admin profile UI.
+- Security invariants: no password hashes, reset tokens, WebAuthn response material, 2FA secrets, recovery codes, or private keys are passed to the profile summary; admin authorization remains required.
+- Tests: `tests/Feature/Admin/ProfileTest.php` and `tests/Feature/Admin/ProfileSecurityCenterTest.php` cover guest/permission denial, safe output, application-owned route contracts, no package-page navigation, and profile regression.
+- Verification: focused profile tests (6 tests, 24 assertions), admin suite (33 tests, 119 assertions), `php artisan view:cache`, Pint, Vite build, and `git diff --check` pass.
+
+Next slice 2.3.6 — avatar and final security UX:
+- Add private avatar storage, upload/remove validation, and safe serving.
+- Replace browser `prompt` and native confirms with dashboard modal components.
+- Add browser-level WebAuthn verification and explicit destructive-action confirmation.
 
 ### 2.4 Users and roles view
 - Paths: `app/Http/Controllers/Admin/UserController.php`, `resources/views/pages/admin/users/`, `tests/Feature/AdminUsersTest.php`

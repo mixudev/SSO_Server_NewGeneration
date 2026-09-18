@@ -103,10 +103,9 @@
     <div
         id="popup-box"
         class="relative w-full max-w-[420px] mx-auto overflow-hidden pt-8 px-6 pb-6
-               bg-gray-200 border border-black/[0.06]
-               shadow-[0_0_0_1px_rgba(0,0,0,0.03),0_20px_60px_-10px_rgba(0,0,0,0.18),0_8px_24px_-4px_rgba(0,0,0,0.08)]
-               dark:bg-[#18181f] dark:border-white/[0.07]
-               dark:shadow-[0_0_0_1px_rgba(255,255,255,0.04),0_20px_60px_-10px_rgba(0,0,0,0.7),0_8px_24px_-4px_rgba(0,0,0,0.4)]"
+                       bg-[var(--dash-card)] border border-[var(--dash-border)]
+                       text-[var(--dash-text)] shadow-[0_20px_60px_-10px_rgba(0,0,0,0.18)]
+                       dark:shadow-[0_20px_60px_-10px_rgba(0,0,0,0.65)]"
     >
         {{-- Top accent bar — background color di-set JS --}}
         <div
@@ -122,7 +121,7 @@
             class="absolute top-3.5 right-3.5 w-8 h-8 flex items-center justify-center
                    rounded-[10px] bg-transparent border-0 cursor-pointer
                    text-gray-400 hover:bg-gray-100 hover:text-gray-700
-                   dark:text-gray-600 dark:hover:bg-white/[0.08] dark:hover:text-gray-300
+                   dark:text-[var(--dash-muted)] dark:hover:bg-[var(--dash-card-hover)] dark:hover:text-[var(--dash-text-heading)]
                    focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-300"
         >
             <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" viewBox="0 0 24 24">
@@ -138,14 +137,14 @@
         <h3
             id="popup-title"
             class="popup-anim-title text-center text-xl font-bold leading-snug tracking-tight mb-2
-                   text-gray-900 dark:text-slate-100"
+                   text-[var(--dash-text-heading)]"
         ></h3>
 
         {{-- Description --}}
         <p
             id="popup-desc"
             class="popup-anim-desc text-center text-sm leading-relaxed mb-6 hidden
-                   text-gray-500 dark:text-slate-400"
+                   text-[var(--dash-muted)]"
         ></p>
 
         {{-- Action buttons --}}
@@ -493,6 +492,11 @@
             (function () {
                 const p = parse(@json(session('error')), 'Terjadi Kesalahan');
                 show({ type: 'error', title: p.title, description: p.description, confirmText: 'Oke, Mengerti', showButton: true });
+            })();
+        @elseif (session('status'))
+            (function () {
+                const p = parse(@json(session('status')), 'Berhasil!');
+                show({ type: 'success', title: p.title, description: p.description, showButton: false, autoClose: 3000 });
             })();
         @elseif (session('warning'))
             (function () {

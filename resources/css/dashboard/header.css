@@ -281,6 +281,8 @@ html.dark .dash-profile-dropdown {
 }
 .dp-item:hover .dp-item-icon { background: var(--dash-primary); color: #fff; }
 .dp-item:hover .dp-item-arrow { opacity: 1; transform: translateX(0); }
+.dp-item.is-disabled { cursor: not-allowed; opacity: 0.42; user-select: none; }
+.dp-item.is-disabled:hover { background: transparent; color: var(--dash-text); }
 
 .dp-item-icon {
     display: grid;

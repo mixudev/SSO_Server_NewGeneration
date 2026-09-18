@@ -9,6 +9,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('security_events', function (Blueprint $table): void {
+            $table->dropIndex('security_events_organization_id_occurred_at_index');
             $table->dropColumn(['organization_id', 'application_id']);
         });
 
@@ -23,6 +24,8 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('security_events', function (Blueprint $table): void {
+            $table->dropIndex('security_events_organization_id_occurred_at_index');
+            $table->dropIndex('security_events_application_id_occurred_at_index');
             $table->dropColumn(['organization_id', 'application_id']);
         });
 
