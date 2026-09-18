@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\StoreApplicationRequest;
+use App\Http\Requests\Admin\UpdateApplicationRequest;
 use App\Models\Identity\Application;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -42,6 +43,27 @@ class ApplicationController extends Controller
         $application->load(['organization', 'redirectUris']);
 
         return view('pages.admin.applications.show', compact('application'));
+    }
+
+    public function update(UpdateApplicationRequest $request, Application $application): RedirectResponse
+    {
+        DB::transaction(function () use ($request, $application): void {
+            $application->update([
+                ...$request->safe()->except('canonical_redirect_uris'),
+                'updated_by' => $request->user()->id,
+            ]);
+            $application->redirectUris()->delete();
+
+            foreach ($request->input('canonical_redirect_uris', []) as $uri) {
+                $application->redirectUris()->create([
+                    'uri' => $uri,
+                    'uri_hash' => hash('sha256', $uri),
+                    'kind' => 'login',
+                ]);
+            }
+        });
+
+        return redirect()->route('admin.applications.show', $application)->with('success', "Application {$application->name} updated.");
     }
 
     public function store(StoreApplicationRequest $request): RedirectResponse

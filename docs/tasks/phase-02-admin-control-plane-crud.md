@@ -74,6 +74,8 @@ Create slice completed: `app/Http/Requests/Admin/StoreApplicationRequest.php` ca
 
 Detail slice completed: `ApplicationController::show()`, `resources/views/pages/admin/applications/show.blade.php`, and `tests/Feature/Admin/ApplicationDetailsTest.php` cover permission enforcement, route model binding, organization/redirect URI display, and secret-material exclusion.
 
+Update slice completed: `UpdateApplicationRequest`, `ApplicationController::update()`, and the `applications.update` route update metadata and replace canonical redirect URIs atomically. `tests/Feature/Admin/ApplicationUpdateTest.php` covers permission denial, invalid URI rollback, and successful replacement.
+
 ### 2.3 Application creation wizard
 
 Status: not started.

@@ -17,4 +17,7 @@ Route::middleware(['auth', 'can:admin.dashboard.view'])
         Route::post('/applications', [ApplicationController::class, 'store'])
             ->middleware('can:applications.create')
             ->name('applications.store');
+        Route::put('/applications/{application}', [ApplicationController::class, 'update'])
+            ->middleware('can:applications.update')
+            ->name('applications.update');
     });
