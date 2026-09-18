@@ -70,7 +70,11 @@ Status: completed. `routes/admin.php` enforces `auth` and `can:admin.dashboard.v
 
 Status: index slice completed in `app/Http/Controllers/Admin/ApplicationController.php`, `resources/views/pages/admin/applications/index.blade.php`, and `tests/Feature/Admin/ApplicationsIndexTest.php`. Create/edit/show/delete mutations remain separate slices.
 
+Create slice completed: `app/Http/Requests/Admin/StoreApplicationRequest.php` canonicalizes and validates exact redirect URIs, `ApplicationController::store()` persists atomically with draft lifecycle, and `tests/Feature/Admin/ApplicationCreationTest.php` covers permission denial, canonicalization, and redirect abuse. Wizard, credentials, and activation remain separate slices.
+
 ### 2.3 Application creation wizard
+
+Status: not started.
 - Paths: `app/Http/Controllers/Admin/ApplicationWizardController.php`, `resources/views/pages/admin/applications/wizard/`, `tests/Feature/AdminApplicationWizardTest.php`
 - Target steps:
   1. Basic information.

@@ -3,8 +3,11 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\StoreApplicationRequest;
 use App\Models\Identity\Application;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
 class ApplicationController extends Controller
@@ -32,5 +35,29 @@ class ApplicationController extends Controller
             ->withQueryString();
 
         return view('pages.admin.applications.index', compact('applications', 'search', 'status'));
+    }
+
+    public function store(StoreApplicationRequest $request): RedirectResponse
+    {
+        $application = DB::transaction(function () use ($request): Application {
+            $application = Application::query()->create([
+                ...$request->safe()->except('canonical_redirect_uris'),
+                'status' => 'draft',
+                'created_by' => $request->user()->id,
+                'updated_by' => $request->user()->id,
+            ]);
+
+            foreach ($request->input('canonical_redirect_uris', []) as $uri) {
+                $application->redirectUris()->create([
+                    'uri' => $uri,
+                    'uri_hash' => hash('sha256', $uri),
+                    'kind' => 'login',
+                ]);
+            }
+
+            return $application;
+        });
+
+        return redirect()->route('admin.applications.index')->with('success', "Application {$application->name} created.");
     }
 }

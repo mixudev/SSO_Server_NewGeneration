@@ -2,7 +2,7 @@
 
 namespace App\Models\Identity;
 
-use Database\Factories\ApplicationRedirectUriFactory;
+use Database\Factories\Identity\ApplicationRedirectUriFactory;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
