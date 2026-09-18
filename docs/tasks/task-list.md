@@ -28,7 +28,9 @@ Updated: 2026-09-18
 - [x] Build the Users and Roles administration view with last-admin protection and audit coverage.
 - [x] Build Organizations administration view with lifecycle status, application counts, search, authorization, and audit coverage.
 - [x] Build Scopes and Claims registry views with validator-backed creation and separate permissions.
-- [ ] Add Scope/Claim update, deactivation, and active-application reference protection.
+- [x] Add Scope update/revocation guard for system records and active-application references.
+- [ ] Add Claim update/deactivation after persisted policy-reference support exists.
+- [ ] Implement application credential issuance, rotation, and revocation boundary.
 - [ ] Define persisted versioned application claim-policy records before policy editing or protocol issuance.
 - [ ] Build Key Management view with rotation, revocation, audit, and private-key exclusion.
 - [ ] Build the global Session Inspector and revocation view.

@@ -73,6 +73,9 @@ Route::middleware(['auth', 'can:admin.dashboard.view'])
         Route::post('/scopes', [ScopeController::class, 'store'])
             ->middleware('can:scopes.manage')
             ->name('scopes.store');
+        Route::put('/scopes/{scope}', [ScopeController::class, 'update'])
+            ->middleware('can:scopes.manage')
+            ->name('scopes.update');
         Route::get('/claims', [ClaimController::class, 'index'])
             ->middleware('can:claims.view')
             ->name('claims.index');

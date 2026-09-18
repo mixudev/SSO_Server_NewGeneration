@@ -36,47 +36,57 @@
 
             <div class="dashboard-nav-label">Identity &amp; Access</div>
 
-            <div class="dashboard-nav-item">
-                <a href="{{ route('admin.applications.index') }}"
-                    class="dashboard-nav-link {{ request()->routeIs('admin.applications*') ? 'is-active' : '' }}">
-                    <i class="bi bi-key" aria-hidden="true"></i>
-                    <span>OAuth Clients</span>
-                    <span class="dashboard-nav-tooltip">Client Applications</span>
-                </a>
-            </div>
+            @can('applications.view')
+                <div class="dashboard-nav-item">
+                    <a href="{{ route('admin.applications.index') }}"
+                        class="dashboard-nav-link {{ request()->routeIs('admin.applications*') ? 'is-active' : '' }}">
+                        <i class="bi bi-key" aria-hidden="true"></i>
+                        <span>OAuth Clients</span>
+                        <span class="dashboard-nav-tooltip">Client Applications</span>
+                    </a>
+                </div>
+            @endcan
 
-            <div class="dashboard-nav-item">
-                <a href="{{ route('admin.users.index') }}"
-                    class="dashboard-nav-link {{ request()->routeIs('admin.users*') ? 'is-active' : '' }}">
-                    <i class="bi bi-people" aria-hidden="true"></i>
-                    <span>Users &amp; Roles</span>
-                    <span class="dashboard-nav-tooltip">Users &amp; Roles</span>
-                </a>
-            </div>
+            @can('users.view')
+                <div class="dashboard-nav-item">
+                    <a href="{{ route('admin.users.index') }}"
+                        class="dashboard-nav-link {{ request()->routeIs('admin.users*') ? 'is-active' : '' }}">
+                        <i class="bi bi-people" aria-hidden="true"></i>
+                        <span>Users &amp; Roles</span>
+                        <span class="dashboard-nav-tooltip">Users &amp; Roles</span>
+                    </a>
+                </div>
+            @endcan
 
-            <div class="dashboard-nav-item">
-                <a href="{{ route('admin.organizations.index') }}"
-                    class="dashboard-nav-link {{ request()->routeIs('admin.organizations*') ? 'is-active' : '' }}">
-                    <i class="bi bi-building" aria-hidden="true"></i>
-                    <span>Organizations</span>
-                    <span class="dashboard-nav-tooltip">Organizations</span>
-                </a>
-            </div>
+            @can('organizations.view')
+                <div class="dashboard-nav-item">
+                    <a href="{{ route('admin.organizations.index') }}"
+                        class="dashboard-nav-link {{ request()->routeIs('admin.organizations*') ? 'is-active' : '' }}">
+                        <i class="bi bi-building" aria-hidden="true"></i>
+                        <span>Organizations</span>
+                        <span class="dashboard-nav-tooltip">Organizations</span>
+                    </a>
+                </div>
+            @endcan
 
-            <div class="dashboard-nav-item">
-                <a href="{{ route('admin.scopes.index') }}" class="dashboard-nav-link {{ request()->routeIs('admin.scopes*') ? 'is-active' : '' }}">
-                    <i class="bi bi-shield-check" aria-hidden="true"></i>
-                    <span>Scopes</span>
-                    <span class="dashboard-nav-tooltip">Scopes</span>
-                </a>
-            </div>
-            <div class="dashboard-nav-item">
-                <a href="{{ route('admin.claims.index') }}" class="dashboard-nav-link {{ request()->routeIs('admin.claims*') ? 'is-active' : '' }}">
-                    <i class="bi bi-list-check" aria-hidden="true"></i>
-                    <span>Claims</span>
-                    <span class="dashboard-nav-tooltip">Claims</span>
-                </a>
-            </div>
+            @can('scopes.view')
+                <div class="dashboard-nav-item">
+                    <a href="{{ route('admin.scopes.index') }}" class="dashboard-nav-link {{ request()->routeIs('admin.scopes*') ? 'is-active' : '' }}">
+                        <i class="bi bi-shield-check" aria-hidden="true"></i>
+                        <span>Scopes</span>
+                        <span class="dashboard-nav-tooltip">Scopes</span>
+                    </a>
+                </div>
+            @endcan
+            @can('claims.view')
+                <div class="dashboard-nav-item">
+                    <a href="{{ route('admin.claims.index') }}" class="dashboard-nav-link {{ request()->routeIs('admin.claims*') ? 'is-active' : '' }}">
+                        <i class="bi bi-list-check" aria-hidden="true"></i>
+                        <span>Claims</span>
+                        <span class="dashboard-nav-tooltip">Claims</span>
+                    </a>
+                </div>
+            @endcan
 
             <div class="dashboard-nav-label">System &amp; Security</div>
 
