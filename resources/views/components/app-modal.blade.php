@@ -192,6 +192,12 @@
     }
     .modal-btn-cancel:hover { background-color: #e2e8f0; }
     .modal-btn-cancel:active { transform: scale(0.98); }
+    .dark .app-modal .modal-btn-primary {
+        background-color: var(--dash-primary);
+        border-color: var(--dash-primary);
+        color: var(--dash-action-text);
+    }
+    .dark .app-modal .modal-btn-primary:hover { background-color: var(--dash-primary-hover); }
     .dark .modal-btn-cancel { background-color: rgba(255, 255, 255, 0.05); border-color: rgba(255, 255, 255, 0.1); color: #e2e8f0; }
     .dark .modal-btn-cancel:hover { background-color: rgba(255, 255, 255, 0.1); }
 
@@ -226,12 +232,12 @@
                         </div>
                     </div>
                     @endif
-                    <div class="flex flex-col justify-center">
+                    <div class="min-w-0 flex flex-col justify-center">
                         <h3 class="text-[17px] font-bold text-gray-900 dark:text-slate-100 tracking-tight leading-tight">
                             {{ $title ?? 'Modal Title' }}
                         </h3>
                         @if($description)
-                        <p class="text-[12px] text-gray-500 dark:text-slate-400 mt-1 leading-relaxed">
+                        <p class="max-w-[260px] truncate text-[12px] text-gray-500 dark:text-slate-400 mt-1 leading-relaxed" title="{{ $description }}">
                             {{ $description }}
                         </p>
                         @endif
