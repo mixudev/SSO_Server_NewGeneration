@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Identity;
 
 use Database\Factories\ScopeFactory;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;

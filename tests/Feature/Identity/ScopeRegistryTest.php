@@ -1,14 +1,14 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Feature\Identity;
 
 use App\Domain\Applications\Services\ScopeAuthorizationEvaluator;
 use App\Domain\Applications\Services\ScopeNameValidator;
 use App\Domain\Applications\Services\ScopeSetNormalizer;
-use App\Models\Application;
-use App\Models\ApplicationScope;
-use App\Models\Organization;
-use App\Models\Scope;
+use App\Models\Identity\Application;
+use App\Models\Identity\ApplicationScope;
+use App\Models\Identity\Organization;
+use App\Models\Identity\Scope;
 use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;

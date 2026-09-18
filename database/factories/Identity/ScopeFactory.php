@@ -1,8 +1,8 @@
 <?php
 
-namespace Database\Factories;
+namespace Database\Factories\Identity;
 
-use App\Models\Scope;
+use App\Models\Identity\Scope;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**

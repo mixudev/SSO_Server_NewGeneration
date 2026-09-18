@@ -77,6 +77,18 @@ Jangan memperkenalkan Vue untuk CRUD/dashboard normal.
 
 ## 5. Backend workflow
 
+Place each class under the bounded-context subfolder that owns it:
+
+- Controllers: `app/Http/Controllers/<Context>/`
+- Requests: `app/Http/Requests/<Context>/`
+- Domain services: `app/Domain/<Context>/Services/`
+- Infrastructure adapters: `app/Infrastructure/<Context>/`
+- Models: `app/Models/<Context>/`
+- Unit tests: `tests/Unit/Domain/<Context>/`
+- Feature tests: `tests/Feature/<Context>/` or `tests/Feature/Admin/`
+
+Tests MUST mirror the production responsibility they exercise. Do not keep new context-specific tests in the root `tests/Unit` or `tests/Feature` folders.
+
 Target flow:
 
 ```text

@@ -23,7 +23,8 @@ Dokumentasi ini adalah **single source of truth** untuk perancangan, pengembanga
 | `10-dashboard-ui.md` | Baseline dashboard: Blade + Tailwind CSS v4 + Bootstrap Icons + Alpine.js, struktur view, UI contract, deployment. |
 | `11-routing-architecture.md` | Struktur route modular, ownership, middleware matrix, naming, protocol route boundaries. |
 | `12-security-testing-strategy.md` | Strategi unit/feature/integration/protocol/adversarial/concurrency/property testing untuk mencoba menjebol invariant keamanan. |
-| `13-development-workflow.md` | Workflow implementasi, slicing, definition of done, migrasi, dan sinkronisasi dokumentasi. |
+- `13-development-workflow.md` | Workflow implementasi, slicing, definition of done, migrasi, dan sinkronisasi dokumentasi. |
+- `tasks/README.md` | Task execution roadmap per phase, termasuk urutan dependency dan Definition of Done. |
 | `14-authorization-and-permissions.md` | Spatie Laravel Permission sebagai RBAC untuk control plane, role/permission boundary, policies, scope, audit, dan privilege invariants. |
 | `15-backup-and-disaster-recovery.md` | Spatie Laravel Backup, storage, encryption, retention, monitoring, restore drill, RPO/RTO, dan disaster recovery. |
 | `16-security-threat-catalog.md` | Threat catalog dari auth, OIDC/SAML, injection, SSRF, XSS, CSRF, RCE paths, supply chain, DoS, backup, deployment, hingga insider threat. |
@@ -63,6 +64,7 @@ Dokumentasi ini adalah **single source of truth** untuk perancangan, pengembanga
 - `routes/web.php` adalah composition point; route kompleks dipecah per bounded context/protocol.
 - Security test harus bersifat adversarial: test suite wajib mencoba replay, race condition, tenant breakout, redirect abuse, token tampering, parser abuse, SSRF, dan privilege escalation bila relevan.
 - Jangan membuat controller/service raksasa. Satu class harus memiliki satu tanggung jawab utama.
+- Struktur code wajib dikelompokkan berdasarkan bounded context: controller, request, service, infrastructure, model, factory, unit test, dan feature test memakai subfolder context masing-masing.
 - Semua flow security-critical wajib mempunyai test positif, negatif, abuse case, dan replay/expiry case.
 - Endpoint discovery/metadata harus selalu mencerminkan konfigurasi aktif dan key material aktif.
 - Breaking change harus dicatat dalam `09-decision-log.md` sebelum implementasi.

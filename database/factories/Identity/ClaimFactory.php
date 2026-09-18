@@ -1,8 +1,8 @@
 <?php
 
-namespace Database\Factories;
+namespace Database\Factories\Identity;
 
-use App\Models\Claim;
+use App\Models\Identity\Claim;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**

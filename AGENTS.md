@@ -19,6 +19,11 @@ This project has domain-specific skills available in `**/skills/**`. You MUST ac
 
 ## Conventions
 
+- Before planning or editing any code, read `docs/README.md` and the documentation files relevant to the bounded context, route, UI, security concern, and test area being changed. Read `docs/13-development-workflow.md`, `docs/03-architecture.md`, `docs/08-ai-agent-contract.md`, and `docs/12-security-testing-strategy.md` as the minimum baseline for every implementation task.
+- Treat documentation as a required implementation input, not an optional after-the-fact report. If code and documentation disagree, stop, record the discrepancy, and update the affected documentation before introducing an architectural change.
+- When a task touches the dashboard, also read `docs/10-dashboard-ui.md` and `docs/DESIGN.md`. When it touches authentication, authorization, protocols, keys, sessions, or audit, also read the matching security and protocol documents listed in `docs/README.md`.
+- Place new code by bounded context: controllers in `app/Http/Controllers/<Context>/`, requests in `app/Http/Requests/<Context>/`, domain services in `app/Domain/<Context>/Services/`, infrastructure adapters in `app/Infrastructure/<Context>/`, models in `app/Models/<Context>/`, factories in `database/factories/<Context>/`, unit tests in `tests/Unit/Domain/<Context>/`, and feature tests in `tests/Feature/<Context>/` or `tests/Feature/Admin/`.
+- Keep `tests/Unit` and `tests/Feature` root directories free of new context-specific test files. Test namespaces must mirror their folder paths, and model factories must mirror model namespaces so Laravel factory discovery remains deterministic.
 - You must follow all existing code conventions used in this application. When creating or editing a file, check sibling files for the correct structure, approach, and naming.
 - Use descriptive names for variables and methods. For example, `isRegisteredForDiscounts`, not `discount()`.
 - Check for existing components to reuse before writing a new one.

@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit;
+namespace Tests\Unit\Domain\Applications;
 
 use App\Domain\Applications\Services\RedirectUriValidator;
 use InvalidArgumentException;

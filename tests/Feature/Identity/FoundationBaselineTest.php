@@ -1,9 +1,9 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Feature\Identity;
 
-use App\Models\Application;
-use App\Models\Organization;
+use App\Models\Identity\Application;
+use App\Models\Identity\Organization;
 use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;

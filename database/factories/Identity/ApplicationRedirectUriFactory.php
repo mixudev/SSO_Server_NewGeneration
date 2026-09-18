@@ -1,9 +1,9 @@
 <?php
 
-namespace Database\Factories;
+namespace Database\Factories\Identity;
 
-use App\Models\Application;
-use App\Models\ApplicationRedirectUri;
+use App\Models\Identity\Application;
+use App\Models\Identity\ApplicationRedirectUri;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**

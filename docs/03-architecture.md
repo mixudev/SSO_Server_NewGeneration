@@ -60,6 +60,30 @@ Custom application layer di atas Passport:
 - OIDC metadata;
 - protocol-specific error/response rules.
 
+### Application directory structure
+
+Organize code by bounded context and responsibility before a folder becomes crowded:
+
+```text
+app/
+├── Domain/<Context>/{Contracts,Data,Enums,Services,Rules}
+├── Http/
+│   ├── Controllers/<Context>/
+│   ├── Requests/<Context>/
+│   └── Resources/<Context>/
+├── Infrastructure/<Context>/
+└── Models/<Context>/
+database/
+└── factories/<Context>/
+
+tests/
+├── Unit/Domain/<Context>/
+├── Feature/<Context>/
+└── Feature/Admin/
+```
+
+Controllers, requests, services, infrastructure adapters, models, and tests MUST use the matching context subfolder. Do not add new files to a crowded generic folder when a context folder exists. Move an existing class only with namespace/reference updates and a full test run.
+
 ### Dashboard UI
 
 - Custom modular dashboard shell through Blade components and the Laravel/Vite asset pipeline.
