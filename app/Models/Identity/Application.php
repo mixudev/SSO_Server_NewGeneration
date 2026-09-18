@@ -2,7 +2,7 @@
 
 namespace App\Models\Identity;
 
-use Database\Factories\ApplicationFactory;
+use Database\Factories\Identity\ApplicationFactory;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;

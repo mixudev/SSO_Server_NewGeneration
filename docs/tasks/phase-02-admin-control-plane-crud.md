@@ -68,6 +68,8 @@ Status: completed. `routes/admin.php` enforces `auth` and `can:admin.dashboard.v
   php artisan view:cache
   ```
 
+Status: index slice completed in `app/Http/Controllers/Admin/ApplicationController.php`, `resources/views/pages/admin/applications/index.blade.php`, and `tests/Feature/Admin/ApplicationsIndexTest.php`. Create/edit/show/delete mutations remain separate slices.
+
 ### 2.3 Application creation wizard
 - Paths: `app/Http/Controllers/Admin/ApplicationWizardController.php`, `resources/views/pages/admin/applications/wizard/`, `tests/Feature/AdminApplicationWizardTest.php`
 - Target steps:
