@@ -24,7 +24,9 @@ Updated: 2026-09-18
 ## Current next steps
 
 - [x] Complete the final review integrity boundary for the application wizard, including tamper-resistant final validation and active-organization revalidation.
-- [ ] Define and test credential generation separately from application activation.
+- [x] Define and test credential generation separately from application activation.
+- [x] Implement application credential issuance, rotation, and revocation boundary.
+- [ ] Add application-aware OAuth token/authorization enforcement for suspended or revoked applications.
 - [x] Build the Users and Roles administration view with last-admin protection and audit coverage.
 - [x] Build Organizations administration view with lifecycle status, application counts, search, authorization, and audit coverage.
 - [x] Build Scopes and Claims registry views with validator-backed creation and separate permissions.

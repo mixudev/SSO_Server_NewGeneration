@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\ApplicationController;
+use App\Http\Controllers\Admin\ApplicationCredentialController;
 use App\Http\Controllers\Admin\ClaimController;
 use App\Http\Controllers\Admin\OrganizationController;
 use App\Http\Controllers\Admin\ProfileController;
@@ -142,6 +143,15 @@ Route::middleware(['auth', 'can:admin.dashboard.view'])
         Route::put('/applications/{application}', [ApplicationController::class, 'update'])
             ->middleware('can:applications.update')
             ->name('applications.update');
+        Route::post('/applications/{application}/credentials', [ApplicationCredentialController::class, 'issue'])
+            ->middleware('can:applications.credentials.issue')
+            ->name('applications.credentials.issue');
+        Route::post('/applications/{application}/credentials/rotate', [ApplicationCredentialController::class, 'rotate'])
+            ->middleware('can:applications.credentials.rotate')
+            ->name('applications.credentials.rotate');
+        Route::delete('/applications/{application}/credentials', [ApplicationCredentialController::class, 'revoke'])
+            ->middleware('can:applications.credentials.rotate')
+            ->name('applications.credentials.revoke');
         Route::delete('/applications/{application}', [ApplicationController::class, 'destroy'])
             ->middleware('can:applications.delete')
             ->name('applications.destroy');

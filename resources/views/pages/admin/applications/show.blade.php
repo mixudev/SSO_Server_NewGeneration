@@ -28,6 +28,24 @@
             </section>
 
             <section class="border border-[var(--dash-border)] bg-[var(--dash-card)] p-5">
+                <h2 class="text-sm font-semibold text-[var(--dash-text-heading)]">Credential boundary</h2>
+                <p class="mt-2 text-sm text-[var(--dash-text-muted)]">Secrets are shown once only. Public clients do not receive a secret.</p>
+                <div class="mt-4 flex flex-wrap gap-2">
+                    @can('applications.credentials.issue')
+                        @if($application->status === 'active' && ! $application->credential)
+                            <form method="POST" action="{{ route('admin.applications.credentials.issue', $application) }}">@csrf<x-form.button type="submit" size="sm" icon="key">Issue credential</x-form.button></form>
+                        @endif
+                    @endcan
+                    @can('applications.credentials.rotate')
+                        @if($application->credential?->status === 'active')
+                            <x-form.button href="{{ route('admin.applications.credentials.rotate', $application) }}" size="sm" variant="secondary" icon="arrow-repeat">Rotate credential</x-form.button>
+                            <form method="POST" action="{{ route('admin.applications.credentials.revoke', $application) }}">@csrf @method('DELETE')<x-form.button type="submit" size="sm" variant="ghost">Revoke credential</x-form.button></form>
+                        @endif
+                    @endcan
+                </div>
+            </section>
+
+            <section class="border border-[var(--dash-border)] bg-[var(--dash-card)] p-5">
                 <h2 class="text-sm font-semibold text-[var(--dash-text-heading)]">Redirect URIs</h2>
                 @if($application->redirectUris->isEmpty())
                     <p class="mt-4 text-sm text-[var(--dash-text-muted)]">No redirect URI registered.</p>

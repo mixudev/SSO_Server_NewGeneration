@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Application extends Model
 {
@@ -69,5 +70,10 @@ class Application extends Model
         return $this->belongsToMany(Scope::class, 'application_scopes')
             ->withPivot(['allowed', 'consent_required'])
             ->withTimestamps();
+    }
+
+    public function credential(): HasOne
+    {
+        return $this->hasOne(ApplicationCredential::class);
     }
 }
