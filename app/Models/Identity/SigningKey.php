@@ -15,8 +15,8 @@ class SigningKey extends Model
         'kid',
         'algorithm',
         'public_key',
-        'private_key',
         'status',
+        'active_slot',
         'activated_at',
         'retired_at',
     ];

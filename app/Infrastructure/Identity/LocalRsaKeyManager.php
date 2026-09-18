@@ -29,14 +29,17 @@ final class LocalRsaKeyManager implements KeyManagerInterface
         $publicKey = $details['key'];
         $kid = substr(hash('sha256', $publicKey), 0, 32);
 
-        return SigningKey::query()->create([
+        $signingKey = new SigningKey([
             'kid' => $kid,
             'algorithm' => 'RS256',
             'public_key' => $publicKey,
-            'private_key' => $privateKey,
             'status' => 'active',
+            'active_slot' => 1,
             'activated_at' => now(),
         ]);
+        $signingKey->forceFill(['private_key' => $privateKey])->save();
+
+        return $signingKey;
     }
 
     public function active(): SigningKey
@@ -56,6 +59,7 @@ final class LocalRsaKeyManager implements KeyManagerInterface
                 ->where('status', 'active')
                 ->update([
                     'status' => 'retired',
+                    'active_slot' => null,
                     'retired_at' => now(),
                 ]);
 

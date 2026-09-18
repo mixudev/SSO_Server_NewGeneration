@@ -18,6 +18,4 @@
     <!-- Posture Checklist and Operator Queue -->
     @include('pages.admin.dashboard.partials.posture')
 
-    <!-- Modals & Action Handlers -->
-    @include('pages.admin.dashboard.partials.modals')
 </x-dashboard.layout>

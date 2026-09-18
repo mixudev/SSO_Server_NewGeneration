@@ -15,10 +15,11 @@ class KeyManagementTest extends TestCase
 
     public function test_key_page_requires_security_permission_and_hides_private_material(): void
     {
-        $key = SigningKey::query()->create([
+        $key = (new SigningKey)->forceFill([
             'kid' => 'kid-test', 'algorithm' => 'RS256', 'public_key' => 'PUBLIC', 'private_key' => 'PRIVATE',
-            'status' => 'active', 'activated_at' => now(),
+            'status' => 'active', 'active_slot' => 1, 'activated_at' => now(),
         ]);
+        $key->save();
         $admin = $this->admin();
 
         $this->actingAs($admin)->get(route('admin.keys.index'))
@@ -32,10 +33,11 @@ class KeyManagementTest extends TestCase
     public function test_rotation_retires_old_key_and_audit_excludes_private_material(): void
     {
         $admin = $this->admin();
-        $old = SigningKey::query()->create([
+        $old = (new SigningKey)->forceFill([
             'kid' => 'kid-old', 'algorithm' => 'RS256', 'public_key' => 'PUBLIC', 'private_key' => 'PRIVATE',
-            'status' => 'active', 'activated_at' => now(),
+            'status' => 'active', 'active_slot' => 1, 'activated_at' => now(),
         ]);
+        $old->save();
 
         $this->actingAs($admin)->post(route('admin.keys.rotate'))
             ->assertRedirect(route('admin.keys.index'));
@@ -49,10 +51,11 @@ class KeyManagementTest extends TestCase
     public function test_last_active_key_cannot_be_retired(): void
     {
         $admin = $this->admin();
-        $key = SigningKey::query()->create([
+        $key = (new SigningKey)->forceFill([
             'kid' => 'kid-only', 'algorithm' => 'RS256', 'public_key' => 'PUBLIC', 'private_key' => 'PRIVATE',
-            'status' => 'active', 'activated_at' => now(),
+            'status' => 'active', 'active_slot' => 1, 'activated_at' => now(),
         ]);
+        $key->save();
 
         $this->actingAs($admin)->delete(route('admin.keys.revoke', $key))->assertStatus(422);
         $this->assertSame('active', $key->refresh()->status);

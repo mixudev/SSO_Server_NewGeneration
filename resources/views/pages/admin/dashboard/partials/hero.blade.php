@@ -10,38 +10,23 @@
             Kelola kontrol akses terpusat untuk aplikasi klien terdaftar, kebijakan izin berbasis peran (RBAC), serta pemantauan otentikasi federasi SSO/OIDC secara real-time.
         </p>
         <div class="dashboard-hero-actions">
-            <!-- Action 1: Modal Trigger -->
-            <x-form.button
-                variant="primary"
-                size="md"
-                icon="arrow-repeat"
-                onclick="AppModal.open('rotateKeyModal')"
-                id="btn-rotate-keys"
-            >
-                Rotasi Kunci Keamanan
-            </x-form.button>
+            @can('keys.view')
+                <x-form.button href="{{ route('admin.keys.index') }}" variant="primary" size="md" icon="arrow-repeat" id="btn-rotate-keys">
+                    Kelola Kunci Keamanan
+                </x-form.button>
+            @endcan
 
-            <!-- Action 2: Alert Confirm (Cache) -->
-            <x-form.button
-                variant="secondary"
-                size="md"
-                icon="eraser"
-                onclick="confirmClearCache()"
-                id="btn-flush-cache"
-            >
-                Flush Identity Cache
-            </x-form.button>
+            @can('audit.view')
+                <x-form.button href="{{ route('admin.audit.index') }}" variant="secondary" size="md" icon="shield-lock" id="btn-audit-log">
+                    Buka Audit Log
+                </x-form.button>
+            @endcan
 
-            <!-- Action 3: Danger Alert Confirm (Revoke) -->
-            <x-form.button
-                variant="outline"
-                size="md"
-                icon="slash-circle"
-                onclick="confirmRevokeTokens()"
-                id="btn-revoke-sessions"
-            >
-                Cabut Sesi Aktif
-            </x-form.button>
+            @can('sessions.view')
+                <x-form.button href="{{ route('admin.sessions.index') }}" variant="outline" size="md" icon="pc-display" id="btn-sessions">
+                    Lihat Sesi Aktif
+                </x-form.button>
+            @endcan
         </div>
     </div>
     <div class="dashboard-hero-mark" aria-hidden="true">

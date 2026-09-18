@@ -18,6 +18,7 @@ class SigningKeyLifecycleTest extends TestCase
 
         $this->assertSame('RS256', $key->algorithm);
         $this->assertSame('active', $key->status);
+        $this->assertSame(1, $key->active_slot);
         $this->assertNotEmpty($key->kid);
         $this->assertStringStartsWith('-----BEGIN PUBLIC KEY-----', $key->public_key);
         $this->assertNotEmpty($key->private_key);
@@ -31,7 +32,9 @@ class SigningKeyLifecycleTest extends TestCase
 
         $this->assertNotSame($first->kid, $second->kid);
         $this->assertSame('retired', $first->refresh()->status);
+        $this->assertNull($first->active_slot);
         $this->assertSame('active', $second->status);
+        $this->assertSame(1, SigningKey::where('active_slot', 1)->count());
         $this->assertSame(1, SigningKey::where('status', 'active')->count());
     }
 

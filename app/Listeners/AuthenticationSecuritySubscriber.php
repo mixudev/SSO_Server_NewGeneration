@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Listeners;
 
+use App\Domain\Identity\Contracts\AuditLoggerInterface;
 use Illuminate\Events\Dispatcher;
 use Mixudev\SecurityDefense\Support\Facades\SecurityDefense;
 use Vendor\LaravelAuthentication\Events\AccountLocked;
@@ -21,6 +22,8 @@ use Vendor\LaravelAuthentication\Events\UserRegistered;
 
 class AuthenticationSecuritySubscriber
 {
+    public function __construct(private AuditLoggerInterface $auditLogger) {}
+
     public function handleLoginFailed(LoginFailed $event): void
     {
         SecurityDefense::record([
@@ -33,6 +36,7 @@ class AuthenticationSecuritySubscriber
                 'user_id' => $event->user?->getAuthIdentifier(),
             ],
         ]);
+        $this->auditLogger->record('LOGIN_FAILURE', subject: $event->user?->getAuthIdentifier() !== null ? (string) $event->user->getAuthIdentifier() : null, risk: 'high', metadata: ['reason' => substr((string) $event->reason, 0, 120)]);
     }
 
     public function handleLoginSucceeded(LoginSucceeded $event): void
@@ -47,6 +51,7 @@ class AuthenticationSecuritySubscriber
                 'user_id' => $event->user->getAuthIdentifier(),
             ],
         ]);
+        $this->auditLogger->record('LOGIN_SUCCESS', subject: (string) $event->user->getAuthIdentifier(), risk: 'low', metadata: ['strategy' => substr((string) $event->strategy, 0, 64)]);
     }
 
     public function handleAccountLocked(AccountLocked $event): void

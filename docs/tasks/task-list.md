@@ -28,11 +28,11 @@ Updated: 2026-09-18
 - [x] Implement application credential issuance, rotation, and revocation boundary.
 - [x] Add application-aware OAuth client runtime enforcement for suspended/revoked applications and organizations.
 - [x] Build read-only Security Audit dashboard with bounded filters and redacted metadata.
-- [ ] Project authentication security events into the application audit log where required.
+- [ ] Complete authentication security-event projection for all subscribed lifecycle events (login failure/success projection started).
 - [x] Build Key Management view with rotation, revocation, audit, and private-key exclusion.
 - [x] Build read-only global Session Inspector from the canonical database session table.
 - [ ] Add separately authorized cross-user session revocation after package boundary review.
-- [ ] Add database-level active signing-key uniqueness and concurrent rotation hardening.
+- [x] Add database-level active signing-key uniqueness and active-slot rotation hardening.
 - [ ] Build the Audit Log export boundary with explicit authorization and redaction.
 - [x] Build the Users and Roles administration view with last-admin protection and audit coverage.
 - [x] Build Organizations administration view with lifecycle status, application counts, search, authorization, and audit coverage.
