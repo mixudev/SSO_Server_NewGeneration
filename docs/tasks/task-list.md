@@ -25,7 +25,7 @@ Updated: 2026-09-18
 
 - [x] Complete the final review integrity boundary for the application wizard, including tamper-resistant final validation and active-organization revalidation.
 - [ ] Define and test credential generation separately from application activation.
-- [ ] Build the Users and Roles administration view with last-admin protection and audit coverage.
+- [x] Build the Users and Roles administration view with last-admin protection and audit coverage.
 - [ ] Build Scopes and Claims administration views with active-application reference protection.
 - [ ] Build Key Management view with rotation, revocation, audit, and private-key exclusion.
 - [ ] Build the global Session Inspector and revocation view.

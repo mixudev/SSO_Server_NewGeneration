@@ -119,17 +119,21 @@ Next slice 2.3.6 — avatar and final security UX:
 - Replace browser `prompt` and native confirms with dashboard modal components.
 - Add browser-level WebAuthn verification and explicit destructive-action confirmation.
 
-### 2.4 Users and roles view
-- Paths: `app/Http/Controllers/Admin/UserController.php`, `resources/views/pages/admin/users/`, `tests/Feature/AdminUsersTest.php`
-- Target:
-  - Paginated users, role assignment, permission display, and protected last-admin rule.
-  - Use existing Spatie version after confirming `composer show spatie/laravel-permission`.
-  - Every mutation is policy-protected and audited.
+### 2.4 Users and roles view [completed]
+- Paths: `app/Http/Controllers/Admin/UserController.php`, `resources/views/pages/admin/users/`, `tests/Feature/Admin/UsersIndexTest.php`, `tests/Feature/Admin/UserRoleManagementTest.php`, `tests/Feature/Admin/UserLastAdminProtectionTest.php`
+- Delivered:
+  - Paginated/searchable users, role display, permission summary, and role assignment.
+  - `users.view` protects reads and `users.manage` protects mutations.
+  - Unknown roles and direct permission assignment are rejected.
+  - Last `platform_admin` cannot be demoted; role changes are audited.
+  - Installed versions verified from `vendor/composer/installed.php`: `spatie/laravel-permission` 8.3.0 and `laravel/passport` 13.8.0. The Composer launcher remains misconfigured.
 - Verification:
   ```bash
-  composer show spatie/laravel-permission
-  php artisan test tests/Feature/AdminUsersTest.php --compact
+  php artisan test tests/Feature/Admin/UsersIndexTest.php tests/Feature/Admin/UserRoleManagementTest.php tests/Feature/Admin/UserLastAdminProtectionTest.php --compact
+  php artisan view:cache
+  vendor/bin/pint --dirty --format agent
   ```
+  Result: 7 tests passed, 22 assertions.
 
 ### 2.5 Scopes and claims views
 - Paths: `app/Http/Controllers/Admin/ScopeController.php`, `app/Http/Controllers/Admin/ClaimController.php`, `resources/views/pages/admin/scopes/`, `resources/views/pages/admin/claims/`

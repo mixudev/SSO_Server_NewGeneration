@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\ApplicationController;
 use App\Http\Controllers\Admin\ProfileController;
+use App\Http\Controllers\Admin\UserController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth', 'can:admin.dashboard.view'])
@@ -51,6 +52,15 @@ Route::middleware(['auth', 'can:admin.dashboard.view'])
             ->name('profile.security.sessions.destroy-others');
         Route::put('/profile', [ProfileController::class, 'update'])
             ->name('profile.update');
+        Route::get('/users', [UserController::class, 'index'])
+            ->middleware('can:users.view')
+            ->name('users.index');
+        Route::get('/users/{user}', [UserController::class, 'show'])
+            ->middleware('can:users.view')
+            ->name('users.show');
+        Route::put('/users/{user}', [UserController::class, 'update'])
+            ->middleware('can:users.manage')
+            ->name('users.update');
         Route::get('/applications', [ApplicationController::class, 'index'])
             ->middleware('can:applications.view')
             ->name('applications.index');

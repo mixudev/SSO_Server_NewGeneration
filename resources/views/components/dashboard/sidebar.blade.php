@@ -46,11 +46,12 @@
             </div>
 
             <div class="dashboard-nav-item">
-                <span class="dashboard-nav-link is-disabled" aria-disabled="true" title="Coming soon">
+                <a href="{{ route('admin.users.index') }}"
+                    class="dashboard-nav-link {{ request()->routeIs('admin.users*') ? 'is-active' : '' }}">
                     <i class="bi bi-people" aria-hidden="true"></i>
                     <span>Users &amp; Roles</span>
-                    <span class="dashboard-nav-tooltip">Coming soon</span>
-                </span>
+                    <span class="dashboard-nav-tooltip">Users &amp; Roles</span>
+                </a>
             </div>
 
             <div class="dashboard-nav-item">
