@@ -53,6 +53,8 @@ Use Bootstrap Icons as `bi bi-*`. Do not introduce another icon package or CDN a
   php artisan test tests/Feature/AdminDashboardAuthorizationTest.php --compact
   ```
 
+Status: completed. `routes/admin.php` enforces `auth` and `can:admin.dashboard.view`; `tests/Feature/Admin/AdminDashboardTest.php` verifies guest, unauthorized, authorized, and safe-output cases. Verified with `php artisan route:list --path=admin` and the focused test suite.
+
 ### 2.2 Applications index and CRUD
 - Paths: `app/Http/Controllers/Admin/ApplicationController.php`, `app/Http/Requests/Admin/`, `resources/views/pages/admin/applications/`, `tests/Feature/AdminApplicationsTest.php`
 - Target:
