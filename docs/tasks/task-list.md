@@ -26,7 +26,12 @@ Updated: 2026-09-18
 - [x] Complete the final review integrity boundary for the application wizard, including tamper-resistant final validation and active-organization revalidation.
 - [x] Define and test credential generation separately from application activation.
 - [x] Implement application credential issuance, rotation, and revocation boundary.
-- [ ] Add application-aware OAuth token/authorization enforcement for suspended or revoked applications.
+- [x] Add application-aware OAuth client runtime enforcement for suspended/revoked applications and organizations.
+- [x] Build read-only Security Audit dashboard with bounded filters and redacted metadata.
+- [ ] Project authentication security events into the application audit log where required.
+- [ ] Build Key Management view with rotation, revocation, audit, and private-key exclusion.
+- [ ] Build the global Session Inspector and revocation view.
+- [ ] Build the Audit Log export boundary with explicit authorization and redaction.
 - [x] Build the Users and Roles administration view with last-admin protection and audit coverage.
 - [x] Build Organizations administration view with lifecycle status, application counts, search, authorization, and audit coverage.
 - [x] Build Scopes and Claims registry views with validator-backed creation and separate permissions.

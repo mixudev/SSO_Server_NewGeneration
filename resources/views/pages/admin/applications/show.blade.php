@@ -38,8 +38,8 @@
                     @endcan
                     @can('applications.credentials.rotate')
                         @if($application->credential?->status === 'active')
-                            <x-form.button href="{{ route('admin.applications.credentials.rotate', $application) }}" size="sm" variant="secondary" icon="arrow-repeat">Rotate credential</x-form.button>
-                            <form method="POST" action="{{ route('admin.applications.credentials.revoke', $application) }}">@csrf @method('DELETE')<x-form.button type="submit" size="sm" variant="ghost">Revoke credential</x-form.button></form>
+                            <form method="POST" action="{{ route('admin.applications.credentials.rotate', $application) }}" data-confirm="The previous client secret becomes invalid immediately." data-confirm-type="warning" data-confirm-title="Rotate credential?" data-confirm-btn="Rotate credential">@csrf<x-form.button type="submit" size="sm" variant="secondary" icon="arrow-repeat">Rotate credential</x-form.button></form>
+                            <form method="POST" action="{{ route('admin.applications.credentials.revoke', $application) }}" data-confirm="The active client and its tokens will be revoked." data-confirm-type="delete" data-confirm-title="Revoke credential?" data-confirm-btn="Revoke credential">@csrf @method('DELETE')<x-form.button type="submit" size="sm" variant="ghost">Revoke credential</x-form.button></form>
                         @endif
                     @endcan
                 </div>

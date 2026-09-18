@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\ApplicationController;
 use App\Http\Controllers\Admin\ApplicationCredentialController;
+use App\Http\Controllers\Admin\AuditController;
 use App\Http\Controllers\Admin\ClaimController;
 use App\Http\Controllers\Admin\OrganizationController;
 use App\Http\Controllers\Admin\ProfileController;
@@ -77,6 +78,9 @@ Route::middleware(['auth', 'can:admin.dashboard.view'])
         Route::put('/scopes/{scope}', [ScopeController::class, 'update'])
             ->middleware('can:scopes.manage')
             ->name('scopes.update');
+        Route::get('/audit', [AuditController::class, 'index'])
+            ->middleware('can:audit.view')
+            ->name('audit.index');
         Route::get('/claims', [ClaimController::class, 'index'])
             ->middleware('can:claims.view')
             ->name('claims.index');

@@ -90,13 +90,15 @@
 
             <div class="dashboard-nav-label">System &amp; Security</div>
 
-            <div class="dashboard-nav-item">
-                <span class="dashboard-nav-link is-disabled" aria-disabled="true" title="Coming soon">
-                    <i class="bi bi-shield-lock" aria-hidden="true"></i>
-                    <span>Security Audit</span>
-                    <span class="dashboard-nav-tooltip">Coming soon</span>
-                </span>
-            </div>
+            @can('audit.view')
+                <div class="dashboard-nav-item">
+                    <a href="{{ route('admin.audit.index') }}" class="dashboard-nav-link {{ request()->routeIs('admin.audit*') ? 'is-active' : '' }}">
+                        <i class="bi bi-shield-lock" aria-hidden="true"></i>
+                        <span>Security Audit</span>
+                        <span class="dashboard-nav-tooltip">Security Audit</span>
+                    </a>
+                </div>
+            @endcan
 
             <div class="dashboard-nav-item">
                 <span class="dashboard-nav-link is-disabled" aria-disabled="true" title="Coming soon">

@@ -25,4 +25,29 @@ class SecurityEvent extends Model
             'occurred_at' => 'datetime',
         ];
     }
+
+    /** @return array<string, mixed> */
+    public function safeMetadata(): array
+    {
+        return $this->redactMetadata($this->metadata ?? []);
+    }
+
+    /** @param array<string, mixed> $metadata */
+    private function redactMetadata(array $metadata): array
+    {
+        $sensitiveFragments = ['password', 'secret', 'token', 'private_key', 'authorization', 'credential', 'recovery'];
+        $safe = [];
+
+        foreach ($metadata as $key => $value) {
+            $normalizedKey = strtolower((string) $key);
+            $isSensitive = collect($sensitiveFragments)->contains(
+                fn (string $fragment): bool => str_contains($normalizedKey, $fragment),
+            );
+            $safe[$key] = $isSensitive
+                ? '[REDACTED]'
+                : (is_array($value) ? $this->redactMetadata($value) : $value);
+        }
+
+        return $safe;
+    }
 }

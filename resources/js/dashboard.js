@@ -110,8 +110,6 @@ window.confirmAction = function({
             onConfirm: () => { if (typeof onConfirm === 'function') onConfirm(); },
             onCancel:  () => { if (typeof onCancel  === 'function') onCancel();  },
         });
-    } else if (window.confirm(`${title}\n\n${description}`)) {
-        if (typeof onConfirm === 'function') onConfirm();
     } else if (typeof onCancel === 'function') {
         onCancel();
     }

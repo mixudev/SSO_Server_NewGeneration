@@ -8,6 +8,7 @@ use App\Models\Identity\Organization;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Passport\Client;
+use Laravel\Passport\ClientRepository;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 use Tests\TestCase;
@@ -63,9 +64,25 @@ class ApplicationCredentialTest extends TestCase
             ->assertStatus(422);
     }
 
+    public function test_runtime_repository_rejects_suspended_application_and_organization(): void
+    {
+        [$admin, $application] = $this->application('active', 'confidential_web');
+        $this->actingAs($admin)->post(route('admin.applications.credentials.issue', $application));
+        $client = Client::query()->firstOrFail();
+        $repository = app(ClientRepository::class);
+
+        $this->assertNotNull($repository->findActive($client->getKey()));
+        $application->update(['status' => 'suspended']);
+        $this->assertNull($repository->findActive($client->getKey()));
+        $application->update(['status' => 'active']);
+        $application->organization->update(['status' => 'suspended']);
+        $this->assertNull($repository->findActive($client->getKey()));
+    }
+
     public function test_rotation_replaces_secret_and_revoke_revokes_client(): void
     {
         [$admin, $application] = $this->application('active', 'confidential_web');
+
         $issue = $this->actingAs($admin)->post(route('admin.applications.credentials.issue', $application));
         $firstSecret = $issue->viewData('result')['client_secret'];
 
