@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Domain\Applications\Services\ApplicationWizardIntegrityValidator;
 use App\Domain\Applications\Services\RedirectUriValidator;
 use App\Domain\Identity\Contracts\AuditLoggerInterface;
 use App\Http\Controllers\Controller;
@@ -9,6 +10,7 @@ use App\Http\Requests\Admin\StoreApplicationRequest;
 use App\Http\Requests\Admin\UpdateApplicationRequest;
 use App\Models\Identity\Application;
 use App\Models\Identity\Claim;
+use App\Models\Identity\Organization;
 use App\Models\Identity\Scope;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -18,7 +20,10 @@ use Illuminate\View\View;
 
 class ApplicationController extends Controller
 {
-    public function __construct(private AuditLoggerInterface $auditLogger) {}
+    public function __construct(
+        private AuditLoggerInterface $auditLogger,
+        private ApplicationWizardIntegrityValidator $wizardIntegrityValidator,
+    ) {}
 
     public function index(Request $request): View
     {
@@ -256,8 +261,16 @@ class ApplicationController extends Controller
     public function wizardReview(Request $request): View|RedirectResponse
     {
         $wizard = $request->session()->get('application_wizard', []);
-        if (! isset($wizard['basic'], $wizard['protocol'], $wizard['redirect_uris'], $wizard['scope_ids'], $wizard['claims'], $wizard['security'])) {
+        if (! is_array($wizard)) {
             return redirect()->route('admin.applications.wizard.basic');
+        }
+
+        try {
+            $wizard = $this->wizardIntegrityValidator->validate($wizard);
+        } catch (ValidationException $exception) {
+            return redirect()
+                ->route('admin.applications.wizard.basic')
+                ->withErrors($exception->errors());
         }
 
         return view('pages.admin.applications.wizard', [
@@ -271,10 +284,22 @@ class ApplicationController extends Controller
     public function wizardComplete(Request $request): RedirectResponse
     {
         $wizard = $request->session()->get('application_wizard', []);
-        if (! isset($wizard['basic'], $wizard['protocol'], $wizard['redirect_uris'], $wizard['scope_ids'], $wizard['claims'], $wizard['security'])) {
+        if (! is_array($wizard)) {
             return redirect()->route('admin.applications.wizard.basic');
         }
+
+        $wizard = $this->wizardIntegrityValidator->validate($wizard);
         $application = DB::transaction(function () use ($wizard, $request): Application {
+            $organizationIsActive = Organization::query()
+                ->whereKey($wizard['basic']['organization_id'])
+                ->where('status', 'active')
+                ->exists();
+            if (! $organizationIsActive) {
+                throw ValidationException::withMessages([
+                    'wizard' => 'The selected organization is no longer active.',
+                ]);
+            }
+
             $activeScopeIds = Scope::query()
                 ->where('status', 'active')
                 ->whereKey($wizard['scope_ids'])

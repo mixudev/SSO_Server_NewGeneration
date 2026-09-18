@@ -180,6 +180,61 @@ class ApplicationWizardTest extends TestCase
         $this->assertDatabaseMissing('applications', ['slug' => 'unsafe']);
     }
 
+    public function test_completion_rejects_tampered_security_policy(): void
+    {
+        $user = $this->authorizedUser();
+        $organization = Organization::factory()->create();
+        $session = $this->actingAs($user);
+        $this->completeBasicProtocolAndRedirect($session, $organization, 'public_spa');
+
+        session()->put('application_wizard.security.session_idle_timeout', 900);
+
+        $session->post(route('admin.applications.wizard.complete'))
+            ->assertSessionHasErrors('security');
+        $this->assertDatabaseMissing('applications', ['slug' => 'portal']);
+    }
+
+    public function test_completion_revalidates_tampered_redirect_uris(): void
+    {
+        $user = $this->authorizedUser();
+        $organization = Organization::factory()->create();
+        $session = $this->actingAs($user);
+        $this->completeBasicProtocolAndRedirect($session, $organization);
+
+        session()->put('application_wizard.redirect_uris', ['https://client.example/callback#fragment']);
+
+        $session->post(route('admin.applications.wizard.complete'))
+            ->assertSessionHasErrors('redirect_uris.0');
+        $this->assertDatabaseMissing('applications', ['slug' => 'portal']);
+    }
+
+    public function test_completion_rejects_inactive_organization(): void
+    {
+        $user = $this->authorizedUser();
+        $organization = Organization::factory()->create(['status' => 'inactive']);
+        $session = $this->actingAs($user);
+        $this->completeBasicProtocolAndRedirect($session, $organization);
+
+        $session->post(route('admin.applications.wizard.complete'))
+            ->assertSessionHasErrors('wizard');
+        $this->assertDatabaseMissing('applications', ['slug' => 'portal']);
+    }
+
+    public function test_review_rejects_malformed_scope_and_claim_segments(): void
+    {
+        $user = $this->authorizedUser();
+        $organization = Organization::factory()->create();
+        $session = $this->actingAs($user);
+        $this->completeBasicProtocolAndRedirect($session, $organization);
+
+        session()->put('application_wizard.scope_ids', [['malformed']]);
+        session()->put('application_wizard.claims.keys', [['malformed']]);
+
+        $session->get(route('admin.applications.wizard.review'))
+            ->assertRedirect(route('admin.applications.wizard.basic'))
+            ->assertSessionHasErrors('scope_ids');
+    }
+
     private function completeBasicProtocolAndRedirect($session, Organization $organization, string $clientType = 'confidential_web'): void
     {
         $session->post(route('admin.applications.wizard.basic.store'), [

@@ -47,6 +47,10 @@ Every task must follow this loop:
 - UI uses existing modular Blade components (`x-dashboard.*`, `x-app-modal`, `x-allert`, `x-form.*`, `x-table.*`) and Bootstrap Icons (`bi bi-*`).
 - `git diff --check` is clean.
 
+## Central task list
+
+See `task-list.md` for the consolidated completed and outstanding task checklist.
+
 ## Dependency order
 
 `phase-01` enables `phase-02` (Dashboard Views); `phase-02` provides control-plane workflows for `phase-03`; `phase-03` is required by `phase-04`; `phase-05` may proceed after protocol contracts but must remain adapter-isolated; `phase-06` starts after the security-critical flows are exercised.

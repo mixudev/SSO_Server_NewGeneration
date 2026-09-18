@@ -8,7 +8,7 @@
     <div class="space-y-6">
         <div class="flex flex-col justify-between gap-4 md:flex-row md:items-end">
             <div>
-                <a href="{{ route('admin.applications.index') }}" class="text-xs font-semibold text-[var(--dash-primary)]">Back to applications</a>
+                <x-form.button href="{{ route('admin.applications.index') }}" variant="ghost" size="sm" icon="arrow-left">Back to applications</x-form.button>
                 <h1 class="mt-2 text-2xl font-semibold text-[var(--dash-text-heading)]">{{ $application->name }}</h1>
                 <p class="mt-1 text-sm text-[var(--dash-text-muted)]">{{ $application->description ?: 'No description provided.' }}</p>
             </div>

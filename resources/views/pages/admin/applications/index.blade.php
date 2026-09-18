@@ -24,7 +24,7 @@
                     <option value="{{ $option }}" @selected($status === $option)>{{ str($option)->title() }}</option>
                 @endforeach
             </select>
-            <button type="submit" class="border border-[var(--dash-primary)] bg-[var(--dash-primary)] px-4 py-2 text-sm font-semibold text-[var(--dash-action-text)] hover:bg-[var(--dash-primary-hover)]">Filter</button>
+            <x-form.button type="submit" size="sm">Filter</x-form.button>
         </form>
 
         @if($applications->isEmpty())

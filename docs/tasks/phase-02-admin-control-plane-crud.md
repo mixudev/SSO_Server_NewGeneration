@@ -93,9 +93,9 @@ Status: slice 2.3.3 completed.
 - No credentials are generated and no application is activated in this slice.
 - Verification: `php artisan test --compact` (75 tests, 202 assertions), `php artisan test tests/Feature/Admin --compact` (27 tests, 95 assertions), `php artisan view:cache`, `vendor/bin/pint --dirty --format agent`, `npm run build`, and `git diff --check` all pass.
 
-Next slice 2.3.4 — final review integrity and credential boundary:
-- Add a dedicated final review action that revalidates every wizard segment before persistence.
-- Add explicit transaction rollback tests for pivot and application writes.
+Completed follow-up: final review integrity validation now reconstructs and validates all staged wizard segments before persistence, re-canonicalizes redirect URIs, enforces policy cross-field rules, and re-checks active organization state inside the transaction. Adversarial tests cover tampered security policy, redirect URI, and inactive organization state.
+
+Next slice 2.3.4 — credential boundary:
 - Define credential-generation contract without exposing client secrets in HTML, logs, session, or validation errors.
 - Keep credential creation separate from activation; newly completed applications remain `draft`.
 - Acceptance: a draft is persisted atomically only after current registry/policy validation, and credential material has a separate tested boundary.
@@ -111,6 +111,8 @@ Status: profile security center implemented with application-owned pages; avatar
 - Security invariants: no password hashes, reset tokens, WebAuthn response material, 2FA secrets, recovery codes, or private keys are passed to the profile summary; admin authorization remains required.
 - Tests: `tests/Feature/Admin/ProfileTest.php` and `tests/Feature/Admin/ProfileSecurityCenterTest.php` cover guest/permission denial, safe output, application-owned route contracts, no package-page navigation, and profile regression.
 - Verification: focused profile tests (6 tests, 24 assertions), admin suite (33 tests, 119 assertions), `php artisan view:cache`, Pint, Vite build, and `git diff --check` pass.
+
+Completed follow-up: avatar and final security UX are implemented. The application-owned profile/security pages use shared action components for migrated actions, with remaining page-local icon/password controls intentionally kept local because they carry specialized behavior.
 
 Next slice 2.3.6 — avatar and final security UX:
 - Add private avatar storage, upload/remove validation, and safe serving.

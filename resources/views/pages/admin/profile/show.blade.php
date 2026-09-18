@@ -9,7 +9,7 @@
 
         <section class="relative overflow-hidden border border-[var(--dash-border)] bg-[var(--dash-card)]">
             <div class="profile-banner h-40"></div>
-            <div class="relative px-6 pb-6 sm:px-8">
+            <div class="relative px-6 pb-7 pt-2 sm:px-8 sm:pb-8">
                 <div class="-mt-14 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
                     <div class="flex items-end gap-4">
                         <form method="POST" action="{{ route('admin.profile.avatar.update') }}" enctype="multipart/form-data" id="avatar-form">
@@ -26,14 +26,14 @@
                         </form>
                         <div class="pb-1">
                             <p class="text-[11px] font-semibold uppercase tracking-[0.16em] text-[var(--dash-primary)]">Account center</p>
-                            <h1 class="mt-1 text-2xl font-semibold leading-tight text-[var(--dash-text-heading)]">{{ $user->name }}</h1>
+                            <h1 class="mt-2 text-2xl font-bold leading-tight tracking-[-0.02em] text-[var(--dash-text-heading)]">{{ $user->name }}</h1>
                             <p class="mt-1 text-[13px] text-[var(--dash-text-muted)]">{{ $user->email }}</p>
                         </div>
                     </div>
                     <div class="flex flex-wrap gap-2">
-                        <a href="{{ route('admin.profile.edit') }}" class="inline-flex items-center gap-2 border border-[var(--dash-border)] px-3 py-2 text-sm font-semibold text-[var(--dash-text)] transition hover:border-[var(--dash-primary)]"><i class="bi bi-pencil" aria-hidden="true"></i>Edit profile</a>
+                        <x-form.button href="{{ route('admin.profile.edit') }}" variant="secondary" size="sm" icon="pencil">Edit profile</x-form.button>
                         @if ($user->avatar_path)
-                            <form method="POST" action="{{ route('admin.profile.avatar.destroy') }}" data-confirm="Foto profil akan dihapus. Lanjutkan?" data-confirm-type="delete" data-confirm-title="Hapus foto profil" data-confirm-btn="Hapus foto">@csrf @method('DELETE')<button type="submit" class="inline-flex items-center gap-2 border border-red-200 px-3 py-2 text-sm font-semibold text-red-700 transition hover:bg-red-50"><i class="bi bi-trash3" aria-hidden="true"></i>Remove photo</button></form>
+                            <form method="POST" action="{{ route('admin.profile.avatar.destroy') }}" data-confirm="Foto profil akan dihapus. Lanjutkan?" data-confirm-type="delete" data-confirm-title="Hapus foto profil" data-confirm-btn="Hapus foto">@csrf @method('DELETE')<button type="submit" class="inline-flex items-center gap-2 border border-red-200 px-3 py-2 text-xs font-semibold tracking-[0.01em] text-red-700 transition hover:bg-red-50"><i class="bi bi-trash3" aria-hidden="true"></i>Remove photo</button></form>
                         @endif
                     </div>
                 </div>
@@ -53,7 +53,7 @@
                     <div><dt class="text-[11px] font-semibold uppercase tracking-[0.08em] text-[var(--dash-text-muted)]">Member since</dt><dd class="mt-1 text-sm font-medium text-[var(--dash-text-heading)]">{{ $user->created_at?->format('d M Y') ?? 'Not available' }}</dd></div>
                     <div><dt class="text-[11px] font-semibold uppercase tracking-[0.08em] text-[var(--dash-text-muted)]">Assigned roles</dt><dd class="mt-1 text-sm font-medium text-[var(--dash-text-heading)]">{{ $roles->count() }} role(s)</dd></div>
                 </dl>
-                <footer class="border-t border-[var(--dash-border)] px-6 py-4"><a href="{{ route('admin.profile.edit') }}" class="text-sm font-semibold text-[var(--dash-primary)]">Edit identity <i class="bi bi-arrow-right ml-1" aria-hidden="true"></i></a></footer>
+                <footer class="border-t border-[var(--dash-border)] px-6 py-4"><x-form.button href="{{ route('admin.profile.edit') }}" variant="ghost" size="sm" icon="arrow-right">Edit identity</x-form.button></footer>
             </section>
 
             <section class="flex flex-col border border-[var(--dash-border)] bg-[var(--dash-card)]">
@@ -68,8 +68,8 @@
                     <div class="flex flex-wrap items-center justify-between gap-3">
                         <span class="text-[11px] font-semibold uppercase tracking-[0.12em] text-[var(--dash-text-muted)]">Security control</span>
                         <div class="flex flex-wrap gap-3">
-                            <button type="button" onclick="AppModal.open('password-management-modal')" class="inline-flex items-center justify-center border border-[var(--dash-border)] px-3 py-2 text-sm font-semibold text-[var(--dash-text)] transition hover:border-[var(--dash-primary)]">Manage password</button>
-                            <a href="{{ route('admin.profile.security') }}" class="inline-flex items-center justify-center gap-2 bg-[var(--dash-primary)] px-3 py-2 text-sm font-semibold text-white transition hover:opacity-90">Open security center <i class="bi bi-arrow-right" aria-hidden="true"></i></a>
+                            <x-form.button type="button" variant="secondary" size="sm" onclick="AppModal.open('password-management-modal')">Manage password</x-form.button>
+                            <x-form.button href="{{ route('admin.profile.security') }}" size="sm" icon="arrow-right">Open security center</x-form.button>
                         </div>
                     </div>
                 </footer>

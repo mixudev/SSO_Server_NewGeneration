@@ -7,7 +7,7 @@
 >
     <div class="mx-auto max-w-5xl space-y-6">
         <div class="flex items-start gap-4">
-            <a href="{{ route('admin.profile.security') }}" class="mt-1 inline-flex h-9 w-9 items-center justify-center border border-[var(--dash-border)] text-[var(--dash-text-muted)] transition hover:border-[var(--dash-primary)] hover:text-[var(--dash-primary)]" aria-label="Back to security center"><i class="bi bi-arrow-left" aria-hidden="true"></i></a>
+            <x-form.button href="{{ route('admin.profile.security') }}" variant="ghost" size="sm" icon="arrow-left" aria-label="Back to security center">Back to security center</x-form.button>
             <div>
                 <p class="text-xs font-semibold uppercase tracking-[0.14em] text-[var(--dash-primary)]">Account protection</p>
                 <h1 class="mt-2 text-2xl font-semibold text-[var(--dash-text-heading)]">Set up two-factor authentication</h1>
@@ -41,7 +41,7 @@
                         <p id="code-help" class="mt-3 text-xs leading-5 text-[var(--dash-text-muted)]">Use the six-digit code currently shown by your authenticator app. Codes are valid for a short time and can only be used once.</p>
                         @error('code')<p class="mt-2 text-xs text-red-600">{{ $message }}</p>@enderror
                     </div>
-                    <footer class="mt-8 flex items-center justify-between gap-3 border-t border-[var(--dash-border)] pt-5"><a href="{{ route('admin.profile.security') }}" class="text-sm font-semibold text-[var(--dash-text-muted)] hover:text-[var(--dash-text-heading)]">Cancel</a><button type="submit" class="inline-flex items-center gap-2 bg-[var(--dash-primary)] px-4 py-2.5 text-sm font-semibold text-white transition hover:opacity-90"><i class="bi bi-check2-circle" aria-hidden="true"></i>Enable 2FA</button></footer>
+                    <footer class="mt-8 flex items-center justify-between gap-3 border-t border-[var(--dash-border)] pt-5"><x-form.button href="{{ route('admin.profile.security') }}" variant="secondary" size="sm">Cancel</x-form.button><x-form.button type="submit" size="sm" icon="check2-circle">Enable 2FA</x-form.button></footer>
                 </form>
             </section>
         </div>
@@ -55,8 +55,8 @@
                     @endforeach
                 </div>
                 <div class="mt-5 flex flex-wrap gap-3">
-                    <button type="button" id="download-recovery-codes" class="recovery-action inline-flex items-center gap-2 px-3 py-2 text-sm font-semibold"><i class="bi bi-download" aria-hidden="true"></i>Download codes</button>
-                    <button type="button" id="copy-recovery-codes" class="recovery-action inline-flex items-center gap-2 px-3 py-2 text-sm font-semibold"><i class="bi bi-copy" aria-hidden="true"></i>Copy codes</button>
+                    <x-form.button type="button" id="download-recovery-codes" variant="secondary" size="sm" icon="download" class="recovery-action">Download codes</x-form.button>
+                    <x-form.button type="button" id="copy-recovery-codes" variant="secondary" size="sm" icon="copy" class="recovery-action">Copy codes</x-form.button>
                 </div>
             </section>
             <script>

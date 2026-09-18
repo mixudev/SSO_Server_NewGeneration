@@ -7,7 +7,7 @@
 >
     <div class="mx-auto max-w-3xl space-y-6">
         <div>
-            <a href="{{ route('admin.profile.show') }}" class="text-xs font-semibold text-[var(--dash-primary)]"><i class="bi bi-arrow-left mr-1" aria-hidden="true"></i>Back to profile</a>
+            <x-form.button href="{{ route('admin.profile.show') }}" variant="ghost" size="sm" icon="arrow-left">Back to profile</x-form.button>
             <h1 class="mt-3 text-2xl font-semibold text-[var(--dash-text-heading)]">Edit profile</h1>
             <p class="mt-1 text-sm text-[var(--dash-text-muted)]">Update the identity shown in the admin control plane.</p>
         </div>
@@ -28,8 +28,8 @@
                 </div>
             </div>
             <div class="mt-6 flex flex-col-reverse justify-end gap-3 border-t border-[var(--dash-border)] pt-6 sm:flex-row">
-                <a href="{{ route('admin.profile.show') }}" class="inline-flex items-center justify-center rounded-lg border border-[var(--dash-border)] px-4 py-2.5 text-sm font-semibold text-[var(--dash-text)]">Cancel</a>
-                <button type="submit" class="inline-flex items-center justify-center gap-2 rounded-lg bg-[var(--dash-primary)] px-4 py-2.5 text-sm font-semibold text-white hover:opacity-90"><i class="bi bi-check2" aria-hidden="true"></i>Save changes</button>
+                <x-form.button href="{{ route('admin.profile.show') }}" variant="secondary" size="sm">Cancel</x-form.button>
+                <x-form.button type="submit" size="sm" icon="check2">Save changes</x-form.button>
             </div>
         </form>
     </div>
