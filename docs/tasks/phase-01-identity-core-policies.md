@@ -50,14 +50,17 @@ Establish the domain core for identity metadata, scopes, claims, key lifecycles,
 Status: completed in checkpoint `1f4439a` follow-up slice.
 
 ### 1.4 Security Audit Subsystem
-- Path: `app/Domain/Identity/Contracts/AuditLoggerInterface.php`, `app/Infrastructure/Audit/SecurityAuditLogger.php`
+- Paths: `app/Domain/Identity/Contracts/AuditLoggerInterface.php`, `app/Infrastructure/Identity/SecurityAuditLogger.php`, `app/Models/Identity/SecurityEvent.php`, `database/migrations/2026_09_18_013638_create_security_events_table.php`
 - Target:
-  - Immutable audit logs with actor ID, IP, user-agent, action code, and JSON payload.
-  - Automatic redaction of sensitive keys (`password`, `secret`, `private_key`).
+  - Normalized security event schema with request, actor, subject, organization, application, risk, and redacted metadata.
+  - Structured event taxonomy and correlation IDs.
+  - Recursive redaction of tokens, secrets, passwords, private keys, authorization values, and codes before persistence.
 - Verification:
   ```bash
-  php artisan test --filter=SecurityAuditLoggerTest --compact
+  php artisan test tests/Feature/Identity/SecurityAuditLoggerTest.php --compact
   ```
+
+Status: completed in checkpoint `ccab1d8` follow-up slice.
 
 ### 1.5 Adversarial Test Suite
 - Path: `tests/Feature/IdentityCoreAdversarialTest.php`
