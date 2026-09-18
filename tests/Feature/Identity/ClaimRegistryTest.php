@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Identity;
 
+use App\Domain\Identity\Enums\ClaimValueType;
 use App\Models\Identity\Claim;
 use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -32,8 +33,15 @@ class ClaimRegistryTest extends TestCase
 
     public function test_claim_persists_an_explicit_value_type(): void
     {
-        $claim = Claim::factory()->create(['value_type' => 'boolean']);
+        $claim = Claim::factory()->create(['value_type' => ClaimValueType::Boolean]);
 
-        $this->assertSame('boolean', $claim->value_type);
+        $this->assertSame(ClaimValueType::Boolean, $claim->value_type);
+    }
+
+    public function test_claim_rejects_an_unsupported_value_type(): void
+    {
+        $this->expectException(\ValueError::class);
+
+        Claim::factory()->create(['value_type' => 'object']);
     }
 }
