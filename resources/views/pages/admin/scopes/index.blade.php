@@ -4,7 +4,8 @@
             <div><h1 class="text-2xl font-semibold text-[var(--dash-text-heading)]">Scopes</h1><p class="mt-1 text-sm text-[var(--dash-text-muted)]">Manage the scope registry used by application authorization.</p></div>
             @can('scopes.manage')<x-form.button type="button" size="sm" icon="plus-lg" onclick="AppModal.open('create-scope-modal')">Create scope</x-form.button>@endcan
         </header>
-        <form method="GET" class="flex items-end gap-3"><x-form.input name="search" :value="$search" label="Search scopes" placeholder="account:read" /><x-form.button type="submit" size="sm">Search</x-form.button></form>
+        <x-filter-section id="scope-filters" title="Filter scopes" description="Search the authorization scope registry." reset-url="{{ route('admin.scopes.index') }}" search-name="search" :search-value="$search" search-placeholder="Search scopes">
+        </x-filter-section>
         @if($scopes->isEmpty())
             <div class="border border-dashed border-[var(--dash-border)] bg-[var(--dash-card)] px-6 py-14 text-center"><h2 class="font-semibold text-[var(--dash-text-heading)]">No scopes found</h2><p class="mt-1 text-sm text-[var(--dash-text-muted)]">The registry has no matching scope.</p></div>
         @else

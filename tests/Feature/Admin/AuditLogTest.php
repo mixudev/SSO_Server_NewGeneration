@@ -5,6 +5,8 @@ namespace Tests\Feature\Admin;
 use App\Models\Identity\SecurityEvent;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Artisan;
+use Mixudev\SecurityDefense\Models\SecurityDataAudit;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 use Tests\TestCase;
@@ -41,6 +43,30 @@ class AuditLogTest extends TestCase
 
         $this->actingAs($admin)->get(route('admin.audit.index', ['event' => 'MATCH_EVENT', 'risk' => 'critical', 'per_page' => 50]))
             ->assertOk()->assertSee('MATCH_EVENT')->assertDontSee('OTHER_EVENT');
+    }
+
+    public function test_security_retention_prunes_normal_and_tampered_records_by_different_windows(): void
+    {
+        $normal = SecurityDataAudit::query()->create([
+            'event' => 'updated',
+            'auditable_type' => User::class,
+            'auditable_id' => 'normal-old',
+            'created_at' => now()->subDays(31),
+            'updated_at' => now()->subDays(31),
+        ]);
+        $tampered = SecurityDataAudit::query()->create([
+            'event' => 'updated',
+            'auditable_type' => User::class,
+            'auditable_id' => 'tampered-old',
+            'is_tampered' => true,
+            'created_at' => now()->subDays(91),
+            'updated_at' => now()->subDays(91),
+        ]);
+
+        Artisan::call('security-defense:prune');
+
+        $this->assertDatabaseMissing('security_data_audits', ['id' => $normal->id]);
+        $this->assertDatabaseMissing('security_data_audits', ['id' => $tampered->id]);
     }
 
     private function admin(): User

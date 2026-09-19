@@ -11,10 +11,10 @@ This directory contains the executable roadmap for the Mixu SSO identity platfor
 | 0 | Foundation and dashboard shell | Repository, docs, CI, UI baseline | Completed |
 | 1 | Identity core and policies | Registry, claims, keys, audit | Completed |
 | 2 | Admin control plane (Dashboard views) | CRUD, roles, sessions, operations, profile security center | In progress — application CRUD, wizard slices, and profile security overview completed |
-| 3 | OAuth 2.0 infrastructure | Authorization, PKCE, tokens | Planned |
-| 4 | OpenID Connect provider | Discovery, JWKS, ID token, UserInfo | Planned |
-| 5 | SAML federation | Metadata, assertions, SLO | Planned |
-| 6 | Production hardening | Limits, backup, metrics, recovery | Planned |
+| 3 | OAuth 2.0 infrastructure | Authorization, PKCE, tokens | In progress — Passport code/token lifecycle, refresh, revocation, and focused integration tests complete |
+| 4 | OpenID Connect provider | Discovery, JWKS, ID token, UserInfo | In progress — discovery, JWKS, and scoped UserInfo complete; ID Token/nonce pending |
+| 5 | SAML federation | Metadata, assertions, SLO | Blocked — dependency and adapter contract not approved |
+| 6 | Production hardening | Limits, backup, metrics, recovery | In progress — readiness check complete; limits, backup, metrics, recovery pending |
 
 ## Rule on Dashboard View Development
 

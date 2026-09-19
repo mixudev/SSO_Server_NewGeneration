@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Domain\Applications\Services\ApplicationWizardIntegrityValidator;
 use App\Domain\Applications\Services\RedirectUriValidator;
 use App\Domain\Identity\Contracts\AuditLoggerInterface;
+use App\Domain\Identity\Services\ClaimPolicyScopeMapper;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\StoreApplicationRequest;
 use App\Http\Requests\Admin\UpdateApplicationRequest;
@@ -16,6 +17,7 @@ use App\Models\Identity\SigningKey;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 
@@ -24,6 +26,7 @@ class ApplicationController extends Controller
     public function __construct(
         private AuditLoggerInterface $auditLogger,
         private ApplicationWizardIntegrityValidator $wizardIntegrityValidator,
+        private ClaimPolicyScopeMapper $claimPolicyScopeMapper,
     ) {}
 
     public function index(Request $request): View
@@ -48,18 +51,21 @@ class ApplicationController extends Controller
             ->paginate(10)
             ->withQueryString();
 
-        return view('pages.admin.applications.index', compact('applications', 'search', 'status'));
+        $organizations = Organization::query()->where('status', 'active')->orderBy('name')->get(['id', 'name']);
+
+        return view('pages.admin.applications.index', compact('applications', 'search', 'status', 'organizations'));
     }
 
     public function show(Application $application): View
     {
         $application->load(['organization', 'redirectUris', 'scopes', 'credential']);
+        $organizations = Organization::query()->where('status', 'active')->orderBy('name')->get(['id', 'name']);
         $signingKeyReady = SigningKey::query()
             ->where('algorithm', 'RS256')
             ->where('status', 'active')
             ->exists();
 
-        return view('pages.admin.applications.show', compact('application', 'signingKeyReady'));
+        return view('pages.admin.applications.show', compact('application', 'signingKeyReady', 'organizations'));
     }
 
     public function wizardBasic(Request $request): View|RedirectResponse
@@ -67,13 +73,14 @@ class ApplicationController extends Controller
         return view('pages.admin.applications.wizard', [
             'step' => 'basic',
             'wizard' => $request->session()->get('application_wizard', []),
+            'organizations' => Organization::query()->where('status', 'active')->orderBy('name')->get(['id', 'name', 'slug']),
         ]);
     }
 
     public function wizardBasicStore(Request $request): RedirectResponse
     {
         $data = $request->validate([
-            'organization_id' => ['required', 'string', 'exists:organizations,id'],
+            'organization_id' => ['required', 'string', Rule::exists('organizations', 'id')->where('status', 'active')],
             'name' => ['required', 'string', 'max:255'],
             'slug' => ['required', 'string', 'alpha_dash', 'max:255'],
             'description' => ['nullable', 'string', 'max:5000'],
@@ -207,7 +214,6 @@ class ApplicationController extends Controller
         $data = $request->validate([
             'claim_keys' => ['present', 'array'],
             'claim_keys.*' => ['required', 'string', 'max:191'],
-            'claim_policy_version' => ['required', 'integer', 'min:1'],
         ]);
         $claimKeys = array_values(array_unique($data['claim_keys']));
         if (count($claimKeys) !== count($data['claim_keys'])) {
@@ -219,7 +225,7 @@ class ApplicationController extends Controller
         }
         $request->session()->put('application_wizard.claims', [
             'keys' => $claimKeys,
-            'version' => $data['claim_policy_version'],
+            'version' => 1,
         ]);
 
         return redirect()->route('admin.applications.wizard.security');
@@ -247,6 +253,8 @@ class ApplicationController extends Controller
             'session_max_age' => ['required', 'integer', 'min:300', 'max:86400'],
             'session_idle_timeout' => ['required', 'integer', 'min:60', 'max:900'],
         ]);
+        $data['session_max_age'] = (int) $data['session_max_age'];
+        $data['session_idle_timeout'] = (int) $data['session_idle_timeout'];
         $protocol = $request->session()->get('application_wizard.protocol');
         if ($protocol['client_type'] === 'public_spa' && $data['session_idle_timeout'] > 600) {
             throw ValidationException::withMessages([
@@ -310,11 +318,11 @@ class ApplicationController extends Controller
                 ->whereKey($wizard['scope_ids'])
                 ->pluck('id')
                 ->all();
-            $activeClaimKeys = Claim::query()
+            $activeClaims = Claim::query()
                 ->where('status', 'active')
                 ->whereIn('key', $wizard['claims']['keys'])
-                ->pluck('key')
-                ->all();
+                ->get(['key', 'source', 'value_type']);
+            $activeClaimKeys = $activeClaims->pluck('key')->all();
             if (count($activeScopeIds) !== count($wizard['scope_ids']) || count($activeClaimKeys) !== count($wizard['claims']['keys'])) {
                 throw ValidationException::withMessages([
                     'registry' => 'A selected scope or claim is no longer active.',
@@ -334,6 +342,20 @@ class ApplicationController extends Controller
                 'created_by' => $request->user()->id,
                 'updated_by' => $request->user()->id,
             ]);
+            $application->claimPolicies()->create([
+                'version' => 1,
+                'rules_json' => [
+                    'version' => 1,
+                    'claims' => $activeClaims->map(fn (Claim $claim): array => [
+                        'key' => $claim->key,
+                        'source' => $claim->source,
+                        'scopes' => $this->claimPolicyScopeMapper->requiredScopes($claim->key),
+                        'value_type' => $claim->value_type->value,
+                    ])->values()->all(),
+                ],
+                'status' => 'active',
+                'created_by' => $request->user()->id,
+            ]);
             $application->scopes()->attach($activeScopeIds, [
                 'allowed' => true,
                 'consent_required' => true,
@@ -351,6 +373,29 @@ class ApplicationController extends Controller
         $request->session()->forget('application_wizard');
 
         return redirect()->route('admin.applications.index')->with('success', "Application {$application->name} created.");
+    }
+
+    public function activate(Request $request, Application $application): RedirectResponse
+    {
+        if ($application->status !== 'draft') {
+            return back()->withErrors(['application' => 'Only draft applications can be activated.']);
+        }
+
+        DB::transaction(function () use ($application, $request): void {
+            $application->update([
+                'status' => 'active',
+                'updated_by' => $request->user()->id,
+            ]);
+            $this->auditLogger->record(
+                event: 'APPLICATION_ACTIVATED',
+                organizationId: (string) $application->organization_id,
+                applicationId: (string) $application->getKey(),
+                actor: (string) $request->user()->getAuthIdentifier(),
+                risk: 'high',
+            );
+        });
+
+        return redirect()->route('admin.applications.show', $application)->with('success', 'Application activated. Credentials can now be generated.');
     }
 
     public function update(UpdateApplicationRequest $request, Application $application): RedirectResponse
@@ -374,8 +419,29 @@ class ApplicationController extends Controller
         return redirect()->route('admin.applications.show', $application)->with('success', "Application {$application->name} updated.");
     }
 
+    public function connectionTest(Application $application): RedirectResponse
+    {
+        $issuer = rtrim((string) config('app.url'), '/');
+        $healthy = $application->status === 'active'
+            && $application->organization?->status === 'active'
+            && $issuer !== ''
+            && filter_var($issuer, FILTER_VALIDATE_URL) !== false
+            && SigningKey::query()->where('algorithm', 'RS256')->where('status', 'active')->exists();
+
+        return redirect()->route('admin.applications.show', $application)->with(
+            $healthy ? 'success' : 'error',
+            $healthy
+                ? 'Provider configuration is ready: issuer, signing key, and application lifecycle are valid.'
+                : 'Provider configuration is not ready. Check lifecycle status, APP_URL, and active signing keys.',
+        );
+    }
+
     public function destroy(Application $application, Request $request): RedirectResponse
     {
+        $request->validate([
+            'current_password' => ['required', 'current_password'],
+        ]);
+
         if ($application->status !== 'draft') {
             return back()->withErrors(['application' => 'Only draft applications can be deleted.']);
         }

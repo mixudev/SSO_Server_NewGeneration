@@ -115,6 +115,11 @@
         box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
     }
     .modal-body input::placeholder, .modal-body textarea::placeholder { color: #94a3b8; }
+    .modal-body::-webkit-scrollbar { width: 5px; }
+    .modal-body::-webkit-scrollbar-track { background: transparent; }
+    .modal-body::-webkit-scrollbar-thumb { background: var(--dash-border); border-radius: 999px; }
+    .modal-body::-webkit-scrollbar-thumb:hover { background: var(--dash-muted); }
+    .modal-body { scrollbar-width: thin; scrollbar-color: var(--dash-border) transparent; }
 
     /* File Input Styling */
     .modal-body input[type="file"] { width: 100%; font-size: 0.875rem; color: #64748b; cursor: pointer; }

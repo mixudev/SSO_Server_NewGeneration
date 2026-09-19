@@ -17,9 +17,14 @@ Add OIDC endpoints on top of the tested OAuth 2.0 infrastructure, using active s
 - Verify: `php artisan test tests/Feature/OidcJwksTest.php --compact`.
 
 ### 4.3 ID token builder
-- Paths: `app/Domain/Oidc/Contracts/IdTokenBuilderInterface.php`, `app/Application/Oidc/IdTokenBuilder.php`, `tests/Unit/IdTokenBuilderTest.php`.
-- Produce RS256 tokens with validated `iss`, `sub`, `aud`, `iat`, `exp`, and nonce; resolve claims through policy engine.
-- Verify: `php artisan test tests/Unit/IdTokenBuilderTest.php --compact`.
+- Builder slice implemented at `app/Domain/Oidc/Services/IdTokenBuilder.php` with native OpenSSL RS256 signing, active `kid`, UUID `sub`, validated issuer/audience/time/nonce inputs, and reserved-claim protection.
+- Unit coverage: `tests/Unit/Domain/Oidc/IdTokenBuilderTest.php` (2 tests, 9 assertions).
+- Added `app/Domain/Oidc/Services/IdTokenVerifier.php` with strict RS256/kid validation, signature verification, issuer/audience/nonce/time checks, and algorithm-confusion rejection. Builder now includes required `auth_time`.
+- Coverage: builder/verifier unit tests plus OIDC nonce binding (10 tests, 26 assertions across the slice).
+- Passport authorization-code token exchange now uses an application-owned `OidcBearerTokenResponse` adapter to issue a signed RS256 `id_token` for OIDC transactions.
+- ID Token issuance reads the persisted versioned claim policy, includes the encrypted-at-rest transaction nonce, clears the encrypted nonce after successful issuance, and is verified through the native OpenSSL verifier.
+- OIDC authorization requires both `openid` scope and nonce; token endpoint is Passport-owned but has an application rate-limit middleware attached.
+- Remaining: complete standards-negative token error coverage, refresh-token ID Token semantics, UserInfo claim-policy integration coverage, and external client smoke tests.
 
 ### 4.4 UserInfo
 - Paths: `app/Http/Controllers/Oidc/UserInfoController.php`, `tests/Feature/OidcUserInfoTest.php`.

@@ -31,6 +31,7 @@ class SessionInspectorTest extends TestCase
         $this->actingAs($admin)->get(route('admin.sessions.index'))
             ->assertOk()
             ->assertSee('Session User')
+            ->assertSee('Currently connected identities')
             ->assertDontSee('secret-cookie-payload')
             ->assertDontSee('<script>alert(1)</script>', false);
     }

@@ -1,7 +1,8 @@
 <x-dashboard.layout title="Claims" breadcrumb="Claims" :user-name="auth()->user()->name" :user-email="auth()->user()->email" :logout-url="Route::has('logout') ? route('logout') : url('/logout')">
     <div class="space-y-6">
         <header class="flex flex-col justify-between gap-3 md:flex-row md:items-end"><div><h1 class="text-2xl font-semibold text-[var(--dash-text-heading)]">Claims</h1><p class="mt-1 text-sm text-[var(--dash-text-muted)]">Manage the claim registry without exposing policy secrets.</p></div>@can('claims.manage')<x-form.button type="button" size="sm" icon="plus-lg" onclick="AppModal.open('create-claim-modal')">Create claim</x-form.button>@endcan</header>
-        <form method="GET" class="flex items-end gap-3"><x-form.input name="search" :value="$search" label="Search claims" placeholder="user.email" /><x-form.button type="submit" size="sm">Search</x-form.button></form>
+        <x-filter-section id="claim-filters" title="Filter claims" description="Search the registered claim definitions." reset-url="{{ route('admin.claims.index') }}" search-name="search" :search-value="$search" search-placeholder="Search claims">
+        </x-filter-section>
         @if($claims->isEmpty())
             <div class="border border-dashed border-[var(--dash-border)] bg-[var(--dash-card)] px-6 py-14 text-center"><h2 class="font-semibold text-[var(--dash-text-heading)]">No claims found</h2><p class="mt-1 text-sm text-[var(--dash-text-muted)]">The registry has no matching claim.</p></div>
         @else

@@ -58,6 +58,16 @@
                 </div>
             @endcan
 
+            @can('roles.view')
+                <div class="dashboard-nav-item">
+                    <a href="{{ route('admin.roles.index') }}" class="dashboard-nav-link {{ request()->routeIs('admin.roles*') ? 'is-active' : '' }}">
+                        <i class="bi bi-person-badge" aria-hidden="true"></i>
+                        <span>Roles</span>
+                        <span class="dashboard-nav-tooltip">Roles</span>
+                    </a>
+                </div>
+            @endcan
+
             @can('organizations.view')
                 <div class="dashboard-nav-item">
                     <a href="{{ route('admin.organizations.index') }}"

@@ -27,174 +27,174 @@ class AuthenticationSecuritySubscriber
     public function handleLoginFailed(LoginFailed $event): void
     {
         SecurityDefense::record([
-            'ip' => $event->context->ipAddress,
+            'ip' => $event->context?->ipAddress,
             'identifier' => $event->identifier,
             'eventType' => 'LoginFailed',
-            'userAgent' => $event->context->userAgent,
+            'userAgent' => $event->context?->userAgent,
             'metadata' => [
                 'reason' => $event->reason,
-                'user_id' => $event->user?->getAuthIdentifier(),
+                'user_id' => $event->user?->uuid,
             ],
         ]);
-        $this->auditLogger->record('LOGIN_FAILURE', subject: $event->user?->getAuthIdentifier() !== null ? (string) $event->user->getAuthIdentifier() : null, risk: 'high', metadata: ['reason' => substr((string) $event->reason, 0, 120)]);
+        $this->auditLogger->record('LOGIN_FAILURE', subject: $event->user?->uuid !== null ? (string) $event->user->uuid : null, risk: 'high', metadata: ['reason' => substr((string) $event->reason, 0, 120)]);
     }
 
     public function handleLoginSucceeded(LoginSucceeded $event): void
     {
         SecurityDefense::record([
-            'ip' => $event->context->ipAddress,
-            'identifier' => (string) ($event->user->email ?? $event->user->username ?? $event->user->getAuthIdentifier()),
+            'ip' => $event->context?->ipAddress,
+            'identifier' => (string) ($event->user->email ?? $event->user->username ?? $event->user->uuid),
             'eventType' => 'LoginSucceeded',
-            'userAgent' => $event->context->userAgent,
+            'userAgent' => $event->context?->userAgent,
             'metadata' => [
                 'strategy' => $event->strategy,
-                'user_id' => $event->user->getAuthIdentifier(),
+                'user_id' => $event->user->uuid,
             ],
         ]);
-        $this->auditLogger->record('LOGIN_SUCCESS', subject: (string) $event->user->getAuthIdentifier(), risk: 'low', metadata: ['strategy' => substr((string) $event->strategy, 0, 64)]);
+        $this->auditLogger->record('LOGIN_SUCCESS', subject: (string) $event->user->uuid, risk: 'low', metadata: ['strategy' => substr((string) $event->strategy, 0, 64)]);
     }
 
     public function handleAccountLocked(AccountLocked $event): void
     {
         SecurityDefense::record([
-            'ip' => $event->context->ipAddress,
-            'identifier' => (string) ($event->user->email ?? $event->user->username ?? $event->user->getAuthIdentifier()),
+            'ip' => $event->context?->ipAddress,
+            'identifier' => (string) ($event->user->email ?? $event->user->username ?? $event->user->uuid),
             'eventType' => 'AccountLocked',
-            'userAgent' => $event->context->userAgent,
+            'userAgent' => $event->context?->userAgent,
             'metadata' => [
                 'lockout_duration_minutes' => $event->lockoutDurationMinutes,
-                'user_id' => $event->user->getAuthIdentifier(),
+                'user_id' => $event->user->uuid,
             ],
         ]);
-        $this->auditLogger->record('ACCOUNT_LOCKED', subject: (string) $event->user->getAuthIdentifier(), risk: 'high', metadata: ['duration_minutes' => (int) $event->lockoutDurationMinutes]);
+        $this->auditLogger->record('ACCOUNT_LOCKED', subject: (string) $event->user->uuid, risk: 'high', metadata: ['duration_minutes' => (int) $event->lockoutDurationMinutes]);
     }
 
     public function handleNewDeviceLoginDetected(NewDeviceLoginDetected $event): void
     {
         SecurityDefense::record([
-            'ip' => $event->context->ipAddress,
-            'identifier' => (string) ($event->user->email ?? $event->user->username ?? $event->user->getAuthIdentifier()),
+            'ip' => $event->context?->ipAddress,
+            'identifier' => (string) ($event->user->email ?? $event->user->username ?? $event->user->uuid),
             'eventType' => 'NewDeviceLoginDetected',
-            'userAgent' => $event->context->userAgent,
+            'userAgent' => $event->context?->userAgent,
             'metadata' => [
                 'device_id' => $event->device->id,
-                'user_id' => $event->user->getAuthIdentifier(),
+                'user_id' => $event->user->uuid,
             ],
         ]);
-        $this->auditLogger->record('NEW_DEVICE_LOGIN', subject: (string) $event->user->getAuthIdentifier(), risk: 'medium', metadata: ['device_id' => (string) $event->device->id]);
+        $this->auditLogger->record('NEW_DEVICE_LOGIN', subject: (string) $event->user->uuid, risk: 'medium', metadata: ['device_id' => (string) $event->device->id]);
     }
 
     public function handleOtpVerified(OtpVerified $event): void
     {
         SecurityDefense::record([
-            'ip' => $event->context->ipAddress,
+            'ip' => $event->context?->ipAddress,
             'identifier' => $event->identifier,
             'eventType' => 'OTP_VERIFIED',
-            'userAgent' => $event->context->userAgent,
+            'userAgent' => $event->context?->userAgent,
             'metadata' => [
-                'user_id' => $event->user->getAuthIdentifier(),
+                'user_id' => $event->user->uuid,
             ],
         ]);
-        $this->auditLogger->record('OTP_VERIFIED', subject: (string) $event->user->getAuthIdentifier(), risk: 'low');
+        $this->auditLogger->record('OTP_VERIFIED', subject: (string) $event->user->uuid, risk: 'low');
     }
 
     public function handlePasswordChanged(PasswordChanged $event): void
     {
         SecurityDefense::record([
-            'ip' => $event->context->ipAddress,
-            'identifier' => (string) ($event->user->email ?? $event->user->username ?? $event->user->getAuthIdentifier()),
+            'ip' => $event->context?->ipAddress,
+            'identifier' => (string) ($event->user->email ?? $event->user->username ?? $event->user->uuid),
             'eventType' => 'PasswordChanged',
-            'userAgent' => $event->context->userAgent,
+            'userAgent' => $event->context?->userAgent,
             'metadata' => [
-                'user_id' => $event->user->getAuthIdentifier(),
+                'user_id' => $event->user->uuid,
             ],
         ]);
-        $this->auditLogger->record('PASSWORD_CHANGED', subject: (string) $event->user->getAuthIdentifier(), risk: 'high');
+        $this->auditLogger->record('PASSWORD_CHANGED', subject: (string) $event->user->uuid, risk: 'high');
     }
 
     public function handleSessionRevoked(SessionRevoked $event): void
     {
         SecurityDefense::record([
-            'ip' => $event->context->ipAddress,
-            'identifier' => (string) ($event->user?->email ?? $event->user?->username ?? ($event->user ? $event->user->getAuthIdentifier() : 'anonymous')),
+            'ip' => $event->context?->ipAddress,
+            'identifier' => (string) ($event->user?->email ?? $event->user?->username ?? ($event->user ? $event->user->uuid : 'anonymous')),
             'eventType' => 'SessionRevoked',
-            'userAgent' => $event->context->userAgent,
+            'userAgent' => $event->context?->userAgent,
             'metadata' => [
                 'session_id' => $event->sessionId,
-                'user_id' => $event->user?->getAuthIdentifier(),
+                'user_id' => $event->user?->uuid,
             ],
         ]);
-        $this->auditLogger->record('SESSION_REVOKED', subject: $event->user?->getAuthIdentifier() !== null ? (string) $event->user->getAuthIdentifier() : null, risk: 'high');
+        $this->auditLogger->record('SESSION_REVOKED', subject: $event->user?->uuid !== null ? (string) $event->user->uuid : null, risk: 'high');
     }
 
     public function handleLogoutPerformed(LogoutPerformed $event): void
     {
         SecurityDefense::record([
-            'ip' => $event->context->ipAddress,
-            'identifier' => (string) ($event->user?->email ?? $event->user?->username ?? ($event->user ? $event->user->getAuthIdentifier() : 'anonymous')),
+            'ip' => $event->context?->ipAddress,
+            'identifier' => (string) ($event->user?->email ?? $event->user?->username ?? ($event->user ? $event->user->uuid : 'anonymous')),
             'eventType' => 'LogoutPerformed',
-            'userAgent' => $event->context->userAgent,
+            'userAgent' => $event->context?->userAgent,
             'metadata' => [
-                'user_id' => $event->user?->getAuthIdentifier(),
+                'user_id' => $event->user?->uuid,
             ],
         ]);
-        $this->auditLogger->record('LOGOUT', subject: $event->user?->getAuthIdentifier() !== null ? (string) $event->user->getAuthIdentifier() : null, risk: 'low');
+        $this->auditLogger->record('LOGOUT', subject: $event->user?->uuid !== null ? (string) $event->user->uuid : null, risk: 'low');
     }
 
     public function handleUserRegistered(UserRegistered $event): void
     {
         SecurityDefense::record([
-            'ip' => $event->context->ipAddress,
-            'identifier' => (string) ($event->user->email ?? $event->user->username ?? $event->user->getAuthIdentifier()),
+            'ip' => $event->context?->ipAddress,
+            'identifier' => (string) ($event->user->email ?? $event->user->username ?? $event->user->uuid),
             'eventType' => 'UserRegistered',
-            'userAgent' => $event->context->userAgent,
+            'userAgent' => $event->context?->userAgent,
             'metadata' => [
-                'user_id' => $event->user->getAuthIdentifier(),
+                'user_id' => $event->user->uuid,
             ],
         ]);
-        $this->auditLogger->record('USER_REGISTERED', subject: (string) $event->user->getAuthIdentifier(), risk: 'medium');
+        $this->auditLogger->record('USER_REGISTERED', subject: (string) $event->user->uuid, risk: 'medium');
     }
 
     public function handlePasswordResetRequested(PasswordResetRequested $event): void
     {
         SecurityDefense::record([
-            'ip' => $event->context->ipAddress,
-            'identifier' => (string) ($event->user?->email ?? $event->user?->username ?? ($event->user ? $event->user->getAuthIdentifier() : 'anonymous')),
+            'ip' => $event->context?->ipAddress,
+            'identifier' => (string) ($event->user?->email ?? $event->user?->username ?? ($event->user ? $event->user->uuid : 'anonymous')),
             'eventType' => 'PasswordResetRequested',
-            'userAgent' => $event->context->userAgent,
+            'userAgent' => $event->context?->userAgent,
             'metadata' => [
-                'user_id' => $event->user?->getAuthIdentifier(),
+                'user_id' => $event->user?->uuid,
             ],
         ]);
-        $this->auditLogger->record('PASSWORD_RESET_REQUESTED', subject: $event->user?->getAuthIdentifier() !== null ? (string) $event->user->getAuthIdentifier() : null, risk: 'medium');
+        $this->auditLogger->record('PASSWORD_RESET_REQUESTED', subject: $event->user?->uuid !== null ? (string) $event->user->uuid : null, risk: 'medium');
     }
 
     public function handlePasswordResetCompleted(PasswordResetCompleted $event): void
     {
         SecurityDefense::record([
-            'ip' => $event->context->ipAddress,
-            'identifier' => (string) ($event->user->email ?? $event->user->username ?? $event->user->getAuthIdentifier()),
+            'ip' => $event->context?->ipAddress,
+            'identifier' => (string) ($event->user->email ?? $event->user->username ?? $event->user->uuid),
             'eventType' => 'PasswordResetCompleted',
-            'userAgent' => $event->context->userAgent,
+            'userAgent' => $event->context?->userAgent,
             'metadata' => [
-                'user_id' => $event->user->getAuthIdentifier(),
+                'user_id' => $event->user->uuid,
             ],
         ]);
-        $this->auditLogger->record('PASSWORD_RESET_COMPLETED', subject: (string) $event->user->getAuthIdentifier(), risk: 'high');
+        $this->auditLogger->record('PASSWORD_RESET_COMPLETED', subject: (string) $event->user->uuid, risk: 'high');
     }
 
     public function handleEmailVerified(EmailVerified $event): void
     {
         SecurityDefense::record([
-            'ip' => $event->context->ipAddress,
-            'identifier' => (string) ($event->user->email ?? $event->user->username ?? $event->user->getAuthIdentifier()),
+            'ip' => $event->context?->ipAddress,
+            'identifier' => (string) ($event->user->email ?? $event->user->username ?? $event->user->uuid),
             'eventType' => 'EmailVerified',
-            'userAgent' => $event->context->userAgent,
+            'userAgent' => $event->context?->userAgent,
             'metadata' => [
-                'user_id' => $event->user->getAuthIdentifier(),
+                'user_id' => $event->user->uuid,
             ],
         ]);
-        $this->auditLogger->record('EMAIL_VERIFIED', subject: (string) $event->user->getAuthIdentifier(), risk: 'low');
+        $this->auditLogger->record('EMAIL_VERIFIED', subject: (string) $event->user->uuid, risk: 'low');
     }
 
     public function subscribe(Dispatcher $events): array

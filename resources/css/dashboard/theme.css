@@ -3,12 +3,12 @@
    ========================================================================== */
 :root {
     color-scheme: light;
-    --dash-body: #ffffff;
-    --dash-bg: #ffffff;
+    --dash-body: #e7e9ed;
+    --dash-bg: #e7e9ed;
     --dash-card: #ffffff;
-    --dash-card-hover: #fafafa;
-    --dash-border: #e3e3e3;
-    --dash-border-subtle: #f4f4f4;
+    --dash-card-hover: #f8f9fb;
+    --dash-border: #dfe2e7;
+    --dash-border-subtle: #eceef1;
     --dash-text: #4d4d4d;
     --dash-text-heading: #0d0d0d;
     --dash-muted: #6b6b6b;

@@ -4,6 +4,7 @@ namespace App\Infrastructure\Identity;
 
 use App\Domain\Identity\Contracts\KeyManagerInterface;
 use App\Models\Identity\SigningKey;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use RuntimeException;
 
@@ -49,6 +50,19 @@ final class LocalRsaKeyManager implements KeyManagerInterface
             ->where('status', 'active')
             ->latest('activated_at')
             ->firstOrFail();
+    }
+
+    public function verificationKeys(): Collection
+    {
+        return SigningKey::query()
+            ->where('algorithm', 'RS256')
+            ->whereIn('status', ['active', 'retired'])
+            ->where(function ($query): void {
+                $query->where('status', 'active')
+                    ->orWhere('retired_at', '>=', now()->subHours(2));
+            })
+            ->orderByDesc('activated_at')
+            ->get();
     }
 
     public function rotate(): SigningKey

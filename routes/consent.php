@@ -1,3 +1,8 @@
 <?php
 
-// Consent routes are intentionally reserved for the authorization flow.
+use App\Http\Controllers\OAuth\ConsentController;
+use Illuminate\Support\Facades\Route;
+
+Route::middleware(['auth', 'web'])
+    ->post('/oauth/consent/{transaction}/approve', [ConsentController::class, 'approve'])
+    ->name('oauth.consent.approve');

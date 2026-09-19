@@ -119,21 +119,27 @@ Next slice 2.3.6 — avatar and final security UX:
 - Replace browser `prompt` and native confirms with dashboard modal components.
 - Add browser-level WebAuthn verification and explicit destructive-action confirmation.
 
-### 2.4 Users and roles view [completed]
+### 2.4 Users and roles view [user identity completed; role registry pending]
 - Paths: `app/Http/Controllers/Admin/UserController.php`, `resources/views/pages/admin/users/`, `tests/Feature/Admin/UsersIndexTest.php`, `tests/Feature/Admin/UserRoleManagementTest.php`, `tests/Feature/Admin/UserLastAdminProtectionTest.php`
 - Delivered:
   - Paginated/searchable users, role display, permission summary, and role assignment.
   - `users.view` protects reads and `users.manage` protects mutations.
   - Unknown roles and direct permission assignment are rejected.
-  - Last `platform_admin` cannot be demoted; role changes are audited.
-  - Installed versions verified from `vendor/composer/installed.php`: `spatie/laravel-permission` 8.3.0 and `laravel/passport` 13.8.0. The Composer launcher remains misconfigured.
+  - Last active `platform_admin` cannot be demoted or deactivated; role and status changes are audited.
+  - Public user identity is UUID: creation generates UUID, existing rows are backfilled, route keys use `uuid`, numeric IDs return 404.
+  - Account lifecycle is `status` plus compatibility `active`. Inactive users fail closed at `getAuthPassword()` with the same invalid-credentials response.
+  - User detail is a read-only Bento Grid: five recent activity rows, `View all` pagination, three-permission summary, modal mutations, and password-confirmed status changes.
 - Verification:
   ```bash
   php artisan test tests/Feature/Admin/UsersIndexTest.php tests/Feature/Admin/UserRoleManagementTest.php tests/Feature/Admin/UserLastAdminProtectionTest.php --compact
   php artisan view:cache
   vendor/bin/pint --dirty --format agent
+  npm run build
+  git diff --check
   ```
-  Result: 7 tests passed, 22 assertions.
+  Result: 20 tests passed, 78 assertions.
+- Roles registry completed: `roles.view` / `roles.manage` permissions, Spatie-backed role/permission selectors, system-role protection, allowlisted assignment, audit events, and adversarial feature coverage in `tests/Feature/Admin/RoleRegistryTest.php`. Verified with 3 tests and 12 assertions.
+- Next boundary: dashboard visual/accessibility review and separately authorized cross-user session revocation after package boundary review.
 
 ### 2.5 Organizations view [completed]
 - Paths: `app/Http/Controllers/Admin/OrganizationController.php`, `app/Http/Requests/Admin/UpdateOrganizationRequest.php`, `resources/views/pages/admin/organizations/`, `tests/Feature/Admin/OrganizationsTest.php`

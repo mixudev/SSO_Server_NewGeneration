@@ -25,6 +25,8 @@ class DatabaseSeeder extends Seeder
         'applications.credentials.issue',
         'users.view',
         'users.manage',
+        'roles.view',
+        'roles.manage',
         'organizations.view',
         'organizations.manage',
         'scopes.view',
@@ -36,6 +38,7 @@ class DatabaseSeeder extends Seeder
         'keys.view',
         'keys.rotate',
         'audit.view',
+        'audit.export',
         'security.manage',
     ];
 
@@ -47,6 +50,10 @@ class DatabaseSeeder extends Seeder
         $role = Role::findOrCreate('platform_admin', 'web');
         $role->syncPermissions($permissions);
 
+        if (! app()->environment('local')) {
+            return;
+        }
+
         User::query()->updateOrCreate(
             ['email' => 'test@example.com'],
             [
@@ -57,5 +64,6 @@ class DatabaseSeeder extends Seeder
         )->assignRole($role);
 
         $this->call(ExampleUserSeeder::class);
+        $this->call(LocalDemoSeeder::class);
     }
 }

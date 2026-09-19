@@ -20,6 +20,7 @@ Minimum contract:
   "authorization_endpoint": "https://sso.example.com/oauth/authorize",
   "token_endpoint": "https://sso.example.com/oauth/token",
   "userinfo_endpoint": "https://sso.example.com/oauth/userinfo",
+  "end_session_endpoint": "https://sso.example.com/oauth/end-session",
   "jwks_uri": "https://sso.example.com/.well-known/jwks.json",
   "response_types_supported": ["code"],
   "grant_types_supported": ["authorization_code", "refresh_token"],

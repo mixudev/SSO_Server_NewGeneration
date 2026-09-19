@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\ClaimController;
 use App\Http\Controllers\Admin\KeyController;
 use App\Http\Controllers\Admin\OrganizationController;
 use App\Http\Controllers\Admin\ProfileController;
+use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\ScopeController;
 use App\Http\Controllers\Admin\SessionController;
 use App\Http\Controllers\Admin\UserController;
@@ -65,12 +66,40 @@ Route::middleware(['auth', 'can:admin.dashboard.view'])
         Route::get('/users/{user}', [UserController::class, 'show'])
             ->middleware('can:users.view')
             ->name('users.show');
+        Route::get('/users/{user}/activity', [UserController::class, 'activity'])
+            ->middleware('can:users.view')
+            ->name('users.activity');
+        Route::put('/users/{user}/password', [UserController::class, 'updatePassword'])
+            ->middleware(['can:users.manage', 'throttle:5,1'])
+            ->name('users.password.update');
+        Route::post('/users/{user}/password/reset-link', [UserController::class, 'sendResetLink'])
+            ->middleware(['can:users.manage', 'throttle:5,1'])
+            ->name('users.password.reset-link');
+        Route::put('/users/{user}/status', [UserController::class, 'toggleStatus'])
+            ->middleware(['can:users.manage', 'throttle:10,1'])
+            ->name('users.status.update');
+        Route::delete('/users/{user}', [UserController::class, 'destroy'])
+            ->middleware(['can:users.manage', 'throttle:5,1'])
+            ->name('users.destroy');
+
         Route::get('/organizations', [OrganizationController::class, 'index'])
             ->middleware('can:organizations.view')
             ->name('organizations.index');
         Route::get('/organizations/{organization}', [OrganizationController::class, 'show'])
             ->middleware('can:organizations.view')
             ->name('organizations.show');
+        Route::post('/organizations', [OrganizationController::class, 'store'])
+            ->middleware('can:organizations.manage')
+            ->name('organizations.store');
+        Route::get('/roles', [RoleController::class, 'index'])
+            ->middleware('can:roles.view')
+            ->name('roles.index');
+        Route::post('/roles', [RoleController::class, 'store'])
+            ->middleware('can:roles.manage')
+            ->name('roles.store');
+        Route::put('/roles/{role}', [RoleController::class, 'update'])
+            ->middleware('can:roles.manage')
+            ->name('roles.update');
         Route::get('/scopes', [ScopeController::class, 'index'])
             ->middleware('can:scopes.view')
             ->name('scopes.index');
@@ -83,6 +112,9 @@ Route::middleware(['auth', 'can:admin.dashboard.view'])
         Route::get('/audit', [AuditController::class, 'index'])
             ->middleware('can:audit.view')
             ->name('audit.index');
+        Route::get('/audit/export', [AuditController::class, 'export'])
+            ->middleware('can:audit.export')
+            ->name('audit.export');
         Route::get('/sessions', [SessionController::class, 'index'])
             ->middleware('can:sessions.view')
             ->name('sessions.index');
@@ -164,12 +196,21 @@ Route::middleware(['auth', 'can:admin.dashboard.view'])
         Route::put('/applications/{application}', [ApplicationController::class, 'update'])
             ->middleware('can:applications.update')
             ->name('applications.update');
+        Route::post('/applications/{application}/activate', [ApplicationController::class, 'activate'])
+            ->middleware('can:applications.update')
+            ->name('applications.activate');
+        Route::post('/applications/{application}/connection-test', [ApplicationController::class, 'connectionTest'])
+            ->middleware('can:applications.view')
+            ->name('applications.connection-test');
         Route::post('/applications/{application}/credentials', [ApplicationCredentialController::class, 'issue'])
             ->middleware('can:applications.credentials.issue')
             ->name('applications.credentials.issue');
         Route::post('/applications/{application}/credentials/rotate', [ApplicationCredentialController::class, 'rotate'])
             ->middleware('can:applications.credentials.rotate')
             ->name('applications.credentials.rotate');
+        Route::post('/applications/{application}/credentials/reactivate', [ApplicationCredentialController::class, 'reactivate'])
+            ->middleware('can:applications.credentials.issue')
+            ->name('applications.credentials.reactivate');
         Route::delete('/applications/{application}/credentials', [ApplicationCredentialController::class, 'revoke'])
             ->middleware('can:applications.credentials.rotate')
             ->name('applications.credentials.revoke');

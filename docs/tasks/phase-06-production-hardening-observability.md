@@ -7,16 +7,17 @@ Make security-critical identity flows operable in production with bounded abuse 
 ## Tasks
 
 ### 6.1 Rate limits
-- Paths: `app/Providers/AppServiceProvider.php`, `routes/`, `tests/Feature/RateLimitTest.php`.
-- Define named limits for login, authorization, token, revocation, discovery, and metadata endpoints; key limits by the safest available client/IP identity.
-- TDD cases: threshold, retry-after, independent clients, and proxy spoofing.
-- Verify: `php artisan test tests/Feature/RateLimitTest.php --compact`.
+- Named limits are registered in `AppServiceProvider`: public OIDC metadata uses 60 requests/minute per IP; authorization and revocation use 30 requests/minute per authenticated user or IP fallback.
+- Authorization, revocation, discovery, JWKS, and UserInfo routes use the named middleware. Passport-owned `/oauth/token` is also wrapped with `throttle:oauth-token` after verifying Passport 13.8 route ownership.
+- Coverage: `tests/Feature/RateLimitTest.php` plus OAuth/OIDC tests verify the thresholds and endpoint behavior.
+- Token endpoint route verification: `php artisan route:list --path=oauth/token -v` must show both Passport's default `throttle` and `throttle:oauth-token`.
 
 ### 6.2 Backup and key recovery
-- Confirm package version with `composer show spatie/laravel-backup`.
-- Paths: `config/backup.php`, `app/Console/Commands/`, `tests/Feature/BackupHealthTest.php`.
-- Configure encrypted database/filesystem backups, retention, failure notifications, and a key restoration runbook. Never store secrets in the repository.
-- Verify: `php artisan backup:run --help`, then the focused test in a configured local environment.
+- `config/backup.php` enables archive verification and keeps archive encryption controlled by `BACKUP_ARCHIVE_PASSWORD`.
+- `.env.example` documents the required secret without storing a value; production must use a secret manager.
+- `routes/console.php` schedules `backup:clean`, `backup:run`, and `backup:monitor` after security and audit pruning.
+- Native Windows execution is not treated as production proof; run `backup:run` and the restore drill on the Linux deployment/CI environment described in `docs/15-backup-and-disaster-recovery.md`.
+- Verify schedule registration: `php artisan schedule:list`; verify command availability: `php artisan backup:run --help`.
 
 ### 6.3 Health checks and metrics
 - Paths: `routes/health.php`, `app/Http/Controllers/HealthController.php`, `tests/Feature/HealthCheckTest.php`.
@@ -24,9 +25,10 @@ Make security-critical identity flows operable in production with bounded abuse 
 - Verify: `php artisan test tests/Feature/HealthCheckTest.php --compact`.
 
 ### 6.4 Audit retention and export
-- Paths: `app/Console/Commands/RotateAuditLogs.php`, `app/Infrastructure/Audit/`, `tests/Feature/AuditRetentionTest.php`.
-- Apply retention, tamper evidence, redaction, access control, and bounded export; fail closed when the export destination is unavailable.
-- Verify: `php artisan test tests/Feature/AuditRetentionTest.php --compact`.
+- Read-only CSV export is implemented at `admin.audit.export`, protected by the separate `audit.export` permission.
+- Export accepts the bounded security-event filters, caps output at 1,000 rows, and includes only event, risk, actor, subject, timestamp, and redacted safe metadata. Database-audit export remains intentionally deferred until its provider query contract is finalized.
+- Coverage: `tests/Feature/Admin/AuditExportTest.php` and `tests/Feature/Admin/AuditLogTest.php` (5 tests, 20 assertions).
+- Remaining: retention command/runbook and destination-failure handling for scheduled exports.
 
 ### 6.5 Disaster recovery drill
 - Paths: `docs/15-backup-and-disaster-recovery.md`, `tests/Feature/DisasterRecoveryTest.php`.

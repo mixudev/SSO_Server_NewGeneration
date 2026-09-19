@@ -4,10 +4,12 @@ namespace App\Http\Controllers\Admin;
 
 use App\Domain\Identity\Contracts\AuditLoggerInterface;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\StoreOrganizationRequest;
 use App\Http\Requests\Admin\UpdateOrganizationRequest;
 use App\Models\Identity\Organization;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
 class OrganizationController extends Controller
@@ -37,22 +39,47 @@ class OrganizationController extends Controller
     public function show(Organization $organization): View
     {
         $organization->loadCount('applications');
+        $organization->load(['applications.credential']);
 
         return view('pages.admin.organizations.show', compact('organization'));
     }
 
+    public function store(StoreOrganizationRequest $request): RedirectResponse
+    {
+        $organization = DB::transaction(function () use ($request): Organization {
+            $organization = Organization::query()->create($request->validated() + ['status' => 'active']);
+            $this->auditLogger->record(
+                event: 'ORGANIZATION_CREATED',
+                organizationId: (string) $organization->getKey(),
+                subject: (string) $organization->getKey(),
+                actor: (string) $request->user()->getAuthIdentifier(),
+                risk: 'medium',
+                metadata: ['name' => $organization->name, 'slug' => $organization->slug],
+            );
+
+            return $organization;
+        });
+
+        return redirect()->route('admin.organizations.show', $organization)->with('success', 'Organization created.');
+    }
+
     public function update(UpdateOrganizationRequest $request, Organization $organization): RedirectResponse
     {
-        $before = $organization->only(['name', 'slug', 'status']);
-        $organization->update($request->validated());
-        $this->auditLogger->record(
-            event: 'ORGANIZATION_UPDATED',
-            subject: (string) $organization->getKey(),
-            actor: (string) $request->user()->getAuthIdentifier(),
-            risk: $request->validated('status') !== $before['status'] ? 'high' : 'medium',
-            metadata: ['before' => $before, 'after' => $organization->only(['name', 'slug', 'status'])],
-        );
+        $updatedOrganization = DB::transaction(function () use ($request, $organization): Organization {
+            $before = $organization->only(['name', 'slug', 'status']);
+            $organization->update($request->validated());
+            $this->auditLogger->record(
+                event: 'ORGANIZATION_UPDATED',
+                organizationId: (string) $organization->getKey(),
+                subject: (string) $organization->getKey(),
+                actor: (string) $request->user()->getAuthIdentifier(),
+                risk: $request->validated('status') !== $before['status'] ? 'high' : 'medium',
+                metadata: ['before' => $before, 'after' => $organization->only(['name', 'slug', 'status'])],
+            );
 
-        return redirect()->route('admin.organizations.show', $organization)->with('success', 'Organization updated.');
+            return $organization;
+        });
+
+        return redirect()->route('admin.organizations.show', $updatedOrganization)->with('success', 'Organization updated.');
     }
 }

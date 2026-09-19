@@ -1,5 +1,13 @@
 <?php
 
+use App\Models\Identity\Application;
+use App\Models\Identity\ApplicationClaimPolicy;
+use App\Models\Identity\ApplicationCredential;
+use App\Models\Identity\ApplicationRedirectUri;
+use App\Models\Identity\Claim;
+use App\Models\Identity\Organization;
+use App\Models\Identity\SigningKey;
+
 return [
     /*
     |--------------------------------------------------------------------------
@@ -307,7 +315,13 @@ return [
 
         // Models to automatically watch via service provider without trait
         'auto_watch_models' => [
-            // App\Models\User::class,
+            Application::class,
+            ApplicationCredential::class,
+            ApplicationRedirectUri::class,
+            Organization::class,
+            Claim::class,
+            ApplicationClaimPolicy::class,
+            SigningKey::class,
         ],
 
         // Columns whose values must be redacted to prevent sensitive data leakage

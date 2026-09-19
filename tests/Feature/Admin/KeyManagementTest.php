@@ -23,7 +23,7 @@ class KeyManagementTest extends TestCase
         $admin = $this->admin();
 
         $this->actingAs($admin)->get(route('admin.keys.index'))
-            ->assertOk()->assertSee($key->kid)->assertSee('RS256')->assertDontSee('PRIVATE');
+            ->assertOk()->assertSee($key->kid)->assertSee('RS256')->assertSee('How rotation works')->assertDontSee('PRIVATE');
 
         $operator = User::factory()->create();
         $operator->givePermissionTo('admin.dashboard.view');

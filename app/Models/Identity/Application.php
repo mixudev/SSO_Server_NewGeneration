@@ -76,4 +76,14 @@ class Application extends Model
     {
         return $this->hasOne(ApplicationCredential::class);
     }
+
+    public function claimPolicies(): HasMany
+    {
+        return $this->hasMany(ApplicationClaimPolicy::class);
+    }
+
+    public function activeClaimPolicy(): HasOne
+    {
+        return $this->hasOne(ApplicationClaimPolicy::class)->where('status', 'active')->latestOfMany('version');
+    }
 }

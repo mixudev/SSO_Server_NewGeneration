@@ -23,7 +23,7 @@ class ApplicationDeletionTest extends TestCase
         $user = $this->authorizedUser();
         $application = Application::factory()->create(['status' => 'draft']);
 
-        $this->actingAs($user)->delete("/admin/applications/{$application->id}")
+        $this->actingAs($user)->delete("/admin/applications/{$application->id}", ['current_password' => 'password'])
             ->assertRedirect(route('admin.applications.index'));
 
         $this->assertDatabaseMissing('applications', ['id' => $application->id]);
@@ -39,7 +39,7 @@ class ApplicationDeletionTest extends TestCase
         $user = $this->authorizedUser();
         $application = Application::factory()->create(['status' => 'active']);
 
-        $this->actingAs($user)->delete("/admin/applications/{$application->id}")
+        $this->actingAs($user)->delete("/admin/applications/{$application->id}", ['current_password' => 'password'])
             ->assertSessionHasErrors('application');
 
         $this->assertDatabaseHas('applications', ['id' => $application->id]);

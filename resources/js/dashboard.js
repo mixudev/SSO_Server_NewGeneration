@@ -2,6 +2,25 @@ import Alpine from 'alpinejs';
 
 window.Alpine = Alpine;
 
+const copyDashboardValue = async (value, label) => {
+    try {
+        await navigator.clipboard.writeText(value);
+        window.AppPopup?.success({ title: 'Copied', description: `${label} copied to clipboard.` });
+    } catch {
+        window.AppPopup?.warning({ title: 'Copy failed', description: 'Clipboard access was unavailable. Select and copy the value manually.' });
+    }
+};
+
+document.addEventListener('click', (event) => {
+    const trigger = event.target.closest('[data-copy]');
+    if (!trigger) return;
+
+    event.preventDefault();
+    copyDashboardValue(trigger.dataset.copy, trigger.getAttribute('aria-label')?.replace(/^Copy /, '') || 'Value');
+});
+
+window.copyDashboardValue = copyDashboardValue;
+
 /* =========================================================================
    Dashboard Shell — Sidebar, Mobile, Theme
    ========================================================================= */

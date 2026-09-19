@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Admin;
 
 use App\Domain\Applications\Services\RedirectUriValidator;
+use App\Models\Identity\Application;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Validator;
@@ -32,6 +33,17 @@ class UpdateApplicationRequest extends FormRequest
     protected function withValidator(Validator $validator): void
     {
         $validator->after(function (Validator $validator): void {
+            $application = $this->route('application');
+            if ($application instanceof Application && $application->credential()->exists()) {
+                if ($this->input('protocol_mode') !== $application->protocol_mode) {
+                    $validator->errors()->add('protocol_mode', 'Protocol mode cannot change after credentials are issued. Create a new application instead.');
+                }
+
+                if ($this->input('client_type') !== $application->client_type) {
+                    $validator->errors()->add('client_type', 'Client type cannot change after credentials are issued. Create a new application instead.');
+                }
+            }
+
             $canonicalUris = [];
             $redirectUriValidator = app(RedirectUriValidator::class);
 

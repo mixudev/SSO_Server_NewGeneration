@@ -45,6 +45,7 @@ button, input { font: inherit; }
 @import './dashboard/sidebar-collapsed.css';
 @import './dashboard/header.css';
 @import './dashboard/cards.css';
+@import './dashboard/bento.css';
 @import './dashboard/lists.css';
 @import './dashboard/components.css';
 

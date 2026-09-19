@@ -1,6 +1,6 @@
 # Project Task List
 
-Updated: 2026-09-18
+Updated: 2026-09-19
 
 ## Completed
 
@@ -33,8 +33,9 @@ Updated: 2026-09-18
 - [x] Build read-only global Session Inspector from the canonical database session table.
 - [ ] Add separately authorized cross-user session revocation after package boundary review.
 - [x] Add database-level active signing-key uniqueness and active-slot rotation hardening.
-- [ ] Build the Audit Log export boundary with explicit authorization and redaction.
-- [x] Build the Users and Roles administration view with last-admin protection and audit coverage.
+- [x] Build the Audit Log export boundary with explicit authorization and redaction.
+- [x] Build Users administration with UUID public identity, status/ban lifecycle, last-admin protection, and audit coverage.
+- [x] Build the Roles registry view with separate permissions, system-role protection, and allowlisted permission assignment.
 - [x] Build Organizations administration view with lifecycle status, application counts, search, authorization, and audit coverage.
 - [x] Build Scopes and Claims registry views with validator-backed creation and separate permissions.
 - [x] Add modal-based Scope create/update/revocation flow with system/reference guards.
@@ -42,7 +43,22 @@ Updated: 2026-09-18
 - [x] Add modal-based OAuth client issue/rotate/revoke flow on application details with one-time secret handling.
 - [ ] Define persisted versioned application claim-policy records before policy editing or protocol issuance.
 - [ ] Complete dashboard visual and accessibility review across all Phase 2 views.
-- [ ] Start OAuth 2.0 boundary audit and Passport adapter contracts.
+- [x] Start OAuth 2.0 boundary audit and Passport adapter contracts.
+- [x] Extract Passport client lifecycle behind an application-owned OAuth port and DTO.
+- [x] Add server-side authorization transaction persistence with hashed state/nonce/redirect bindings and lifecycle status.
+- [x] Add OAuth authorization endpoint with exact redirect/scope binding, application lifecycle checks, and S256-only PKCE validation.
+- [x] Complete OAuth consent approval, one-time authorization-code handoff, transaction binding, expiry, replay, and actor-isolation tests.
+- [x] Add atomic application-owned authorization-code redemption with PKCE S256, client/redirect binding, expiry, and replay protection.
+- [x] Expose Passport-backed authorization-code handoff; Passport owns `/oauth/token`, PKCE redemption, token issuance, refresh tokens, and code replay revocation.
+- [x] Add protocol-level `/oauth/token` integration tests for valid exchange, invalid verifier, and standard OAuth errors.
+- [x] Remove the unused parallel application-owned authorization-code table and redeemer.
+- [x] Add idempotent OAuth revocation endpoint and token-redaction tests.
+- [ ] Add adversarial client/redirect/expiry/replay coverage for every token error path.
+- [x] Add OIDC RP-initiated end-session endpoint with registered post-logout redirect validation and state preservation.
+- [x] Add OIDC discovery, JWKS, and scoped UserInfo endpoints.
+- [x] Add OIDC nonce-bound ID Token issuance and verification tests. (Passport authorization-code exchange now returns a signed RS256 `id_token`; issuer, audience, subject, nonce, expiry, signature, and replay coverage is present.)
+- [x] Add database/signing-key readiness health check.
+- [ ] Add audit metrics and complete backup drill/recovery runbook. (OIDC/OAuth rate limits implemented, token endpoint middleware verified, scheduler and archive verification configured; Linux restore drill and metrics remain.)
 - [ ] Add adversarial and integration coverage for newly introduced profile/security mutations.
 - [ ] Replace remaining page-local button/link markup with shared Blade action components where the existing components apply.
 

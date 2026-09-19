@@ -30,16 +30,60 @@ class OrganizationsTest extends TestCase
         $this->actingAs($operator)->get(route('admin.organizations.index'))->assertForbidden();
     }
 
+    public function test_authorized_user_can_create_organization_and_audit_its_boundary(): void
+    {
+        $admin = $this->authorizedAdmin();
+
+        $this->actingAs($admin)->post(route('admin.organizations.store'), [
+            'name' => 'Created Organization',
+            'slug' => 'created-organization',
+        ])->assertRedirect();
+
+        $organization = Organization::query()->where('slug', 'created-organization')->firstOrFail();
+        $this->assertSame('active', $organization->status);
+        $this->assertDatabaseHas('security_events', [
+            'event' => 'ORGANIZATION_CREATED',
+            'organization_id' => $organization->getKey(),
+            'subject' => $organization->getKey(),
+        ]);
+    }
+
+    public function test_user_without_manage_permission_cannot_create_or_update_organization(): void
+    {
+        $operator = User::factory()->create();
+        Permission::findOrCreate('admin.dashboard.view', 'web');
+        Permission::findOrCreate('organizations.view', 'web');
+        $operator->givePermissionTo(['admin.dashboard.view', 'organizations.view']);
+        $organization = Organization::factory()->create();
+
+        $this->actingAs($operator)->post(route('admin.organizations.store'), [
+            'name' => 'Denied Organization',
+            'slug' => 'denied-organization',
+        ])->assertForbidden();
+
+        $this->actingAs($operator)->put(route('admin.organizations.update', $organization), [
+            'name' => 'Denied Update',
+            'slug' => $organization->slug,
+            'status' => 'active',
+        ])->assertForbidden();
+    }
+
     public function test_organization_detail_shows_application_count_without_secret_fields(): void
     {
         $admin = $this->authorizedAdmin();
         $organization = Organization::factory()->create();
-        Application::factory()->create(['organization_id' => $organization->id]);
+        Application::factory()->create([
+            'organization_id' => $organization->id,
+            'name' => 'Acme Client',
+            'client_type' => 'confidential_web',
+        ]);
 
         $this->actingAs($admin)->get(route('admin.organizations.show', $organization))
             ->assertOk()
-            ->assertSee('Applications')
-            ->assertSee('1')
+            ->assertSee('Registered clients')
+            ->assertSee('Acme')
+            ->assertSee('Confidential Web')
+            ->assertDontSee('Registered resources')
             ->assertDontSee('password_hash')
             ->assertDontSee('client_secret');
     }
@@ -61,7 +105,11 @@ class OrganizationsTest extends TestCase
             'slug' => 'updated-org',
             'status' => 'suspended',
         ]);
-        $this->assertDatabaseHas('security_events', ['event' => 'ORGANIZATION_UPDATED', 'subject' => $organization->id]);
+        $this->assertDatabaseHas('security_events', [
+            'event' => 'ORGANIZATION_UPDATED',
+            'organization_id' => $organization->id,
+            'subject' => $organization->id,
+        ]);
 
         $this->actingAs($admin)->put(route('admin.organizations.update', $organization), [
             'name' => '<script>alert(1)</script>',

@@ -29,18 +29,33 @@ class ApplicationCredentialController extends Controller
         ]);
     }
 
-    public function rotate(Request $request, Application $application): View
+    public function rotate(Request $request, Application $application): View|RedirectResponse
     {
         try {
             $result = $this->credentials->rotate($application, (string) $request->user()->getAuthIdentifier());
         } catch (RuntimeException $exception) {
-            abort(422, $exception->getMessage());
+            return redirect()->route('admin.applications.show', $application)->with('error', $exception->getMessage());
         }
 
         return view('pages.admin.applications.credential', [
             'application' => $application->fresh('credential'),
             'result' => $result,
             'operation' => 'rotated',
+        ]);
+    }
+
+    public function reactivate(Request $request, Application $application): View|RedirectResponse
+    {
+        try {
+            $result = $this->credentials->reactivate($application, (string) $request->user()->getAuthIdentifier());
+        } catch (RuntimeException $exception) {
+            return redirect()->route('admin.applications.show', $application)->with('error', $exception->getMessage());
+        }
+
+        return view('pages.admin.applications.credential', [
+            'application' => $application->fresh('credential'),
+            'result' => $result,
+            'operation' => 'reactivated',
         ]);
     }
 

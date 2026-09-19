@@ -5,7 +5,7 @@
     'head' => null,
 ])
 
-<div {{ $attributes->merge(['class' => 'overflow-x-auto rounded-[var(--dash-radius)] border border-[var(--dash-border)]']) }}>
+<div {{ $attributes->merge(['class' => 'overflow-x-auto rounded-[var(--dash-radius)] border border-[var(--dash-border)] bg-[var(--dash-card)] shadow-sm']) }}>
     <table @class([
         'w-full border-collapse text-left text-sm text-[var(--dash-text)]',
         'table-fixed' => $fixed,

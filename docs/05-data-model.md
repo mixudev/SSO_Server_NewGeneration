@@ -57,6 +57,27 @@ Unique:
 slug
 ```
 
+## `users`
+
+Control-plane identity. Numeric `id` stays internal. Public identity is `uuid`.
+
+```text
+id
+uuid
+name
+email
+email_verified_at
+password
+active
+status
+avatar_path
+remember_token
+created_at
+updated_at
+```
+
+Route keys, audit subjects, and OIDC `sub` use `uuid`. Inactive accounts fail closed at `getAuthPassword()`. Last active `platform_admin` cannot be demoted or deactivated.
+
 Implementation status: foundation slice completed. The application uses a ULID primary key, required `name`, unique `slug`, indexed lifecycle `status`, nullable JSON settings, and factory coverage. Application ownership and organization foreign keys are intentionally deferred to the Application Registry slice.
 
 Security notes:

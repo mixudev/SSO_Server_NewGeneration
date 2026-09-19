@@ -198,10 +198,18 @@ activity
 ```text
 index
 show
-sessions
-security
-applications
+activity
 ```
+
+User detail is read-only Bento Grid. Mutations use `x-app-modal`. Public URLs use UUID, never numeric IDs.
+
+### Roles
+
+```text
+index
+```
+
+Role create/update stays in modals. `platform_admin` is a system role.
 
 ### Sessions
 

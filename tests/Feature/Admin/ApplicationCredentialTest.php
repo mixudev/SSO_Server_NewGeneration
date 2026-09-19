@@ -35,7 +35,10 @@ class ApplicationCredentialTest extends TestCase
         $this->actingAs($admin)
             ->get(route('admin.applications.show', $application))
             ->assertOk()
-            ->assertSee('issue-client-modal');
+            ->assertSee('issue-client-modal')
+            ->assertSee('Issuer URL')
+            ->assertSee(config('app.url').'/oauth/authorize')
+            ->assertSee('Test connection');
 
         $response = $this->actingAs($admin)
             ->post(route('admin.applications.credentials.issue', $application));
@@ -69,7 +72,8 @@ class ApplicationCredentialTest extends TestCase
 
         $this->actingAs($admin)
             ->post(route('admin.applications.credentials.rotate', $application))
-            ->assertStatus(422);
+            ->assertRedirect(route('admin.applications.show', $application))
+            ->assertSessionHas('error', 'Public applications do not have a secret to rotate.');
     }
 
     public function test_runtime_repository_rejects_suspended_application_and_organization(): void
@@ -103,6 +107,13 @@ class ApplicationCredentialTest extends TestCase
         $this->actingAs($admin)->delete(route('admin.applications.credentials.revoke', $application))->assertRedirect();
         $this->assertTrue($client->fresh()->revoked);
         $this->assertDatabaseHas('application_credentials', ['application_id' => $application->getKey(), 'status' => 'revoked']);
+
+        $reactivation = $this->actingAs($admin)->post(route('admin.applications.credentials.reactivate', $application));
+        $newSecret = $reactivation->viewData('result')['client_secret'];
+        $this->assertNotEmpty($newSecret);
+        $this->assertNotSame($secondSecret, $newSecret);
+        $this->assertDatabaseHas('application_credentials', ['application_id' => $application->getKey(), 'status' => 'active', 'generation' => 3]);
+        $reactivation->assertSee($newSecret);
     }
 
     /** @return array{0: User, 1: Application} */

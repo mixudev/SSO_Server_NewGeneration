@@ -8,27 +8,17 @@
     iconColor="violet"
 >
     <form id="rotateKeyForm" onsubmit="event.preventDefault(); submitRotateKeys();" style="display: flex; flex-direction: column; gap: 14px;">
-        <div>
-            <label style="display: block; font-size: 12px; font-weight: 600; color: var(--dash-text-heading); margin-bottom: 6px;">
-                Algoritma Penandatanganan
-            </label>
-            <select id="keyAlgorithm" style="width: 100%; border-radius: 6px; border: 1px solid var(--dash-border); background: var(--dash-card); color: var(--dash-text); padding: 9px 12px; font-size: 13px; outline: none;">
-                <option value="RS256">RS256 (RSA Signature with SHA-256) — Standard</option>
-                <option value="ES256">ES256 (ECDSA using P-256 and SHA-256)</option>
-                <option value="RS512">RS512 (RSA Signature with SHA-512)</option>
-            </select>
-        </div>
+        <x-form.select name="algorithm" label="Algoritma Penandatanganan" id="keyAlgorithm">
+            <option value="RS256">RS256 (RSA Signature with SHA-256) — Standard</option>
+            <option value="ES256">ES256 (ECDSA using P-256 and SHA-256)</option>
+            <option value="RS512">RS512 (RSA Signature with SHA-512)</option>
+        </x-form.select>
 
-        <div>
-            <label style="display: block; font-size: 12px; font-weight: 600; color: var(--dash-text-heading); margin-bottom: 6px;">
-                Masa Transisi Kunci Lama (Grace Period)
-            </label>
-            <select id="gracePeriod" style="width: 100%; border-radius: 6px; border: 1px solid var(--dash-border); background: var(--dash-card); color: var(--dash-text); padding: 9px 12px; font-size: 13px; outline: none;">
-                <option value="24">24 Jam (Disarankan untuk meminimalkan dampak klien)</option>
-                <option value="12">12 Jam</option>
-                <option value="0">Segera Batalkan Kunci Lama (Immediate)</option>
-            </select>
-        </div>
+        <x-form.select name="grace_period" label="Masa Transisi Kunci Lama (Grace Period)" id="gracePeriod">
+            <option value="24">24 Jam (Disarankan untuk meminimalkan dampak klien)</option>
+            <option value="12">12 Jam</option>
+            <option value="0">Segera Batalkan Kunci Lama (Immediate)</option>
+        </x-form.select>
 
         <div style="border-radius: 6px; background-color: var(--dash-warning-soft); border: 1px solid rgba(245,158,11,0.25); padding: 12px; font-size: 12px; color: var(--dash-warning); line-height: 1.5;">
             <strong>Perhatian:</strong> Klien yang menyimpan cache JWKS akan membutuhkan waktu beberapa saat untuk memperbarui public key terbaru.
@@ -36,20 +26,12 @@
     </form>
 
     <x-slot name="footer">
-        <button
-            type="button"
-            onclick="AppModal.close('rotateKeyModal')"
-            class="modal-btn-cancel rounded-none"
-        >
+        <x-form.button type="button" variant="ghost" onclick="AppModal.close('rotateKeyModal')">
             Batal
-        </button>
-        <button
-            type="button"
-            onclick="submitRotateKeys()"
-            class="modal-btn-primary rounded-none"
-        >
+        </x-form.button>
+        <x-form.button type="button" onclick="submitRotateKeys()">
             Konfirmasi &amp; Rotasi
-        </button>
+        </x-form.button>
     </x-slot>
 </x-app-modal>
 

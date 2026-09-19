@@ -39,6 +39,35 @@ class ApplicationWizardTest extends TestCase
             ->assertRedirect(route('admin.applications.wizard.basic'));
     }
 
+    public function test_basic_step_rejects_inactive_organization_before_storing_wizard_state(): void
+    {
+        $user = $this->authorizedUser();
+        $organization = Organization::factory()->create(['status' => 'suspended']);
+
+        $this->actingAs($user)
+            ->post(route('admin.applications.wizard.basic.store'), [
+                'organization_id' => $organization->getKey(),
+                'name' => 'Inactive Organization Client',
+                'slug' => 'inactive-organization-client',
+            ])
+            ->assertSessionHasErrors('organization_id');
+
+        $this->assertFalse(session()->has('application_wizard.basic'));
+    }
+
+    public function test_basic_step_lists_only_active_organizations(): void
+    {
+        $user = $this->authorizedUser();
+        $active = Organization::factory()->create(['name' => 'Active Organization']);
+        $inactive = Organization::factory()->create(['name' => 'Suspended Organization', 'status' => 'suspended']);
+
+        $this->actingAs($user)
+            ->get(route('admin.applications.wizard.basic'))
+            ->assertOk()
+            ->assertSee($active->name)
+            ->assertDontSee($inactive->name);
+    }
+
     public function test_wizard_rejects_scope_and_claim_steps_without_previous_steps(): void
     {
         $user = $this->authorizedUser();
@@ -65,7 +94,6 @@ class ApplicationWizardTest extends TestCase
         ])->assertRedirect(route('admin.applications.wizard.claims'));
         $session->post(route('admin.applications.wizard.claims.store'), [
             'claim_keys' => [$claim->key],
-            'claim_policy_version' => 2,
         ])->assertRedirect(route('admin.applications.wizard.security'));
         $session->post(route('admin.applications.wizard.security.store'), [
             'consent_policy' => 'explicit',
@@ -82,8 +110,13 @@ class ApplicationWizardTest extends TestCase
             ->assertRedirect(route('admin.applications.index'));
 
         $application = Application::query()->where('slug', 'portal')->firstOrFail();
-        $this->assertSame(2, $application->claim_policy_version);
+        $this->assertSame(1, $application->claim_policy_version);
         $this->assertSame(['user.email'], $application->session_policy_json['claims']);
+        $this->assertDatabaseHas('application_claim_policies', [
+            'application_id' => $application->id,
+            'version' => 1,
+            'status' => 'active',
+        ]);
         $this->assertTrue($application->scopes()->whereKey($scope->id)->exists());
     }
 
@@ -138,6 +171,25 @@ class ApplicationWizardTest extends TestCase
             'session_max_age' => 3600,
             'session_idle_timeout' => 900,
         ])->assertSessionHasErrors('session_idle_timeout');
+    }
+
+    public function test_browser_string_security_values_can_complete_wizard(): void
+    {
+        $user = $this->authorizedUser();
+        $organization = Organization::factory()->create();
+        $session = $this->actingAs($user);
+        $this->completeBasicProtocolAndRedirect($session, $organization);
+
+        $session->post(route('admin.applications.wizard.security.store'), [
+            'consent_policy' => 'explicit',
+            'session_max_age' => '3600',
+            'session_idle_timeout' => '900',
+        ])->assertRedirect(route('admin.applications.wizard.review'));
+
+        $session->post(route('admin.applications.wizard.complete'))
+            ->assertRedirect(route('admin.applications.index'));
+
+        $this->assertDatabaseHas('applications', ['slug' => 'portal']);
     }
 
     public function test_completion_rejects_scope_deactivated_after_selection(): void

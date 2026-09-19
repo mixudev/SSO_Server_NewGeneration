@@ -26,6 +26,20 @@ class UserLastAdminProtectionTest extends TestCase
         $this->assertTrue($admin->fresh()->hasRole('platform_admin'));
     }
 
+    public function test_last_platform_admin_cannot_be_deleted(): void
+    {
+        $admin = $this->authorizedAdmin();
+        $manager = User::factory()->create();
+        $manager->givePermissionTo(['admin.dashboard.view', 'users.view', 'users.manage']);
+
+        $this->actingAs($manager)->from(route('admin.users.show', $admin))->delete(route('admin.users.destroy', $admin), [
+            'current_password' => 'password',
+        ])->assertSessionHasErrors('user');
+
+        $this->assertDatabaseHas('users', ['id' => $admin->id]);
+        $this->assertTrue($admin->fresh()->hasRole('platform_admin'));
+    }
+
     public function test_admin_can_demote_when_another_platform_admin_remains(): void
     {
         $admin = $this->authorizedAdmin();
@@ -41,6 +55,40 @@ class UserLastAdminProtectionTest extends TestCase
 
         $this->assertTrue($admin->fresh()->hasRole('platform_admin'));
         $this->assertTrue($secondAdmin->fresh()->hasRole('operator'));
+    }
+
+    public function test_last_platform_admin_cannot_be_deactivated(): void
+    {
+        $admin = $this->authorizedAdmin();
+        $manager = User::factory()->create();
+        $manager->givePermissionTo(['admin.dashboard.view', 'users.view', 'users.manage']);
+
+        $this->actingAs($manager)->from(route('admin.users.show', $admin))->put(route('admin.users.status.update', $admin), [
+            'active' => 0,
+            'current_password' => 'password',
+        ])->assertSessionHasErrors('active');
+
+        $this->assertTrue($admin->fresh()->active);
+        $this->assertSame('active', $admin->fresh()->status);
+        $this->assertTrue($admin->fresh()->hasRole('platform_admin'));
+    }
+
+    public function test_platform_admin_can_be_deactivated_when_another_active_admin_remains(): void
+    {
+        $admin = $this->authorizedAdmin();
+        $secondAdmin = $this->authorizedAdmin();
+        $manager = User::factory()->create();
+        $manager->givePermissionTo(['admin.dashboard.view', 'users.view', 'users.manage']);
+
+        $this->actingAs($manager)->put(route('admin.users.status.update', $secondAdmin), [
+            'active' => 0,
+            'current_password' => 'password',
+        ])->assertRedirect(route('admin.users.show', $secondAdmin));
+
+        $this->assertFalse($secondAdmin->fresh()->active);
+        $this->assertSame('inactive', $secondAdmin->fresh()->status);
+        $this->assertTrue($admin->fresh()->active);
+        $this->assertTrue($admin->fresh()->hasRole('platform_admin'));
     }
 
     private function authorizedAdmin(): User
