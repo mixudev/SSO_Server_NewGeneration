@@ -140,7 +140,7 @@ final class ApplicationCredentialService
         if ($application->status !== 'active' || $application->organization?->status !== 'active') {
             throw new RuntimeException('Only active applications in active organizations can receive credentials.');
         }
-        if (! in_array($application->client_type, ['confidential_web', 'public_spa', 'native'], true)) {
+        if (! in_array($application->client_type, ['confidential_web', 'public_spa'], true)) {
             throw new RuntimeException('Application client type is unsupported.');
         }
     }

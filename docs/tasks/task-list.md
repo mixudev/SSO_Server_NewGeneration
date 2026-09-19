@@ -42,6 +42,7 @@ Updated: 2026-09-19
 - [x] Add modal-based Claim create/update/deactivation flow with validator and permission boundaries.
 - [x] Add modal-based OAuth client issue/rotate/revoke flow on application details with one-time secret handling.
 - [ ] Define persisted versioned application claim-policy records before policy editing or protocol issuance.
+- [x] Fail closed for native client credential issuance until custom-scheme/universal-link redirect policy is implemented.
 - [ ] Complete dashboard visual and accessibility review across all Phase 2 views.
 - [x] Start OAuth 2.0 boundary audit and Passport adapter contracts.
 - [x] Extract Passport client lifecycle behind an application-owned OAuth port and DTO.
