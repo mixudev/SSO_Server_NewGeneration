@@ -299,3 +299,28 @@ Established package reduces custom backup implementation risk. Recovery policy r
 
 ### Important constraint
 Current v10 documentation states Windows servers are unsupported; production baseline is Linux. Backup encryption, destination separation, retention, monitoring, and restore drills are mandatory parts of the design. citeturn230300search4turn230300search0
+
+---
+
+## ADR-014 — Application portal access is explicit and default-deny
+
+**Status:** Accepted
+**Date:** 2026-09-19
+
+### Context
+
+Users need a portal when entering the provider directly, but automatically exposing every active application would create accidental access and make tenant policy ambiguous. The current schema has applications owned by organizations, but no user membership or application assignment relation.
+
+### Decision
+
+Release 1 uses an explicit `application_user_access` relation. A user can launch an application only when the assignment is active and all user, organization, application, and credential lifecycle checks pass. No assignment means deny. Portal listing and direct launch must call the same application-owned evaluator.
+
+### Consequences
+
+The first implementation is intentionally narrower than organization-wide access. Assignment administration UI and the portal are required before users can practically manage this capability. Role/group inheritance, directory synchronization, and entitlement rules are deferred until a concrete requirement exists.
+
+### Alternatives rejected
+
+- Grant every active application in the user's organization: unsafe because user membership does not yet exist and violates default-deny.
+- Use provider role names directly as application access: too broad and couples control-plane RBAC to relying-party entitlements.
+- Accept an arbitrary application or redirect URL from the portal request: open-redirect and authorization-bypass risk.

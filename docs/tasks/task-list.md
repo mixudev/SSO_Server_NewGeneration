@@ -23,6 +23,7 @@ Updated: 2026-09-19
 
 ## Current next steps
 
+- [x] Define default-deny explicit user-to-application access relation and lifecycle evaluator; portal UI and assignment administration remain the next slice.
 - [x] Complete the final review integrity boundary for the application wizard, including tamper-resistant final validation and active-organization revalidation.
 - [x] Define and test credential generation separately from application activation.
 - [x] Implement application credential issuance, rotation, and revocation boundary.

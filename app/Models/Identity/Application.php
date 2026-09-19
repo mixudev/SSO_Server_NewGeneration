@@ -86,4 +86,9 @@ class Application extends Model
     {
         return $this->hasOne(ApplicationClaimPolicy::class)->where('status', 'active')->latestOfMany('version');
     }
+
+    public function userAccess(): HasMany
+    {
+        return $this->hasMany(ApplicationUserAccess::class);
+    }
 }

@@ -88,6 +88,16 @@ Acceptance: no automatic unsafe email linking; local account/session tests pass.
 
 ## Phase D — Provider UI completion
 
+### D0. Application portal access policy (in progress)
+
+- Explicit `application_user_access` grants use default-deny semantics.
+- User, organization, application, and assignment lifecycle checks are enforced by `ApplicationAccessEvaluator`.
+- Portal listing, direct launch, and assignment administration must reuse the evaluator.
+- Organization-wide inheritance, role/group entitlements, and directory synchronization remain deferred until explicit membership and policy contracts exist.
+
+Acceptance: policy tests pass for default deny, active assignment, inactive user/organization/application, and revoked assignment; portal and assignment UI tests remain required.
+
+
 ### D1. Claim policy editor
 
 - Add permission-separated policy view/edit.
