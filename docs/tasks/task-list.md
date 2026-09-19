@@ -65,7 +65,7 @@ Updated: 2026-09-19
 - [x] Add OIDC nonce-bound ID Token issuance and verification tests. (Passport authorization-code exchange now returns a signed RS256 `id_token`; issuer, audience, subject, nonce, expiry, signature, and replay coverage is present.)
 - [x] Add database/signing-key readiness health check.
 - [ ] Add audit metrics and complete backup drill/recovery runbook. (OIDC/OAuth rate limits implemented, token endpoint middleware verified, scheduler and archive verification configured; key status is now exposed safely by readiness; Linux restore drill and request counters remain.)
-- [ ] Add adversarial and integration coverage for newly introduced profile/security mutations.
+- [x] Add adversarial coverage for profile password and cross-session mutation step-up boundaries.
 - [ ] Replace remaining page-local button/link markup with shared Blade action components where the existing components apply.
 
 ## Component standard
