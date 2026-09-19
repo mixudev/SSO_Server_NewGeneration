@@ -23,13 +23,10 @@
             </div>
         </nav>
 
-        <section class="portal-hero" aria-labelledby="portal-title">
-            <div>
-                <p class="portal-eyebrow">Your workspace</p>
-                <h1 id="portal-title" class="portal-title">Everything you need,<br>in one place.</h1>
-                <p class="portal-subtitle">Choose an application assigned to your account. Your access is managed securely by your organization.</p>
-            </div>
-            <p class="portal-stat"><strong>{{ $applications->count() }}</strong> authorized {{ Str::plural('application', $applications->count()) }} available for your account.</p>
+        <section class="portal-intro" aria-labelledby="portal-title">
+            <p class="portal-eyebrow">Secure application portal</p>
+            <h1 id="portal-title" class="portal-title">Your workspace,<br>connected.</h1>
+            <p class="portal-subtitle">Choose an application assigned to your account. Every connection is protected by your organization’s access policy.</p>
         </section>
 
         @if ($applications->isEmpty())
@@ -39,24 +36,35 @@
                 <p>Contact your organization administrator if you believe you should have access.</p>
             </section>
         @else
-            <section class="portal-grid" aria-label="Available applications">
-                @foreach ($applications as $application)
-                    <article class="portal-card">
-                        <div>
-                            <div class="portal-card-top">
-                                <div class="portal-app-mark" aria-hidden="true">{{ Str::upper(Str::substr($application->name, 0, 1)) }}</div>
-                                <span class="portal-status">Available</span>
+            <section class="portal-orbit" aria-label="Available applications">
+                <div class="portal-orbit-lines" aria-hidden="true">
+                    <span></span><span></span><span></span><span></span>
+                </div>
+                <div class="portal-center">
+                    <span class="portal-center-mark" aria-hidden="true">M</span>
+                    <span class="portal-center-kicker">{{ config('app.name') }}</span>
+                    <strong>Your applications</strong>
+                    <span>{{ $applications->count() }} authorized {{ Str::plural('app', $applications->count()) }}</span>
+                </div>
+                <div class="portal-grid">
+                    @foreach ($applications as $application)
+                        <article class="portal-card">
+                            <div>
+                                <div class="portal-card-top">
+                                    <div class="portal-app-mark" aria-hidden="true">{{ Str::upper(Str::substr($application->name, 0, 1)) }}</div>
+                                    <span class="portal-status">Available</span>
+                                </div>
+                                <p class="portal-organization">{{ $application->organization->name }}</p>
+                                <h2>{{ $application->name }}</h2>
+                                <p>{{ $application->description ?: 'Secure application access for your organization.' }}</p>
                             </div>
-                            <p class="portal-organization">{{ $application->organization->name }}</p>
-                            <h2>{{ $application->name }}</h2>
-                            <p>{{ $application->description ?: 'Secure application access for your organization.' }}</p>
-                        </div>
-                        <a class="portal-open" href="{{ $application->homepage_url }}" target="_blank" rel="noopener noreferrer">
-                            <span>Open application</span>
-                            <span aria-hidden="true">↗</span>
-                        </a>
-                    </article>
-                @endforeach
+                            <a class="portal-open" href="{{ $application->homepage_url }}" target="_blank" rel="noopener noreferrer">
+                                <span>Open application</span>
+                                <span aria-hidden="true">↗</span>
+                            </a>
+                        </article>
+                    @endforeach
+                </div>
             </section>
         @endif
     </main>
