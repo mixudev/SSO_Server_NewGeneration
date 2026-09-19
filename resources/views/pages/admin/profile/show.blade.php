@@ -33,7 +33,7 @@
                     <div class="flex flex-wrap gap-2">
                         <x-form.button href="{{ route('admin.profile.edit') }}" variant="secondary" size="sm" icon="pencil">Edit profile</x-form.button>
                         @if ($user->avatar_path)
-                            <form method="POST" action="{{ route('admin.profile.avatar.destroy') }}" data-confirm="Foto profil akan dihapus. Lanjutkan?" data-confirm-type="delete" data-confirm-title="Hapus foto profil" data-confirm-btn="Hapus foto">@csrf @method('DELETE')<button type="submit" class="inline-flex items-center gap-2 border border-red-200 px-3 py-2 text-xs font-semibold tracking-[0.01em] text-red-700 transition hover:bg-red-50"><i class="bi bi-trash3" aria-hidden="true"></i>Remove photo</button></form>
+                            <form method="POST" action="{{ route('admin.profile.avatar.destroy') }}" data-confirm="Foto profil akan dihapus. Lanjutkan?" data-confirm-type="delete" data-confirm-title="Hapus foto profil" data-confirm-btn="Hapus foto">@csrf @method('DELETE')<x-form.button type="submit" variant="danger" size="sm" icon="trash3">Remove photo</x-form.button></form>
                         @endif
                     </div>
                 </div>

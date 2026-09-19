@@ -66,7 +66,8 @@ Updated: 2026-09-19
 - [x] Add database/signing-key readiness health check.
 - [ ] Add audit metrics and complete backup drill/recovery runbook. (OIDC/OAuth rate limits implemented, token endpoint middleware verified, scheduler and archive verification configured; key status is now exposed safely by readiness; Linux restore drill and request counters remain.)
 - [x] Add adversarial coverage for profile password and cross-session mutation step-up boundaries.
-- [ ] Replace remaining page-local button/link markup with shared Blade action components where the existing components apply.
+- [x] Replace remaining page-local button markup in the reviewed profile action surface with shared Blade action components where the existing component applies.
+- [ ] Continue the remaining page-local action review incrementally across other dashboard pages.
 
 ## Component standard
 
