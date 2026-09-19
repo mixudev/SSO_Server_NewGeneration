@@ -45,7 +45,7 @@ final class ConsentController extends Controller
         }
 
         try {
-            return DB::transaction(function () use ($transaction, $sessionData): RedirectResponse|SymfonyResponse {
+            return DB::transaction(function () use ($request, $transaction, $sessionData): RedirectResponse|SymfonyResponse {
                 $lockedTransaction = AuthorizationTransaction::query()
                     ->whereKey($transaction->getKey())
                     ->lockForUpdate()
@@ -55,6 +55,18 @@ final class ConsentController extends Controller
                     || $lockedTransaction->expires_at->isPast()
                 ) {
                     throw new RuntimeException('Authorization transaction is no longer pending.');
+                }
+
+                if ($request->string('decision')->toString() === 'deny') {
+                    $lockedTransaction->update([
+                        'status' => AuthorizationTransactionStatus::Denied,
+                        'completed_at' => now(),
+                    ]);
+
+                    return redirect()->to($this->errorRedirect(
+                        $sessionData['redirect_uri'],
+                        $sessionData['state'],
+                    ));
                 }
 
                 $lockedTransaction->update([
@@ -71,5 +83,13 @@ final class ConsentController extends Controller
         } catch (RuntimeException) {
             return response('Invalid authorization transaction.', Response::HTTP_BAD_REQUEST);
         }
+    }
+
+    private function errorRedirect(string $redirectUri, string $state): string
+    {
+        return $redirectUri.'?'.http_build_query([
+            'error' => 'access_denied',
+            'state' => $state,
+        ], '', '&', PHP_QUERY_RFC3986);
     }
 }
