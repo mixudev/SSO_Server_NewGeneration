@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\ApplicationAccessController;
 use App\Http\Controllers\Admin\ApplicationController;
 use App\Http\Controllers\Admin\ApplicationCredentialController;
 use App\Http\Controllers\Admin\AuditController;
@@ -187,6 +188,15 @@ Route::middleware(['auth', 'can:admin.dashboard.view'])
         Route::post('/applications/create/complete', [ApplicationController::class, 'wizardComplete'])
             ->middleware('can:applications.create')
             ->name('applications.wizard.complete');
+        Route::get('/applications/{application}/access', [ApplicationAccessController::class, 'index'])
+            ->middleware('can:applications.access.view')
+            ->name('applications.access.index');
+        Route::post('/applications/{application}/access', [ApplicationAccessController::class, 'store'])
+            ->middleware('can:applications.access.manage')
+            ->name('applications.access.store');
+        Route::delete('/applications/{application}/access/{access}', [ApplicationAccessController::class, 'destroy'])
+            ->middleware('can:applications.access.manage')
+            ->name('applications.access.destroy');
         Route::get('/applications/{application}', [ApplicationController::class, 'show'])
             ->middleware('can:applications.view')
             ->name('applications.show');

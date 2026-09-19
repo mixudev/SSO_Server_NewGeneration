@@ -86,6 +86,9 @@
                 @endif
 
                 <div class="mt-5 flex flex-wrap gap-2">
+                    @can('applications.access.view')
+                        <x-form.button href="{{ route('admin.applications.access.index', $application) }}" variant="secondary" size="xs" icon="people">Manage access</x-form.button>
+                    @endcan
                     @if($application->status === 'draft')
                         @can('applications.update')
                             <form method="POST" action="{{ route('admin.applications.activate', $application) }}">
