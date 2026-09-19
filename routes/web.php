@@ -1,13 +1,15 @@
 <?php
 
-use Illuminate\Http\Request;
+use App\Http\Controllers\AuthenticatedLandingController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function (Request $request) {
-    return $request->user() !== null
-        ? redirect()->route('sso.portal')
-        : view('welcome');
+Route::get('/', function () {
+    return view('welcome');
 })->name('home');
+
+Route::middleware('auth')->get('/app', AuthenticatedLandingController::class)->name('authenticated.landing');
+
+Route::middleware('auth')->get('/home', AuthenticatedLandingController::class);
 
 require base_path('routes/admin.php');
 require base_path('routes/portal.php');

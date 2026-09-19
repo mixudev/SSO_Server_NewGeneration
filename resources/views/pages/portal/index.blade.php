@@ -9,20 +9,6 @@
 </head>
 <body class="portal-page">
     <main class="portal-shell">
-        <nav class="portal-nav" aria-label="Portal navigation">
-            <div class="portal-brand">
-                <span class="portal-brand-mark" aria-hidden="true">M</span>
-                <span>{{ config('app.name') }}</span>
-            </div>
-            <div class="portal-user">
-                <span>Signed in as <strong>{{ auth()->user()->name }}</strong></span>
-                <form method="POST" action="{{ Route::has('logout') ? route('logout') : url('/logout') }}">
-                    @csrf
-                    <button class="portal-logout" type="submit">Sign out</button>
-                </form>
-            </div>
-        </nav>
-
         <section class="portal-intro" aria-labelledby="portal-title">
             <p class="portal-eyebrow">Secure application portal</p>
             <h1 id="portal-title" class="portal-title">Your workspace,<br>connected.</h1>
