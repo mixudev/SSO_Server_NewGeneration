@@ -24,7 +24,8 @@ Updated: 2026-09-19
 ## Current next steps
 
 - [x] Define default-deny explicit user-to-application access relation and lifecycle evaluator.
-- [x] Add permission-gated application user access assignment/revocation UI with audit coverage; provider portal remains the next slice.
+- [x] Add permission-gated application user access assignment/revocation UI with audit coverage.
+- [x] Add authenticated user application portal with default-deny filtering; direct launch and provider login routing remain the next slice.
 - [x] Complete the final review integrity boundary for the application wizard, including tamper-resistant final validation and active-organization revalidation.
 - [x] Define and test credential generation separately from application activation.
 - [x] Implement application credential issuance, rotation, and revocation boundary.
