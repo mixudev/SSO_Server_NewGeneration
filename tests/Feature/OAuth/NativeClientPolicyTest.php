@@ -2,11 +2,11 @@
 
 namespace Tests\Feature\OAuth;
 
+use App\Domain\Applications\Services\ApplicationCredentialService;
 use App\Models\Identity\Application;
 use App\Models\Identity\Organization;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Laravel\Passport\ClientRepository;
 use Tests\TestCase;
 
 class NativeClientPolicyTest extends TestCase
@@ -25,7 +25,7 @@ class NativeClientPolicyTest extends TestCase
 
         $this->expectExceptionMessage('Application client type is unsupported.');
 
-        app(\App\Domain\Applications\Services\ApplicationCredentialService::class)
+        app(ApplicationCredentialService::class)
             ->issue($application, (string) $admin->getAuthIdentifier());
 
         $this->assertDatabaseCount('oauth_clients', 0);
