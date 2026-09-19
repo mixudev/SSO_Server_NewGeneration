@@ -1,44 +1,64 @@
-<x-dashboard.layout
-    title="Application portal"
-    breadcrumb="Application portal"
-    :user-name="auth()->user()->name"
-    :user-email="auth()->user()->email"
-    :logout-url="Route::has('logout') ? route('logout') : url('/logout')"
->
-    <div class="space-y-6">
-        <x-ui.page-header
-            title="Your applications"
-            description="Open an application that has been explicitly assigned to your account."
-        />
+<!doctype html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>Application portal — {{ config('app.name') }}</title>
+    @vite('resources/css/portal.css')
+</head>
+<body class="portal-page">
+    <main class="portal-shell">
+        <nav class="portal-nav" aria-label="Portal navigation">
+            <div class="portal-brand">
+                <span class="portal-brand-mark" aria-hidden="true">M</span>
+                <span>{{ config('app.name') }}</span>
+            </div>
+            <div class="portal-user">
+                <span>Signed in as <strong>{{ auth()->user()->name }}</strong></span>
+                <form method="POST" action="{{ Route::has('logout') ? route('logout') : url('/logout') }}">
+                    @csrf
+                    <button class="portal-logout" type="submit">Sign out</button>
+                </form>
+            </div>
+        </nav>
+
+        <section class="portal-hero" aria-labelledby="portal-title">
+            <div>
+                <p class="portal-eyebrow">Your workspace</p>
+                <h1 id="portal-title" class="portal-title">Everything you need,<br>in one place.</h1>
+                <p class="portal-subtitle">Choose an application assigned to your account. Your access is managed securely by your organization.</p>
+            </div>
+            <p class="portal-stat"><strong>{{ $applications->count() }}</strong> authorized {{ Str::plural('application', $applications->count()) }} available for your account.</p>
+        </section>
 
         @if ($applications->isEmpty())
-            <section class="bento-panel">
-                <div class="flex items-start gap-4">
-                    <div class="bento-icon-mark"><i class="bi bi-grid" aria-hidden="true"></i></div>
-                    <div>
-                        <h2 class="bento-title">No applications are currently available</h2>
-                        <p class="mt-2 text-sm text-[var(--dash-text-muted)]">Contact an administrator if you believe you should have access.</p>
-                    </div>
-                </div>
+            <section class="portal-empty" aria-live="polite">
+                <div class="portal-app-mark" style="margin: 0 auto;">—</div>
+                <h2>No applications are available yet</h2>
+                <p>Contact your organization administrator if you believe you should have access.</p>
             </section>
         @else
-            <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+            <section class="portal-grid" aria-label="Available applications">
                 @foreach ($applications as $application)
-                    <article class="bento-panel flex min-h-52 flex-col justify-between gap-6">
+                    <article class="portal-card">
                         <div>
-                            <span class="bento-kicker">{{ $application->organization->name }}</span>
-                            <h2 class="mt-3 text-xl font-semibold text-[var(--dash-text-heading)]">{{ $application->name }}</h2>
-                            <p class="mt-2 text-sm leading-6 text-[var(--dash-text-muted)]">{{ $application->description ?: 'Assigned application.' }}</p>
+                            <div class="portal-card-top">
+                                <div class="portal-app-mark" aria-hidden="true">{{ Str::upper(Str::substr($application->name, 0, 1)) }}</div>
+                                <span class="portal-status">Available</span>
+                            </div>
+                            <p class="portal-organization">{{ $application->organization->name }}</p>
+                            <h2>{{ $application->name }}</h2>
+                            <p>{{ $application->description ?: 'Secure application access for your organization.' }}</p>
                         </div>
-                        <div>
-                            <a href="{{ $application->homepage_url }}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 border border-[var(--dash-border)] px-3 py-2 text-xs font-semibold text-[var(--dash-text-heading)] hover:border-[var(--dash-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--dash-primary)]">
-                                Open application
-                                <i class="bi bi-box-arrow-up-right" aria-hidden="true"></i>
-                            </a>
-                        </div>
+                        <a class="portal-open" href="{{ $application->homepage_url }}" target="_blank" rel="noopener noreferrer">
+                            <span>Open application</span>
+                            <span aria-hidden="true">↗</span>
+                        </a>
                     </article>
                 @endforeach
-            </div>
+            </section>
         @endif
-    </div>
-</x-dashboard.layout>
+    </main>
+</body>
+</html>

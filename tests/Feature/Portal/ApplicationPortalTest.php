@@ -26,6 +26,8 @@ final class ApplicationPortalTest extends TestCase
             ->assertOk()
             ->assertSee($allowed->name)
             ->assertSee($allowed->homepage_url)
+            ->assertSee('portal-page')
+            ->assertDontSee('dashboard-body')
             ->assertDontSee('>'.$hidden->name.'<');
     }
 
