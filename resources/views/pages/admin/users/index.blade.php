@@ -60,9 +60,13 @@
                             <x-status-badge :value="$user->status ?? ($user->active ? 'active' : 'inactive')" />
                         </x-table.td>
                         <x-table.td align="right">
-                            <x-form.button href="{{ route('admin.users.show', $user) }}" variant="secondary" size="sm">
-                                View
-                            </x-form.button>
+                            @if (filled($user->uuid))
+                                <x-form.button href="{{ route('admin.users.show', $user) }}" variant="secondary" size="sm">
+                                    View
+                                </x-form.button>
+                            @else
+                                <span class="text-xs text-[var(--dash-text-muted)]">Identity pending</span>
+                            @endif
                         </x-table.td>
                     </tr>
                 @endforeach

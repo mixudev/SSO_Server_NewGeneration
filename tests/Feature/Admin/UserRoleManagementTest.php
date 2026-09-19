@@ -5,6 +5,7 @@ namespace Tests\Feature\Admin;
 use App\Models\Identity\SecurityEvent;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 use Tests\TestCase;
@@ -22,6 +23,21 @@ class UserRoleManagementTest extends TestCase
         $route = route('admin.users.show', $user);
         $this->assertStringContainsString($user->uuid, $route);
         $this->assertNotSame((string) $user->id, basename(parse_url($route, PHP_URL_PATH)));
+    }
+
+    public function test_user_index_renders_legacy_user_without_uuid_without_generating_a_broken_route(): void
+    {
+        $admin = $this->authorizedUser('users.view');
+        $legacy = User::factory()->create();
+        DB::table('users')->where('id', $legacy->id)->update(['uuid' => null]);
+        $legacy->refresh();
+
+        $this->actingAs($admin)
+            ->get(route('admin.users.index'))
+            ->assertOk()
+            ->assertSee('Identity pending');
+
+        $this->assertNull($legacy->uuid);
     }
 
     public function test_users_without_manage_permission_cannot_update_user(): void
