@@ -55,6 +55,7 @@ Updated: 2026-09-19
 - [x] Remove the unused parallel application-owned authorization-code table and redeemer.
 - [x] Add idempotent OAuth revocation endpoint and token-redaction tests.
 - [x] Add consent denial protocol error redirect and terminal transaction status.
+- [x] Allowlist consent decisions and reject unknown values before consuming transaction session state.
 - [ ] Add adversarial client/redirect/expiry/replay coverage for every token error path.
 - [x] Add OIDC RP-initiated end-session endpoint with registered post-logout redirect validation and state preservation.
 - [x] Add OIDC discovery, JWKS, and scoped UserInfo endpoints.

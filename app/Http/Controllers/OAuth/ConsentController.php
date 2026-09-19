@@ -33,6 +33,11 @@ final class ConsentController extends Controller
             return response('Authorization transaction expired.', Response::HTTP_BAD_REQUEST);
         }
 
+        $decision = $request->string('decision')->toString();
+        if (! in_array($decision, ['approve', 'deny'], true)) {
+            return response('Invalid consent decision.', Response::HTTP_BAD_REQUEST);
+        }
+
         $sessionData = $request->session()->pull('oauth.authorization.'.$transaction->getKey());
         if (! is_array($sessionData)
             || ! is_string($sessionData['redirect_uri'] ?? null)
@@ -45,7 +50,7 @@ final class ConsentController extends Controller
         }
 
         try {
-            return DB::transaction(function () use ($request, $transaction, $sessionData): RedirectResponse|SymfonyResponse {
+            return DB::transaction(function () use ($transaction, $sessionData, $decision): RedirectResponse|SymfonyResponse {
                 $lockedTransaction = AuthorizationTransaction::query()
                     ->whereKey($transaction->getKey())
                     ->lockForUpdate()
@@ -57,7 +62,7 @@ final class ConsentController extends Controller
                     throw new RuntimeException('Authorization transaction is no longer pending.');
                 }
 
-                if ($request->string('decision')->toString() === 'deny') {
+                if ($decision === 'deny') {
                     $lockedTransaction->update([
                         'status' => AuthorizationTransactionStatus::Denied,
                         'completed_at' => now(),
