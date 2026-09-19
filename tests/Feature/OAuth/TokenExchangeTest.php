@@ -30,7 +30,7 @@ class TokenExchangeTest extends TestCase
                 'redirect_uri' => 'https://client.example/callback',
                 'state' => 'state-value',
             ],
-        ])->post(route('oauth.consent.approve', $transaction))->headers->get('Location');
+        ])->post(route('oauth.consent.approve', $transaction), ['decision' => 'approve'])->headers->get('Location');
         $code = (string) (parse_url($location, PHP_URL_QUERY) ? Str::of(parse_url($location, PHP_URL_QUERY))->after('code=')->before('&')->toString() : '');
 
         $response = $this->postJson('/oauth/token', [
@@ -62,6 +62,34 @@ class TokenExchangeTest extends TestCase
             'redirect_uri' => 'https://client.example/callback',
             'code' => urldecode($code),
             'code_verifier' => $verifier,
+        ])->assertStatus(400)->assertJsonPath('error', 'invalid_grant');
+    }
+
+    public function test_refresh_token_rotation_rejects_replay_of_the_previous_refresh_token(): void
+    {
+        [$user, $credential, $verifier] = $this->approveCode();
+        $transaction = AuthorizationTransaction::query()->firstOrFail();
+        $location = $this->approve($user, $transaction)->headers->get('Location');
+        parse_str((string) parse_url($location, PHP_URL_QUERY), $query);
+        $token = $this->postJson(route('passport.token'), [
+            'grant_type' => 'authorization_code',
+            'client_id' => $credential->passport_client_id,
+            'redirect_uri' => 'https://client.example/callback',
+            'code' => $query['code'],
+            'code_verifier' => $verifier,
+        ])->assertOk()->json();
+
+        $refresh = $this->postJson(route('passport.token'), [
+            'grant_type' => 'refresh_token',
+            'client_id' => $credential->passport_client_id,
+            'refresh_token' => $token['refresh_token'],
+        ])->assertOk()->json();
+
+        $this->assertNotSame($token['refresh_token'], $refresh['refresh_token']);
+        $this->postJson(route('passport.token'), [
+            'grant_type' => 'refresh_token',
+            'client_id' => $credential->passport_client_id,
+            'refresh_token' => $token['refresh_token'],
         ])->assertStatus(400)->assertJsonPath('error', 'invalid_grant');
     }
 
@@ -121,7 +149,7 @@ class TokenExchangeTest extends TestCase
                 'redirect_uri' => 'https://client.example/callback',
                 'state' => 'state-value',
             ],
-        ])->post(route('oauth.consent.approve', $transaction));
+        ])->post(route('oauth.consent.approve', $transaction, absolute: true), ['decision' => 'approve']);
     }
 
     /** @return array{0: Application, 1: ApplicationCredential} */

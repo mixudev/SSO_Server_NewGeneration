@@ -58,6 +58,7 @@ Updated: 2026-09-19
 - [x] Allowlist consent decisions and reject unknown values before consuming transaction session state.
 - [x] Add adversarial client/redirect/expiry/replay coverage for every token error path.
 - [x] Verify token endpoint invalid-client paths return standard OAuth errors without internal details.
+- [x] Verify refresh-token rotation rejects replay of the previous refresh token.
 - [x] Add OIDC RP-initiated end-session endpoint with registered post-logout redirect validation and state preservation.
 - [x] Manage login and post-logout redirect URI kinds separately in application update flow.
 - [x] Add OIDC discovery, JWKS, and scoped UserInfo endpoints.
