@@ -136,6 +136,36 @@ class ApplicationWizardTest extends TestCase
         $this->assertSame([], session('application_wizard.scope_ids'));
     }
 
+    public function test_wizard_ignores_browser_supplied_claim_policy_version(): void
+    {
+        $user = $this->authorizedUser();
+        $organization = Organization::factory()->create(['status' => 'active']);
+        $claim = Claim::factory()->create(['key' => 'user.email', 'status' => 'active']);
+        $session = $this->actingAs($user);
+
+        $this->completeBasicProtocolAndRedirect($session, $organization);
+        $session->post(route('admin.applications.wizard.scopes.store'), ['scope_ids' => []]);
+        $session->post(route('admin.applications.wizard.claims.store'), [
+            'claim_keys' => [$claim->key],
+            'claim_policy_version' => 999,
+        ])->assertRedirect(route('admin.applications.wizard.security'));
+        $session->post(route('admin.applications.wizard.security.store'), [
+            'consent_policy' => 'explicit',
+            'session_max_age' => 3600,
+            'session_idle_timeout' => 900,
+        ]);
+        $session->post(route('admin.applications.wizard.complete'))
+            ->assertRedirect(route('admin.applications.index'));
+
+        $application = Application::query()->where('organization_id', $organization->id)->firstOrFail();
+        $this->assertSame(1, $application->claim_policy_version);
+        $this->assertDatabaseHas('application_claim_policies', [
+            'application_id' => $application->id,
+            'version' => 1,
+            'status' => 'active',
+        ]);
+    }
+
     public function test_wizard_rejects_unknown_inactive_and_duplicate_claim_keys(): void
     {
         $user = $this->authorizedUser();
