@@ -47,6 +47,28 @@ class ApplicationUpdateTest extends TestCase
         $this->assertDatabaseMissing('application_redirect_uris', ['uri' => 'https://old.example/callback']);
     }
 
+    public function test_update_persists_logout_redirect_uris_as_separate_kind(): void
+    {
+        $user = $this->authorizedUser();
+        $application = Application::factory()->create();
+
+        $this->actingAs($user)->put(route('admin.applications.update', $application), [
+            'organization_id' => $application->organization_id,
+            'name' => $application->name,
+            'slug' => $application->slug,
+            'protocol_mode' => $application->protocol_mode,
+            'client_type' => $application->client_type,
+            'redirect_uris' => ['https://client.example/callback'],
+            'logout_redirect_uris' => ['HTTPS://CLIENT.EXAMPLE/logout/callback'],
+        ])->assertRedirect(route('admin.applications.show', $application));
+
+        $this->assertDatabaseHas('application_redirect_uris', [
+            'application_id' => $application->getKey(),
+            'kind' => 'logout',
+            'uri' => 'https://client.example/logout/callback',
+        ]);
+    }
+
     public function test_invalid_update_does_not_change_existing_application(): void
     {
         $user = $this->authorizedUser();

@@ -59,6 +59,7 @@ Updated: 2026-09-19
 - [x] Add adversarial client/redirect/expiry/replay coverage for every token error path.
 - [x] Verify token endpoint invalid-client paths return standard OAuth errors without internal details.
 - [x] Add OIDC RP-initiated end-session endpoint with registered post-logout redirect validation and state preservation.
+- [x] Manage login and post-logout redirect URI kinds separately in application update flow.
 - [x] Add OIDC discovery, JWKS, and scoped UserInfo endpoints.
 - [x] Add OIDC nonce-bound ID Token issuance and verification tests. (Passport authorization-code exchange now returns a signed RS256 `id_token`; issuer, audience, subject, nonce, expiry, signature, and replay coverage is present.)
 - [x] Add database/signing-key readiness health check.

@@ -402,7 +402,7 @@ class ApplicationController extends Controller
     {
         DB::transaction(function () use ($request, $application): void {
             $application->update([
-                ...$request->safe()->except('canonical_redirect_uris'),
+                ...$request->safe()->except(['canonical_redirect_uris', 'canonical_logout_redirect_uris', 'logout_redirect_uris']),
                 'updated_by' => $request->user()->id,
             ]);
             $application->redirectUris()->delete();
@@ -412,6 +412,14 @@ class ApplicationController extends Controller
                     'uri' => $uri,
                     'uri_hash' => hash('sha256', $uri),
                     'kind' => 'login',
+                ]);
+            }
+
+            foreach ($request->input('canonical_logout_redirect_uris', []) as $uri) {
+                $application->redirectUris()->create([
+                    'uri' => $uri,
+                    'uri_hash' => hash('sha256', $uri),
+                    'kind' => 'logout',
                 ]);
             }
         });

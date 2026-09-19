@@ -27,6 +27,8 @@ class UpdateApplicationRequest extends FormRequest
             'description' => ['nullable', 'string', 'max:5000'],
             'redirect_uris' => ['required', 'array', 'min:1', 'max:20'],
             'redirect_uris.*' => ['required', 'string', 'max:2048'],
+            'logout_redirect_uris' => ['nullable', 'array', 'max:20'],
+            'logout_redirect_uris.*' => ['nullable', 'string', 'max:2048'],
         ];
     }
 
@@ -65,7 +67,33 @@ class UpdateApplicationRequest extends FormRequest
                 $canonicalUris[] = $canonicalUri;
             }
 
-            $this->merge(['canonical_redirect_uris' => $canonicalUris]);
+            $canonicalLogoutUris = [];
+            foreach ($this->input('logout_redirect_uris', []) as $index => $uri) {
+                if ($uri === null || $uri === '') {
+                    continue;
+                }
+
+                try {
+                    $canonicalUri = $redirectUriValidator->canonicalize($uri);
+                } catch (\InvalidArgumentException) {
+                    $validator->errors()->add("logout_redirect_uris.{$index}", 'Logout redirect URI is invalid.');
+
+                    continue;
+                }
+
+                if (in_array($canonicalUri, $canonicalLogoutUris, true)) {
+                    $validator->errors()->add("logout_redirect_uris.{$index}", 'Logout redirect URI must be unique.');
+
+                    continue;
+                }
+
+                $canonicalLogoutUris[] = $canonicalUri;
+            }
+
+            $this->merge([
+                'canonical_redirect_uris' => $canonicalUris,
+                'canonical_logout_redirect_uris' => $canonicalLogoutUris,
+            ]);
         });
     }
 }

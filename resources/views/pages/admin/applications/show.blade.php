@@ -196,10 +196,18 @@
                 <p class="-mt-2 text-[11px] text-[var(--dash-text-muted)]">Protocol and client type cannot be changed after application creation.</p>
 
                 <div>
-                    <p class="mb-2 font-[var(--font-ppneuemontrealmono)] text-[11px] font-medium uppercase tracking-[0.02em] text-[var(--dash-muted)]">Redirect URIs</p>
-                    @foreach($application->redirectUris as $redirectUri)
+                    <p class="mb-2 font-[var(--font-ppneuemontrealmono)] text-[11px] font-medium uppercase tracking-[0.02em] text-[var(--dash-muted)]">Login redirect URIs</p>
+                    @foreach($application->redirectUris->where('kind', 'login') as $redirectUri)
                         <input name="redirect_uris[]" value="{{ $redirectUri->uri }}" required class="mb-2 w-full rounded-[var(--dash-radius)] border border-[var(--dash-border)] bg-[var(--dash-card)] px-3 py-2 text-xs text-[var(--dash-text)]" />
                     @endforeach
+                </div>
+
+                <div>
+                    <p class="mb-2 font-[var(--font-ppneuemontrealmono)] text-[11px] font-medium uppercase tracking-[0.02em] text-[var(--dash-muted)]">Post-logout redirect URIs</p>
+                    @foreach($application->redirectUris->where('kind', 'logout') as $redirectUri)
+                        <input name="logout_redirect_uris[]" value="{{ $redirectUri->uri }}" class="mb-2 w-full rounded-[var(--dash-radius)] border border-[var(--dash-border)] bg-[var(--dash-card)] px-3 py-2 text-xs text-[var(--dash-text)]" />
+                    @endforeach
+                    <input name="logout_redirect_uris[]" value="" placeholder="https://client.example/logout/callback" class="w-full rounded-[var(--dash-radius)] border border-[var(--dash-border)] bg-[var(--dash-card)] px-3 py-2 text-xs text-[var(--dash-text)]" />
                 </div>
 
                 <x-form.textarea name="description" label="Description" :value="$application->description" rows="4" />
