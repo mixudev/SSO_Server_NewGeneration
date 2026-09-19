@@ -56,7 +56,8 @@ Updated: 2026-09-19
 - [x] Add idempotent OAuth revocation endpoint and token-redaction tests.
 - [x] Add consent denial protocol error redirect and terminal transaction status.
 - [x] Allowlist consent decisions and reject unknown values before consuming transaction session state.
-- [ ] Add adversarial client/redirect/expiry/replay coverage for every token error path.
+- [x] Add adversarial client/redirect/expiry/replay coverage for every token error path.
+- [x] Verify token endpoint invalid-client paths return standard OAuth errors without internal details.
 - [x] Add OIDC RP-initiated end-session endpoint with registered post-logout redirect validation and state preservation.
 - [x] Add OIDC discovery, JWKS, and scoped UserInfo endpoints.
 - [x] Add OIDC nonce-bound ID Token issuance and verification tests. (Passport authorization-code exchange now returns a signed RS256 `id_token`; issuer, audience, subject, nonce, expiry, signature, and replay coverage is present.)
