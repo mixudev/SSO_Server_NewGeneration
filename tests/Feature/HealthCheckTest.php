@@ -18,6 +18,9 @@ class HealthCheckTest extends TestCase
             ->assertOk()
             ->assertJsonPath('status', 'ok')
             ->assertJsonPath('checks.database', 'ok')
-            ->assertJsonPath('checks.signing_key', 'ok');
+            ->assertJsonPath('checks.signing_key', 'ok')
+            ->assertJsonPath('key_status.active', true)
+            ->assertJsonPath('key_status.verification_key_count', 1)
+            ->assertJsonMissing(['private_key' => true]);
     }
 }

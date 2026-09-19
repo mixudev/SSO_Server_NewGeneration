@@ -20,6 +20,10 @@ final class HealthController extends Controller
         return response()->json([
             'status' => $healthy ? 'ok' : 'failed',
             'checks' => $checks,
+            'key_status' => [
+                'active' => $checks['signing_key'] === 'ok',
+                'verification_key_count' => $this->verificationKeyCount($keys),
+            ],
         ], $healthy ? 200 : 503);
     }
 
@@ -42,6 +46,15 @@ final class HealthController extends Controller
             return true;
         } catch (Throwable) {
             return false;
+        }
+    }
+
+    private function verificationKeyCount(KeyManagerInterface $keys): int
+    {
+        try {
+            return $keys->verificationKeys()->count();
+        } catch (Throwable) {
+            return 0;
         }
     }
 }
