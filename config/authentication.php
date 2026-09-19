@@ -327,8 +327,8 @@ return [
 
     // Tujuan redirect setelah aksi autentikasi berhasil
     'redirects' => [
-        'login' => '/admin',
-        'register' => '/admin',
+        'login' => '/portal',
+        'register' => '/portal',
         'logout' => '/login',
         'password_reset' => '/login',
         'two_factor' => '/admin',

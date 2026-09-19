@@ -1,8 +1,13 @@
 <?php
 
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-Route::view('/', 'welcome')->name('home');
+Route::get('/', function (Request $request) {
+    return $request->user() !== null
+        ? redirect()->route('sso.portal')
+        : view('welcome');
+})->name('home');
 
 require base_path('routes/admin.php');
 require base_path('routes/portal.php');

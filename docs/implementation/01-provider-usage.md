@@ -147,7 +147,21 @@ Provider memverifikasi bearer token melalui Passport sebelum memakai `jti`, kemu
 | Reactivate | Membuat generation/client baru; jangan menghidupkan secret/client lama. |
 | Rotate signing key | JWKS mempertahankan key lama selama overlap terbatas. |
 
-## 10. Operasi dan health
+## 10. Direct login dan application portal
+
+Jika user membuka provider secara langsung:
+
+1. User login melalui route authentication provider `GET /login`.
+2. Setelah login sukses, authentication package mengarahkan user ke `/portal`.
+3. Portal hanya menampilkan application yang memiliki assignment aktif pada user.
+4. Application harus aktif, organization harus aktif, dan credential harus aktif.
+5. Jika tidak ada assignment, portal menampilkan empty state dan tidak membuka application apa pun.
+6. Tombol `Open application` memakai `homepage_url` yang sudah terdaftar pada application; portal tidak menerima `next`, `return_url`, atau redirect URL dari browser.
+7. Aplikasi client kemudian menyediakan halaman login miliknya sendiri dan memulai `route('ssoclient.redirect')`.
+
+Portal tidak menggantikan OAuth authorization endpoint. Request ke `/oauth/authorize` yang membawa client terdaftar tetap melalui authorization transaction, consent, PKCE, dan redirect URI application tersebut. Portal juga tidak memberikan akses berdasarkan role platform secara otomatis; akses application harus diatur melalui `application_user_access` dengan permission admin `applications.access.view` dan `applications.access.manage`.
+
+## 11. Operasi dan health
 
 ```text
 GET /health/live

@@ -4,6 +4,7 @@ namespace Tests\Feature\Identity;
 
 use App\Models\Identity\Application;
 use App\Models\Identity\Organization;
+use App\Models\User;
 use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -27,6 +28,29 @@ class FoundationBaselineTest extends TestCase
     public function test_admin_dashboard_requires_authentication(): void
     {
         $this->get('/admin')->assertRedirect();
+    }
+
+    public function test_authenticated_provider_root_redirects_to_application_portal(): void
+    {
+        $this->actingAs(User::factory()->create(['active' => true, 'status' => 'active']))
+            ->get('/')
+            ->assertRedirect(route('sso.portal'));
+    }
+
+    public function test_authentication_success_redirects_to_application_portal(): void
+    {
+        self::assertSame('/portal', config('authentication.redirects.login'));
+        self::assertSame('/portal', config('authentication.redirects.register'));
+    }
+
+    public function test_oauth_authorize_route_remains_separate_from_provider_portal(): void
+    {
+        self::assertTrue(app('router')->getRoutes()->getByName('oauth.authorize') !== null);
+        self::assertTrue(app('router')->getRoutes()->getByName('sso.portal') !== null);
+        self::assertNotSame(
+            app('router')->getRoutes()->getByName('oauth.authorize')->uri(),
+            app('router')->getRoutes()->getByName('sso.portal')->uri(),
+        );
     }
 
     public function test_organization_has_secure_public_identifier_and_defaults(): void
