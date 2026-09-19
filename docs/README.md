@@ -27,6 +27,7 @@ Dokumentasi ini adalah **single source of truth** untuk perancangan, pengembanga
 - `tasks/README.md` | Task execution roadmap per phase, termasuk urutan dependency dan Definition of Done. |
 | `14-authorization-and-permissions.md` | Spatie Laravel Permission sebagai RBAC untuk control plane, role/permission boundary, policies, scope, audit, dan privilege invariants. |
 | `15-backup-and-disaster-recovery.md` | Spatie Laravel Backup, storage, encryption, retention, monitoring, restore drill, RPO/RTO, dan disaster recovery. |
+| `implementation/` | Panduan provider, integrasi client, PRD/SRS package `ssoclient`, capability/UI matrix, security acceptance, dan implementation roadmap. |
 | `16-security-threat-catalog.md` | Threat catalog dari auth, OIDC/SAML, injection, SSRF, XSS, CSRF, RCE paths, supply chain, DoS, backup, deployment, hingga insider threat. |
 
 ## Urutan membaca AI agent

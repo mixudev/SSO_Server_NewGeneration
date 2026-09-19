@@ -68,6 +68,7 @@ Updated: 2026-09-19
 - [x] Add adversarial coverage for profile password and cross-session mutation step-up boundaries.
 - [x] Replace remaining page-local button markup in the reviewed profile action surface with shared Blade action components where the existing component applies.
 - [ ] Continue the remaining page-local action review incrementally across other dashboard pages.
+- [x] Add `docs/implementation/` provider guide, client integration guide, `ssoclient` PRD/SRS, capability/UI matrix, security acceptance, and structured implementation roadmap.
 
 ## Component standard
 
